@@ -1,0 +1,27 @@
+{
+  "name": "awds-rebalanced",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.33.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.40.0",
+    "vite": "^7.1.2",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "konva": "^9.3.22"
+  }
+}
