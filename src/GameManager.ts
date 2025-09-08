@@ -1,11 +1,11 @@
 import './style.css'
-import { mapaKonva } from './mapaKonva'
+import { generarMapaKonva, generarMapaAleatorio } from './mapa/mapaKonva.ts'
 // import mapaPrueba from './mapas/test.json'
-import {mapaPrueba} from './../public/mapas/test.ts'
+import { mapaPrueba} from './../public/mapas/test.ts'
+// import { listaPaises } from "./comandantes/paises.ts";
 // import type { MapaObjeto } from './mapa.ts'
 // import { jugador } from 'jugador.js'
 // 'comandante.js'
-const { generarMapaKonva, generarMapaAleatorio } = mapaKonva()
 // Se debería cargar una partida con un id único de partida solicitando a una DB
 const PartidaData = {
     "Mapa": {},
@@ -26,6 +26,10 @@ const PartidaData = {
 //     });
 
 //     return setEquipos
+// }
+
+// function obtenerFiltroHSVJugador(){
+//     listaPaises[0].hsv
 // }
 
 async function iniciarJuego({mapaLiga}:{mapaLiga:string}){

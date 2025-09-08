@@ -1,7 +1,6 @@
 
 import { describe, it, expect } from 'vitest'
-import { MapaJS } from '../mapa'
-const { Mapa } = MapaJS()
+import { Mapa } from '../mapa'
 import mapaPrueba from '../mapas/test.json'
 // const { generarMapaKonva } = mapaKonva()
 
