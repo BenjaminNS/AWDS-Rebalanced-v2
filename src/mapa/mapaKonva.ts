@@ -9,6 +9,7 @@ import { Casilla, Mapa } from './mapa.ts'
 import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
 // import { Unidad } from '../unidades/unidades.ts'
 import { listaPaises } from "../comandantes/paises.ts";
+import { arregloTerrenosNombres } from './terreno.ts'
 
 const tamanoCasilla = 32
 const standardSpriteSize = 16
@@ -54,7 +55,7 @@ const MAPA_CAPAS={
 }
 
 // Generación de mapas
-export async function generarMapaKonva ({mapa, idContenedor} : {mapa: Mapa, idContenedor: string}){
+export async function generarMapaKonva ({mapa, idContenedor} : {mapa: Mapa, idContenedor: string}):Promise<Mapa>{
   const mapaJuego = new Mapa(mapa.nombre, mapa.dimensiones, mapa.casillas)
   generarCapasMapa({idContenedor: idContenedor, mapa: mapaJuego})
 

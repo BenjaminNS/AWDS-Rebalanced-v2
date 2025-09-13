@@ -18,7 +18,7 @@ export type casillasAdyacentes = {
 export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 type obtenerSprite = (casillasAdyacentes: casillasAdyacentes) => spriteTerreno;
 
-const arregloTerrenosNombres = [
+export const arregloTerrenosNombres = [
   'planicie', 'bosque', 'montana', 'cuartelGeneral', 'ciudad', 'fabrica', 'aeropuerto', 'puertoNaval', 'silo', 'camino', 'puente', 'tuberia', 'mar', 'arrecife', 'rio', 'costa', 'invalido']
 
 export class Terreno {

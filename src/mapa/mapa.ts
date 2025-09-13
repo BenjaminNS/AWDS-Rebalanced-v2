@@ -16,6 +16,7 @@ export type coordenada = {
 //   tipo: nombreTerreno,
 //   propietario: number|null,
 //   unidad: UnidadCasilla|null
+//   clima?: Clima
 // }
 // type KonvaSprite = Konva.Sprite|null
 // export type Casilla = CasillaSimple & KonvaSprite
@@ -30,14 +31,14 @@ export type coordenada = {
 export class Casilla{
   tipo: nombreTerreno;
   propietario: number|null;
-  sprite: Konva.Sprite|null; //¿Debería ser spriteTerreno?
+  // clima?: Clima
+  sprite: Konva.Sprite|null; //¿Debería ser spriteTerreno o Konva.Image?
   unidad: UnidadCasilla|null;
 
   constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
     if(ListaTerrenos[tipo] == undefined){
       console.error('Tipo de casilla no encontrada: ', tipo)
       this.tipo = 'invalido';
-      // si es invalido, nadie puede ser dueño de esa casilla
       this.propietario = null
     } else{
       this.tipo=tipo;
@@ -79,8 +80,11 @@ export class Mapa{
   nombre: string;
   dimensiones: dimension
   casillas: Casilla[];
-  // numeroJugadores: number; //Tentativo, así podemos cuidar que no haya más jugadores de los esperados
   konvaStage: Konva.Stage|null;
+  // modo: 'estricto'|'permisivo'
+  // estricto: No permite poner unidades en casillas inválidas
+  // permisivo: Permite poner unidades en casillas inválidas
+  // ejemplo: submarino en planicies o cualquier unidad en tuberías
   obtenerCasilla = (coord: coordenada):(nombreTerreno|'inexistente') => {
     // Fuera del mapa
     if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length ){
@@ -90,6 +94,7 @@ export class Mapa{
     }
   }
 
+  // Talvez debería mover esta función a partida
   obtenerComandantesJugables = ():Set<number|null> =>{
     const setComandanteJugables = new Set()
     for (let i = 0; i < this.casillas.length; i++) {

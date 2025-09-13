@@ -5,17 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="awds_rebalanced.ico">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"> -->
     <title>Advance Wars DS: Rebalanced</title>
   </head>
   <body>
-    <!-- <nav></nav> -->
-    <!-- <a href="generador-mapas.html">Generar mapas</a> -->
-
     <main>
-      <div id="mapa-konva">
-        <!-- Konva -->
-      </div>
+      <div id="mapa-konva"></div>
+      <div style="padding: 0 .75rem;">
+				<h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2>
+
+				<div class="seccion-jugadores">
+					
+				</div>
+			</div>
     </main>
     <script type="module" src="/src/GameManager.ts"></script>
+    <script type="module" src="/src/componentes/header.ts"></script>
   </body>
 </html>

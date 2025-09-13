@@ -1,4 +1,4 @@
-// import { ComandanteJugable } from './comandantes/comandante'
+import { ComandanteJugable } from './comandantes/comandante'
 type equipo = 'A'|'B'|'C'|'D';
 
 export class Jugador {
@@ -7,12 +7,12 @@ export class Jugador {
   nombre: string;
   // idJugador: string; //crypto.randomUUID()}
   equipo: equipo;
-  tiempoAcumulado: number|null;
-  // comandantes: ComandanteJugable[]
+  tiempoAcumulado?: number|null; //NOTA: Esto solo funciona en un juego, creo que este dato debería estar en otro lado o de otra manera
+  comandantes: ComandanteJugable[]
 
-  constructor(nombre: string, equipo: equipo, tiempoAcumulado: number|null){
+  constructor(nombre: string, equipo: equipo, comandantes: ComandanteJugable[]){
     this.nombre = nombre
     this.equipo = equipo
-    this.tiempoAcumulado = tiempoAcumulado;
+    this.comandantes = comandantes;
   }
 }
