@@ -1,9 +1,10 @@
 import './style.css'
-// import { generarTerreno } from './mapa/mapaKonva'
-//Mapa del juego
+import { generarMapaAleatorio } from './mapa/mapaKonva'
 
-function iniciarJuego(){
-  // generarTerreno({mapa: mapaPrueba, idContenedor: 'container'})
-}
+document.querySelector('#creador-mapas')?.addEventListener('submit', (ev)=>{
+  ev.preventDefault()
+}, )
 
-iniciarJuego()
+window.addEventListener('load', async ()=>{
+    generarMapaAleatorio({dimensiones: {columnas: 10, filas: 10}, idContenedor: 'mapa-konva'})
+})

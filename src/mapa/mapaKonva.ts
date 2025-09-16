@@ -114,6 +114,8 @@ function generarCapaCasillas({mapa}: {mapa: Mapa}):Konva.Layer{
         width: tamanoCasilla,
         height: tamanoCasilla,
         fill: COLORES_INTERACCION.ATAQUE,
+        // stroke: 'black',
+        // strokeWidth: (tamanoCasilla * .01)
       })
 
       // const seleccionarCasilla(jugador, casilla){

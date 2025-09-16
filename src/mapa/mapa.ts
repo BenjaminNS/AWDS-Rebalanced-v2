@@ -188,6 +188,7 @@ export class Mapa{
 export class MapaSimple{
   nombre: String;
   dimensiones: dimension
+  // idCreador: number; //Jugador que creo el mapa
   casillas: Casilla[];
 
   constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]){
