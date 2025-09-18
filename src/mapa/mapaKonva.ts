@@ -6,15 +6,17 @@ import { ListaTerrenos } from './terreno.ts'
 import { sleep } from '../common.js'
 
 import { Casilla, Mapa } from './mapa.ts'
-import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
 // import { Unidad } from '../unidades/unidades.ts'
-import { listaPaises } from "../comandantes/paises.ts";
+import { listaPaises } from "../comandantes/paises.ts"
 import { arregloTerrenosNombres } from './terreno.ts'
+import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
+import type { nombreTerreno } from './terreno.ts'
 
-const tamanoCasilla = 32
+export const tamanoCasilla = 32
 const standardSpriteSize = 16
 const fondoMapa = '#D5EF00' //'black'
-const delayCasilla = 8
+const duracionConstruccion = 3000
+const maxDelayCasilla = 10
 
 const obtenerColor = ({numComandanteJugable}: {numComandanteJugable: number})=>{
   // validar que se manden números enteros positivos
@@ -47,7 +49,7 @@ const COLORES_INTERACCION={
   ATAQUE: '#c7343488',
 }
 
-const MAPA_CAPAS={
+export const MAPA_CAPAS={
   FONDO: 'fondo',
   TERRENO: 'terreno',
   CASILLAS: 'casillas',
@@ -65,6 +67,21 @@ export async function generarMapaKonva ({mapa, idContenedor} : {mapa: Mapa, idCo
 export async function generarMapaAleatorio({dimensiones, idContenedor}: {dimensiones: dimension, idContenedor: string}){
   const listaCasillas = generarCasillasAleatorias({dimensiones: dimensiones})
   const mapaJuego = new Mapa('Mapa aleatorio', dimensiones, listaCasillas)
+  generarCapasMapa({idContenedor: idContenedor, mapa: mapaJuego})
+
+  // ¿Debería regresar una promesa?
+  return mapaJuego
+}
+
+export async function generarMapaRelleno({dimensiones, idContenedor, tipoCasilla}: {dimensiones: dimension, idContenedor: string, tipoCasilla: nombreTerreno}){
+  const listaCasillas = []
+  // Verificar que sea un tipo de casilla existente, si no es, cambiarlo a planicie por defecto
+  // if( ListaTerrenos[tipoCasilla] )
+  for (let z = 0; z < (dimensiones.columnas * dimensiones.filas); z++) {
+    listaCasillas.push(new Casilla(tipoCasilla, null, null))
+  }
+
+  const mapaJuego = new Mapa('Mapa generado', dimensiones, listaCasillas)
   generarCapasMapa({idContenedor: idContenedor, mapa: mapaJuego})
 
   // ¿Debería regresar una promesa?
@@ -118,27 +135,6 @@ function generarCapaCasillas({mapa}: {mapa: Mapa}):Konva.Layer{
         // strokeWidth: (tamanoCasilla * .01)
       })
 
-      // const seleccionarCasilla(jugador, casilla){
-      //   // UNIDAD
-      //   const unidad = casilla.unidad
-      //   if( unidad ){
-      //     unidad.clickUnidad(jugador)
-      //     return
-      //   }
-
-      //   // PROPIEDAD
-      //   if( ListaTerrenos[casilla.tipo].propietario === jugador.id ){
-      //     console.log('Abrir opciones de compra')
-      //   }
-      // }
-
-
-      // Tentativamente, esto pudiera con una sola capa que calcule la casilla dependiendo la coordenada, 
-      // en vez de que cada casilla tenga evento de clic y/o hover
-      cuadroCasilla.on('click', () => {
-        console.log(`Casilla (x: ${x}, y: ${y})`)
-        console.log(mapa.obtenerCasilla({x: (x), y:(y)}))
-      })
       capaCasillas.add(cuadroCasilla)
     }
   }
@@ -152,6 +148,8 @@ function generarCapaTerreno({mapa}: {mapa: Mapa}):Konva.Layer{
 async function generarListaTilesTerreno({capaTerreno, mapa}: { capaTerreno: Konva.Layer, mapa: Mapa }){
   const filas = mapa.dimensiones.filas
   const columnas = mapa.dimensiones.columnas
+  const delayCalculado = Math.ceil( duracionConstruccion / (filas * columnas) )
+  const tiempoCasilla = delayCalculado > maxDelayCasilla ? maxDelayCasilla : delayCalculado
 
   for (let y = 0; y < filas; y++) {
     for (let x = 0; x < columnas; x++) {
@@ -160,8 +158,10 @@ async function generarListaTilesTerreno({capaTerreno, mapa}: { capaTerreno: Konv
         {x: x, y: y},
         mapa
       )
+
+      mapa.casillas[( ( y * columnas ) + x )].sprite = tileCasilla
       capaTerreno.add(tileCasilla)
-      await sleep(delayCasilla)
+      await sleep(tiempoCasilla)
     }
   }
 }
@@ -211,8 +211,6 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   });
 }
 
-// function rellenarMapa({tipoCasilla, mapa, idContenedor}:{tipoCasilla: ('planicie'|'bosque'|'mar'), mapa: Mapa, idContenedor: string}):void{}
-
 function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Sprite|null{
   if(casilla.unidad == null){
     console.error('Esta casilla no tiene una unidad', casilla)
@@ -251,14 +249,14 @@ function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Kon
 
   return unitSprite
 }
-function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, mapa: Mapa){
+export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, mapa: Mapa){
   const terreno = ListaTerrenos[casilla.tipo]
   const {x,y} = coordenada
   const casillasAdyacentes = {
-    top: mapa.obtenerCasilla({x: (x), y:(y-1)}),
-    left: mapa.obtenerCasilla({x: (x-1), y:(y)}),
-    right: mapa.obtenerCasilla({x: (x+2), y:(y)}),
-    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)})
+    top: mapa.obtenerCasilla({x: (x), y:(y-1)}).tipo,
+    left: mapa.obtenerCasilla({x: (x-1), y:(y)}).tipo,
+    right: mapa.obtenerCasilla({x: (x+2), y:(y)}).tipo,
+    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)}).tipo
   }
   // Objeto terreno
   const objTerreno = terreno.obtenerSprite(casillasAdyacentes)
@@ -270,7 +268,8 @@ function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, ma
     offsetY: objTerreno.offsetY + 1,
     image: TerrainTilesheets,
     crop: objTerreno.crop,
-    strokeWidth: 0
+    strokeWidth: 0,
+    name: 'casilla_' + coordenada.x + '-' + coordenada.y,
   })
   
   const propietario = casilla.propietario
@@ -289,6 +288,7 @@ function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, ma
   return spriteTerreno
 }
 
+// Shaders y tintes de unidad por Comandante Jugable
 function generarShaderPropiedad () {
   // Al parecer, cada propiedad requiere un shader ligeramente diferente
   // Este casi funciona para ciudades, pero parece que necesito indicarle otros colores
@@ -425,7 +425,6 @@ function generarShaderPropiedad () {
     }
   };
 };
-
 function aplicarTinteUnidad({unidadSprite, hsv} : {unidadSprite: Konva.Sprite, hsv: {h: number|null, s: number|null, v: number|null}}): void{
   if( hsv.h != null ){
     unidadSprite.hue( hsv.h )

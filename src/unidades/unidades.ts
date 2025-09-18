@@ -14,7 +14,8 @@ import { spriteInfanteria, spriteMecha,
 } from './spriteUnidades';
 // export type nombreUnidades = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 
-type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
+export type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
+
 
 type municiones = {
   principal: number|null,
@@ -44,7 +45,7 @@ type habilidades = {
 // Necesario para submarinos y Stealth Fighters
 type estado = 'normal'|'oculto';
 
-// const arregloUnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
+export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
 export class UnidadCasilla {
   id: string;
@@ -175,7 +176,7 @@ export class Unidad {
 //   sniper: Unidad,
 // }
 
-const ListaUnidades = {
+export const ListaUnidades = {
   //Soldados terrestres
   infanteria: new Unidad('Infantería', 'Soldado capaz de capturar propiedades.', ['Soldado', 'Terrestre', 'Directo'], 
     1000, 1, 1, 3, 'pie', 2, 40, (estado: estado)=>{return 0}, {'principal': 6, 'secundaria': 1 }, 1, true, spriteInfanteria),

@@ -23,6 +23,20 @@ async function iniciarJuego(partidaLiga:string){
     // console.log('Partida Data', partidaJuego)
 }
 
+// const seleccionarCasilla(jugador, casilla){
+//   // UNIDAD
+//   const unidad = casilla.unidad
+//   if( unidad ){
+//     unidad.clickUnidad(jugador)
+//     return
+//   }
+
+//   // PROPIEDAD
+//   if( ListaTerrenos[casilla.tipo].propietario === jugador.id ){
+//     console.log('Abrir opciones de compra')
+//   }
+// }
+
 window.addEventListener('load', async ()=>{
     // iniciarJuego({mapaLiga: './mapas/test.json'})
     const Partida = new PartidaJuego(PartidaSnapshotMock, null)

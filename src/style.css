@@ -173,3 +173,13 @@ img{
     width: 50px;
     height: auto;
 }
+
+.boton-duda{
+  --tamano: 40px;
+  width: var(--tamano);
+  height: var(--tamano);
+  background-color: orange;
+  border-radius: 8px;
+  border: rgba(73, 59, 42, 0.671) solid 2px;
+  cursor: pointer;
+}

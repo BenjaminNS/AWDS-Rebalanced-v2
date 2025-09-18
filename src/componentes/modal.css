@@ -1,0 +1,27 @@
+.modal{
+  display: none;
+  position: fixed;
+  top: 0%;
+  width: 100%; height: 100%;
+  background-color: rgba(59, 59, 59, 0.342);
+
+  .content{
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 20px;
+    position: fixed;
+    top: auto; left: auto;
+    box-shadow: 2px 2px 2px rgba(95, 95, 95, 0.404);
+    width: 800px;
+    max-width: 90%;
+    max-height: 70%;
+    /* opacity: 0; */
+    /* transition: opacity .5s; */
+  }
+  &.activo{
+    display: flex; align-items: center; justify-content: center;
+    opacity: 1;
+    /* APLICAR ANIMACIÓN DE FADE */
+  }
+}

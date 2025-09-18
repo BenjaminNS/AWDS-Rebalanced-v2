@@ -143,7 +143,7 @@ export const ListaTerrenos : ListaTerrenos = {
     }
   ),
   "fabrica": new Terreno(
-    "Ciudad", 3, "Puedes comprar y reparar unidades terrestres aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Fábrica", 3, "Puedes comprar y reparar unidades terrestres aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
     (casillasAdyacentes: casillasAdyacentes):spriteTerreno => {
       // Similar al HQ, pero no requiere una versión exclusiva por armada
       return {
@@ -156,7 +156,7 @@ export const ListaTerrenos : ListaTerrenos = {
     }
   ),
   "aeropuerto": new Terreno(
-    "Ciudad", 3, "Puedes comprar y reparar unidades aéreas aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Aeropuerto", 3, "Puedes comprar y reparar unidades aéreas aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
     (casillasAdyacentes: casillasAdyacentes):spriteTerreno => {
       // Similar al HQ, pero no requiere una versión exclusiva por armada
       return {

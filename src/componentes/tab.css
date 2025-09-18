@@ -1,0 +1,18 @@
+.tab-content{
+  transition: height 1s;
+}
+
+.nav-link{
+  transition: background-color .275s;
+  cursor: pointer;
+  &.seleccionado{
+    background-color: darkorange;
+    color: white;
+  }
+}
+.tab-pane{
+  display: none;
+  &.seleccionado{
+    display: unset;
+  }
+}

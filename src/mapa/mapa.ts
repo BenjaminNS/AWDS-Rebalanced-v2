@@ -32,7 +32,7 @@ export class Casilla{
   tipo: nombreTerreno;
   propietario: number|null;
   // clima?: Clima
-  sprite: Konva.Sprite|null; //¿Debería ser spriteTerreno o Konva.Image?
+  sprite: Konva.Image|null; //¿Debería ser spriteTerreno o Konva.Image?
   unidad: UnidadCasilla|null;
 
   constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
@@ -85,12 +85,12 @@ export class Mapa{
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
-  obtenerCasilla = (coord: coordenada):(nombreTerreno|'inexistente') => {
+  obtenerCasilla = (coord: coordenada):(Casilla|'inexistente') => {
     // Fuera del mapa
     if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length ){
       return 'inexistente'
     } else{
-      return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )].tipo
+      return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )]
     }
   }
 
