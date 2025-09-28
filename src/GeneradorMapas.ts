@@ -1,12 +1,10 @@
 import './style.css'
 import Konva from 'konva'
-import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno } from './mapa/mapaKonva'
-import { Mapa } from './mapa/mapa'
-import { ListaTerrenos } from './mapa/terreno'
-import { ListaUnidades } from './unidades/unidades'
-import type { nombreTerreno } from './mapa/terreno'
-import type { nombreUnidad } from './unidades/unidades'
-// import type { coordenada } from './mapa/mapa'
+import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad } from './mapa/mapaKonva'
+import { Mapa, type coordenada } from './mapa/mapa'
+import { ListaTerrenos, type nombreTerreno } from './mapa/terreno'
+import { ListaUnidades, UnidadCasilla, type nombreUnidad } from './unidades/unidades'
+let layerUnidad:Konva.Layer
 
 let mapaGenerado:Mapa|null = null
 type dimensiones = {
@@ -15,7 +13,7 @@ type dimensiones = {
   anchoMax: number, altoMax: number
 }
 type accionBrocha = 'pintar'|'seleccionar'|'borrar'
-type espejoOpcion = 'Ninguno'|'Horizontal'|'Vertical'|'Diagonal /'|'Diagonal \\'
+type espejoOpcion = 'Ninguno'|'Horizontal'|'Vertical'|'Diagonal'
 type tipoBrocha = 'Terreno'|'Unidad'
 type formulario = {
   dimensiones: dimensiones,
@@ -27,14 +25,13 @@ type formulario = {
   },
   brochaUnidad: {
     accion: accionBrocha,
-    valor: nombreUnidad
+    unidad: nombreUnidad
   },
-  selectTerreno: HTMLElement|null,
-  selectUnidad: HTMLElement|null,
+  propietarioTerreno: null|number
 }
 const formularioMapa:formulario = {
   dimensiones: {
-    anchoMin: 5, altoMin: 5,
+    anchoMin: 10, altoMin: 10,
     anchoActual: 10, altoActual: 10,
     anchoMax: 40, altoMax: 40,
   },
@@ -46,18 +43,107 @@ const formularioMapa:formulario = {
   },
   brochaUnidad: {
     accion: 'pintar',
-    valor: 'infanteria'
-  }
+    unidad: 'infanteria'
+  },
+  propietarioTerreno: null
 }
 
 function configurarFormulario(){
-  generarOpcionesTerreno(document.querySelector('#brocha-terreno'), ListaTerrenos)
-  generarOpcionesUnidad(document.querySelector('#brocha-unidad'), ListaUnidades)
+  const btnNavBrochaTerreno = document.querySelector('#nav-brocha-terreno') as HTMLButtonElement
+  const btnNavBrochaUnidad = document.querySelector('#nav-brocha-unidad') as HTMLButtonElement
+
+  const anchoMapaInput = document.querySelector('#ancho-mapa') as HTMLInputElement
+  const altoMapaInput = document.querySelector('#alto-mapa') as HTMLInputElement
+  const btnRedimensionarMapa = document.querySelector('#btn-redimensionar-mapa') as HTMLButtonElement
+
+  const brochaTerrenoSelect = document.querySelector('#brocha-terreno') as HTMLSelectElement
+  const brochaUnidadSelect = document.querySelector('#brocha-unidad') as HTMLSelectElement
+  const seccionPropietarioTerreno = document.querySelector('#seccion-propietario') as HTMLInputElement
+  const propietarioTerreno = document.querySelector('#propietario-casilla') as HTMLInputElement
+  const espejoInput = document.querySelector('#opcion-espejo') as HTMLInputElement
+  const btnGuardarMapa = document.querySelector('#btn-guardar') as HTMLButtonElement
+
+  btnNavBrochaTerreno.addEventListener('click', ()=>{
+    formularioMapa.brochaSeleccionada = 'Terreno'
+  })
+  btnNavBrochaUnidad.addEventListener('click', ()=>{
+    formularioMapa.brochaSeleccionada = 'Unidad'
+  })
+
+  anchoMapaInput.addEventListener('change', ()=>{
+    btnRedimensionarMapa.removeAttribute('disabled')
+  })
+  altoMapaInput.addEventListener('change', ()=>{
+    btnRedimensionarMapa.removeAttribute('disabled')
+  })
+
+  generarOpcionesTerreno(brochaTerrenoSelect, ListaTerrenos)
+  formularioMapa.brochaTerreno.valor = 'aeropuerto'
+  generarOpcionesUnidad(brochaUnidadSelect, ListaUnidades)
+  formularioMapa.brochaUnidad.unidad = 'infanteria'
+  formularioMapa.brochaTerreno.espejo = espejoInput.value as espejoOpcion
+
+  btnRedimensionarMapa.addEventListener('click', async ()=>{
+    const ancho = parseInt(anchoMapaInput.value)
+    const alto = parseInt(altoMapaInput.value)
+
+    formularioMapa.dimensiones.anchoActual = ancho
+    formularioMapa.dimensiones.altoActual = alto
+
+    mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
+    AgregarEventosMapa(mapaGenerado)
+    btnRedimensionarMapa.setAttribute('disabled', 'true')
+  })
+
+
+  // Terreno
+  brochaTerrenoSelect?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaTerreno.valor = ev.target?.value
+    mostrarPropietarioTerreno(formularioMapa.brochaTerreno.valor)
+  })
+  espejoInput?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaTerreno.espejo = ev.target?.value
+    console.log(formularioMapa.brochaTerreno.espejo)
+  })
+  propietarioTerreno?.addEventListener('change', (ev)=>{
+    if( ev.target?.value === '' ) {
+      formularioMapa.propietarioTerreno = ev.target?.value
+    } else{
+      formularioMapa.propietarioTerreno = parseInt(ev.target?.value)
+    }
+  })
+  //Unidad 
+  brochaUnidadSelect?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.unidad = ev.target?.value
+  })
+
+  btnGuardarMapa?.addEventListener('click', ()=>{
+    // Convertir a un dato más simple
+    console.log('Guardar mapa')
+    const datos = JSON.stringify({x: 0, y: 0})
+    const blob = new Blob([datos], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `mapa_${Math.floor(Math.random()*999999)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  
+    console.log(mapaGenerado)
+  })
 
   document.querySelector('#creador-mapas')?.addEventListener('submit', (ev)=>{
     ev.preventDefault()
   }, )
 
+
+  function mostrarPropietarioTerreno(terreno: nombreTerreno){
+    if( ListaTerrenos[terreno].esPropiedad ){
+      seccionPropietarioTerreno.style.display = ''
+    } else{
+      seccionPropietarioTerreno.style.display = 'none'
+    }
+  }
   function generarOpcionesTerreno(selectTerreno:HTMLElement, terrenosObjeto: Object){
     let opcionesTerreno = ''
     Object.keys(terrenosObjeto).sort().forEach((keyTerreno, i) => {
@@ -87,38 +173,144 @@ function configurarFormulario(){
 
 function AgregarEventosMapa(mapa: Mapa){
   // mapa.konvaStage?.container().style.cursor = 'pointer'
-  mapa.konvaStage?.on('click', () => {
+  let mousePresionado = false
+  habilitarBotonGuardar()
+
+  mapa.konvaStage?.on('click', ()=>{
     const pos = mapa.konvaStage?.getPointerPosition()
-    if (pos) {
-      const casillaX = Math.floor(pos.x / tamanoCasilla)
-      const casillaY = Math.floor(pos.y / tamanoCasilla)
+    if (!pos) return
+    const casillaX = Math.floor(pos.x / tamanoCasilla)
+    const casillaY = Math.floor(pos.y / tamanoCasilla)
+    
+    switch(formularioMapa.brochaSeleccionada){
+      case 'Unidad':
+        switch(formularioMapa.brochaUnidad.accion){
+          case 'pintar':
+            pintarUnidad(formularioMapa.brochaUnidad.unidad, {x: casillaX, y: casillaY}, mapa)
+            break
+          case 'borrar':
+            break
+          case 'seleccionar':
+            break
+        }
+        break;
+    }
+  })
+  mapa.konvaStage?.on('mousedown', () => {
+    mousePresionado = true
 
-      // checar cual brocha está usando y usar la opción correspondiente
-      const select = document.querySelector('#brocha-terreno') as HTMLSelectElement | null
-      const terrenoSeleccionado = select?.options[select.selectedIndex]?.value
+    const pos = mapa.konvaStage?.getPointerPosition()
+    if (!pos) return
+    const casillaX = Math.floor(pos.x / tamanoCasilla)
+    const casillaY = Math.floor(pos.y / tamanoCasilla)
+    
+    switch(formularioMapa.brochaSeleccionada){
+      case 'Terreno':
+        pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, {x: casillaX, y: casillaY}, mapa, formularioMapa.brochaTerreno.espejo)
+        break
+      case 'Unidad':
+        switch(formularioMapa.brochaUnidad.accion){
+          case 'pintar':
+            pintarUnidad(formularioMapa.brochaUnidad.unidad, {x: casillaX, y: casillaY}, mapa)
+            break
+          case 'borrar':
+            break
+          case 'seleccionar':
+            break
+        }
+        break;
+    }
+  })
+  mapa.konvaStage?.on('mouseup', () => {
+    mousePresionado = false
+    // actualizarAnálisis (num de jugadores y de cada tipo de propiedad)
+    habilitarBotonGuardar()
+  })
+  function habilitarBotonGuardar(){
+    // Falta validar que tenga nombre el archivo
+    if( mapaGenerado != null && mapaGenerado.esMapaValido() ){
+      document.querySelector('#btn-guardar')?.removeAttribute('disabled')
+    } else{
+      document.querySelector('#btn-guardar')?.setAttribute('disabled', 'true')
+    }
+  }
 
-      if( terrenoSeleccionado != null ){
-        pintarCasillaTerreno(terrenoSeleccionado, {x: casillaX, y: casillaY}, mapa)
+  const casillaTxt = document.querySelector('#casilla-output')
+  mapa.konvaStage?.on('mousemove', () => {
+    const pos = mapa.konvaStage?.getPointerPosition()
+    if (!pos) return
+    const casillaX = Math.floor(pos.x / tamanoCasilla)
+    const casillaY = Math.floor(pos.y / tamanoCasilla)
+
+    if( casillaTxt )  casillaTxt.textContent = `CASILLA: [${casillaX}, ${casillaY}]`
+
+    if(mousePresionado){
+      switch(formularioMapa.brochaSeleccionada){
+        case 'Terreno':
+          pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, {x: casillaX, y: casillaY}, mapa, formularioMapa.brochaTerreno.espejo)
+          break
       }
     }
   })
-
-  // Cambiar el evento a mousemove y cambiar el comportamiento
-  // mapa.konvaStage?.on('mousemove', (ev) => {
-  // 1. Imprimir la coordenada
-  // 2. Pintar terreno (o unidades) mientras muevas el mouse con el click presionado (de preferencia no repetir si ya existe un objeto idéntico o si ya sabes que casillas acaban de ser pintadas)
-  //   console.log('Moviste el mouse')
-  // })
 }
 
-async function pintarCasillaTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa){
+
+// FUNCIONES CASILLAS TERRENO
+async function pintarTerrenoEspejo(tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa, espejo: espejoOpcion){
+  pintarTerreno(tipoCasilla, coordenada, mapa)
+
+  switch(espejo){
+    case 'Horizontal':
+      {
+        // 5
+        // 0,4  1,3  2,2  3,1  4,0
+        // (0-5)=-5 (1-)
+        const coordenada2:coordenada = {
+          x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
+          y: coordenada.y 
+        }
+        pintarTerreno(tipoCasilla, coordenada2, mapa)
+      }
+      break;
+    case 'Vertical':
+      {
+        const coordenada2:coordenada = {
+          x: coordenada.x,
+          y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) ) 
+        }
+        pintarTerreno(tipoCasilla, coordenada2, mapa)
+      }
+      break;
+    case 'Diagonal':
+      {
+        const coordenada2:coordenada = {
+          x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
+          y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) ) 
+        }
+        pintarTerreno(tipoCasilla, coordenada2, mapa)
+      }
+      break;
+  }
+}
+async function pintarTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa){
+  if( !tipoCasilla && ListaTerrenos[tipoCasilla] ){
+    console.log('Terreno inválido')
+    return
+  }
+
   const casillaPintada = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
   if( casillaPintada == null){
     return
   }
   
   casillaPintada.tipo = tipoCasilla
-  casillaPintada.propietario = null
+
+  if( ListaTerrenos[tipoCasilla].esPropiedad ){
+    casillaPintada.propietario = formularioMapa.propietarioTerreno
+  } else{
+    casillaPintada.propietario = null
+  }
+  
   const tileCasilla = generarSpriteTerreno(casillaPintada, coordenada, mapa)
   const cropObject = await tileCasilla.getAttr('crop')
   casillaPintada.sprite?.crop({
@@ -132,24 +324,69 @@ async function pintarCasillaTerreno(tipoCasilla: nombreTerreno, coordenada: coor
     height: tileCasilla.getAttr('height'),
     offsetY: tileCasilla.getAttr('offsetY')
   })
+
+  // casillaPintada.sprite?.filters(tileCasilla.filters())
+  // casillaPintada.sprite?.tintColor = tileCasilla.tintColor
+}
+
+// FUNCIONES CASILLAS UNIDAD
+async function pintarUnidad(tipoUnidad: nombreUnidad, coordenada: coordenada, mapa: Mapa){
+  if( !tipoUnidad && ListaUnidades[tipoUnidad] ){
+    console.log('Unidad inválida')
+    return
+  }
+  const casillaUnidad = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
+  if( casillaUnidad == null){
+    return
+  }
+  
+  // const unidadCasilla = new UnidadCasilla(tipoUnidad, 0, 100, {principal: 6}, 10, null, 'normal')
+  const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
+  spriteAnterior?.destroy()
+
+  casillaUnidad.unidad = new UnidadCasilla(tipoUnidad, 0, 100, {principal: 6}, 20, null, 'normal')
+  const spriteUnidad = generarSpriteUnidad(casillaUnidad, coordenada) as Konva.Sprite
+  casillaUnidad.unidad.sprite = spriteUnidad
+
+  // if(casillaUnidad.unidad){
+  //   // Si existe, reemplazar info
+  //   const cropObject = await spriteUnidad?.getAttr('crop')
+  //   casillaUnidad.unidad.sprite?.crop({
+  //     x: cropObject.x,
+  //     y: cropObject.y,
+  //     width: cropObject.width,
+  //     height: cropObject.height,
+  //   });
+    
+
+  //   // casillaUnidad.unidad?.sprite?.filters(spriteUnidad?.filters())
+  //   // casillaUnidad.unidad?.sprite?.tintColor = spriteUnidad?.tintColor
+  //   // casillaUnidad.hue( hsv.h )
+  //   // casillaUnidad.saturation( hsv.s )
+  //   // casillaUnidad.value( hsv.v )
+
+  // } else{
+  //   // Si no existe, agregarlo
+  //   layerUnidad.add(spriteUnidad)
+  // }
+
+  layerUnidad.add(spriteUnidad)
 }
 
 window.addEventListener('load', async ()=>{
   configurarFormulario()
-  mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: 10, filas: 10}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
+  mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
+  layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
   AgregarEventosMapa(mapaGenerado)
 })
 
 // POR HACER
 /*
-1. Cambiar evento de clic por evento de mouse down o de mousemove para pintar continuamente
-2. Output de casilla con hover
-3. Redimensionar mapa cuando hagas clic en aplicar dimensiones
-4. Brocha para unidades
-5. Campo de propietario en terreno (si es que aplica)
-6. Modo de brocha seleccionar
-5. Modo de brocha borrar
-8. Hacer análisis del mapa (cuando no se esté haciendo clic) para saber si se puede guardar 
-y habilitar el botón de guardar mapa cuando sea el caso
-9. Guardar el JSON del mapa localmente
+▄ Pintar correctamente la casilla dependiendo el propietario (en caso de propiedades)
+▄ Brocha para unidades
+▄ Editar valores de vida, municiones y gasolina de unidades
+▄ Modo de brocha seleccionar
+▄ Modo de brocha borrar
+▄ Guardar el JSON del mapa localmente
+▄ Redibujar casillas alrededor cuando se pinte un terreno (para corregir apariencia)
 */

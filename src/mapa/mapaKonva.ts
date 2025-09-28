@@ -4,21 +4,21 @@ const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src=terrainTilesheets
 import { ListaTerrenos } from './terreno.ts'
 import { sleep } from '../common.js'
-
 import { Casilla, Mapa } from './mapa.ts'
 // import { Unidad } from '../unidades/unidades.ts'
 import { listaPaises } from "../comandantes/paises.ts"
 import { arregloTerrenosNombres } from './terreno.ts'
 import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
-import type { nombreTerreno } from './terreno.ts'
+import type { nombreTerreno, Terreno } from './terreno.ts'
+import type { Unidad } from '../unidades/unidades.ts'
 
 export const tamanoCasilla = 32
 const standardSpriteSize = 16
 const fondoMapa = '#D5EF00' //'black'
-const duracionConstruccion = 3000
+const duracionConstruccion = 1000
 const maxDelayCasilla = 10
 
-const obtenerColor = ({numComandanteJugable}: {numComandanteJugable: number})=>{
+export const obtenerColor = ({numComandanteJugable}: {numComandanteJugable: number})=>{
   // validar que se manden números enteros positivos
 
   switch(numComandanteJugable){
@@ -211,7 +211,15 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   });
 }
 
-function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Sprite|null{
+export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Sprite|null{
+  // Cambiar. Ocupo que el objeto sea así:
+  /*class UnidadKonvaContainer {
+    contenedor: Konva.Container
+    sprite: Sprite
+    status: Konva.Sprite
+    hp: Konva.Text;
+  } */
+
   if(casilla.unidad == null){
     console.error('Esta casilla no tiene una unidad', casilla)
     return null
@@ -235,8 +243,10 @@ function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Kon
   
   // Filtro sprite unidad
   if( listaPaises[casilla.unidad.propietario] != null ){
-    unitSprite.width(tamanoCasilla);
-    unitSprite.height(tamanoCasilla);
+    unitSprite.width(tamanoCasilla)
+    unitSprite.height(tamanoCasilla)
+    unitSprite.name(casilla.unidad.id)
+    unitSprite.id(casilla.unidad.id)
     unitSprite.cache({
       pixelRatio: 1,
       imageSmoothingEnabled: false
@@ -273,15 +283,15 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
   })
   
   const propietario = casilla.propietario
+
+  spriteTerreno.tintColor = null
   if( ( casilla.tipo === 'ciudad' || casilla.tipo === 'fabrica' || casilla.tipo === 'aeropuerto' || 
     casilla.tipo === 'puertoNaval' ) && propietario != null ){
-      // console.log(spriteTerreno.colorKey)
       spriteTerreno.cache({
         pixelRatio: 1,
         imageSmoothingEnabled: false
       });
       spriteTerreno.filters([Konva.Filters.Tint]);
-      
       spriteTerreno.tintColor = obtenerColor({numComandanteJugable: propietario});
   }
   
@@ -294,134 +304,19 @@ function generarShaderPropiedad () {
   // Este casi funciona para ciudades, pero parece que necesito indicarle otros colores
   // Tiene que variar el "tinte" de color de cada propiedad basado en el dueño
   // Pero no sé como se cambia la variable del color
-  // Konva.Filters.Tint = function (imageData) {
-  //   const data = imageData.data
-  //   const n = this
 
-  //   const rojoHighlight = {
-  //     r: 248,
-  //     g: 208,
-  //     b: 136,
-  //   }
-  //   const rojoMidtones = {
-  //     r: 208,
-  //     g: 64,
-  //     b: 56,
-  //   }
-  //   const rojoShadow = {
-  //     r: 248,
-  //     g: 160,
-  //     b: 88,
-  //   }
-
-  //   const highlights = {
-  //     r: 240,
-  //     g: 232,
-  //     b: 208,
-  //   }
-  //   const midtones = {
-  //     r: 192,
-  //     g: 184,
-  //     b: 192,
-  //   }
-  //   const shadows = {
-  //     r: 152,
-  //     g: 136,
-  //     b: 200,
-  //   }
-
-  //   for (let i = 0; i < data.length; i += 4) {
-  //     // #F0E8D0, 240, 232, 208
-  //     // #C0B8C0 192, 184, 192
-  //     // #9888C8 152, 136, 200
-
-  //     if( data[i] == highlights['r'] && data[i+1] == highlights['g'] && data[i+2] == highlights['b'] ){ //HIGHLIGHTS
-  //       data[i]   = rojoHighlight.r
-  //       data[i+1] = rojoHighlight.g
-  //       data[i+2] = rojoHighlight.b
-  //     } else if( data[i] == midtones['r'] && data[i+1] == midtones['g'] && data[i+2] == midtones['b'] ){ //MIDTONES
-  //       data[i]   = rojoMidtones.r
-  //       data[i+1] = rojoMidtones.g
-  //       data[i+2] = rojoMidtones.b
-  //     } else if( data[i] == shadows['r'] && data[i+1] == shadows['g'] && data[i+2] == shadows['b'] ){ //SHADOWS
-  //       data[i]   = rojoShadow.r
-  //       data[i+1] = rojoShadow.g
-  //       data[i+2] = rojoShadow.b
-  //     }
-  //   }
-  // };
-
-  // Konva.Filters.Tint = function (imageData:ImageData) {
-  //   const data = imageData.data
-  //   const n = this
-
-  //   const rojoHighlight = {
-  //     r: 248,
-  //     g: 208,
-  //     b: 136,
-  //   }
-  //   const rojoMidtones = {
-  //     r: 208,
-  //     g: 64,
-  //     b: 56,
-  //   }
-  //   const rojoShadow = {
-  //     r: 248,
-  //     g: 160,
-  //     b: 88,
-  //   }
-
-  //   const highlights = {
-  //     r: 240,
-  //     g: 232,
-  //     b: 208,
-  //   }
-  //   const midtones = {
-  //     r: 192,
-  //     g: 184,
-  //     b: 192,
-  //   }
-  //   const shadows = {
-  //     r: 152,
-  //     g: 136,
-  //     b: 200,
-  //   }
-
-  //   for (let i = 0; i < data.length; i += 4) {
-  //     // #F0E8D0, 240, 232, 208
-  //     // #C0B8C0 192, 184, 192
-  //     // #9888C8 152, 136, 200
-
-  //     if( data[i] == highlights['r'] && data[i+1] == highlights['g'] && data[i+2] == highlights['b'] ){ //HIGHLIGHTS
-  //       data[i]   = rojoHighlight.r
-  //       data[i+1] = rojoHighlight.g
-  //       data[i+2] = rojoHighlight.b
-  //     } else if( data[i] == midtones['r'] && data[i+1] == midtones['g'] && data[i+2] == midtones['b'] ){ //MIDTONES
-  //       data[i]   = rojoMidtones.r
-  //       data[i+1] = rojoMidtones.g
-  //       data[i+2] = rojoMidtones.b
-  //     } else if( data[i] == shadows['r'] && data[i+1] == shadows['g'] && data[i+2] == shadows['b'] ){ //SHADOWS
-  //       data[i]   = rojoShadow.r
-  //       data[i+1] = rojoShadow.g
-  //       data[i+2] = rojoShadow.b
-  //     }
-  //   }
-  // };
   Konva.Filters.Tint = function (imageData:ImageData) {
     const data = imageData.data;
-    const n = this; // el nodo Konva.Image al que está ligado este filtro
+    const n = this;
 
-    // Si no existe color en el nodo, default blanco
     const tint = n.tintColor || { r: 255, g: 255, b: 255 };
 
     for (let i = 0; i < data.length; i += 4) {
-      // Suponiendo sprite en escala de grises → canal rojo = gris
       const gray = data[i]; 
 
       data[i]   = (gray / 255) * tint.r; // R
       data[i+1] = (gray / 255) * tint.g; // G
       data[i+2] = (gray / 255) * tint.b; // B
-      // data[i+3] = alpha se queda igual
     }
   };
 };

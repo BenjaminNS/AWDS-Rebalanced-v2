@@ -183,3 +183,9 @@ img{
   border: rgba(73, 59, 42, 0.671) solid 2px;
   cursor: pointer;
 }
+
+:where(input,button,select)[disabled]{
+  cursor: not-allowed;
+  opacity: .9;
+  background-color: lightgrey;
+}

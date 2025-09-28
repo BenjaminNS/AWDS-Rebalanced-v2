@@ -13,7 +13,7 @@ type spriteAnimations = {
 type spriteUnidad = {
   image: ImageData,
   animations: spriteAnimations
-  animation: 'idle'|'derecha'|'abajo',
+  animation: 'idle'|'derecha'|'izquierda'|'arriba'|'abajo',
   frameRate: 3,
   frameIndex: 0
 }

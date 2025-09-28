@@ -12,6 +12,7 @@ import { spriteInfanteria, spriteMecha,
   spriteCruiser, spriteSubmarino, spriteBattleship, 
   // spriteCarrier, spriteLanchas 
 } from './spriteUnidades';
+import { Sprite } from 'konva/lib/shapes/Sprite';
 // export type nombreUnidades = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 
 export type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
@@ -21,6 +22,7 @@ type municiones = {
   principal: number|null,
   secundaria?: number|null,
 }
+
 type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'|'naval';
 // Se supone que si es soldado, no puede ser vehiculo
 // Y si es Terrestre, no puede ser aereo o naval
@@ -47,6 +49,18 @@ type estado = 'normal'|'oculto';
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
+class unitKonvaGroup{
+  sprite: Konva.Sprite|null
+  hpTexto: Konva.Text|null
+  indicadores: Konva.Sprite|null
+
+  constructor(){
+    this.sprite = null
+    this.hpTexto = null
+    this.indicadores = null
+  }
+}
+
 export class UnidadCasilla {
   id: string;
   propietario: number;
@@ -55,14 +69,46 @@ export class UnidadCasilla {
   gasActual: number;
   estado: estado;
   nombreUnidad: nombreUnidad;
-  sprite: Konva.Sprite|null;
+  sprite: Konva.Sprite;
+  unitKonvaGroup: {
+    sprite: Konva.Sprite|null,
+    hpTexto: Konva.Text|null,
+    indicadores: Konva.Sprite|null
+  };
 
   // animarMovimiento = () => {  }
   obtenerTipo = () =>{
     return ListaUnidades[this.nombreUnidad]
   }
 
-  // destruirUnidad()
+  actualizarTextoHP(){
+    if( this.unitKonvaGroup ){
+      this.unitKonvaGroup.hpTexto.setAttr('text', String(this.hp))
+    } else{
+      this.unitKonvaGroup?.hpTexto = new Konva.Text({
+        text: String(this.hp),
+        fontSize: 14,
+        fill: 'white',
+        x: 0, y: 24 
+      })
+    }
+  }
+
+  // efecto: congelado, paralizado, 
+  actualizarIndicadores(faltaGas: boolean, faltaMuniciones: boolean){
+    if( faltaGas && faltaMuniciones ){
+      this.unitKonvaGroup?.indicadores = 'Animación falta gas y municiones'
+      return
+    }
+    if( faltaGas ){
+      this.unitKonvaGroup?.indicadores = 'Animación falta gas'
+      return
+    }
+    if( faltaMuniciones ){
+      this.unitKonvaGroup?.indicadores = 'Animación falta municiones'
+      return
+    }
+  }
 
   constructor(nombreUnidad: nombreUnidad, propietario: number, hp: number, municiones: municiones|null, gasActual: number, sprite: Konva.Sprite|null, estado: estado ){
     // Talvez también pueda validar que el nombre de la unidad si exista
@@ -92,12 +138,13 @@ export class UnidadCasilla {
       console.error('La gasActual actual no puede ser menos de 0')
       this.gasActual = 0;
     } else if( gasActual > ListaUnidades[nombreUnidad].maxGasolina ){
-      console.error('La gasActual actual no puede ser mayor a la actual', gasActual)
+      console.error(`La gasActual actual no puede ser mayor a gasMaxima: ${gasActual}/${ListaUnidades[nombreUnidad].maxGasolina}`)
       this.gasActual = ListaUnidades[nombreUnidad].maxGasolina;
     }else{
       this.gasActual = gasActual;
     }
     this.sprite = null;
+    this.unitKonvaGroup = null
     this.estado = estado;
   }
 }

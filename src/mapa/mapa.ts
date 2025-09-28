@@ -116,6 +116,9 @@ export class Mapa{
     if( setComandanteJugables.size == 0 ){
       console.error('No existen jugadores para este mapa')
       return false
+    } else if( setComandanteJugables.size < 2 ){
+      console.error('Deben haber al menos 2 jugador para que un mapa sea jugable')
+      return false
     }
 
     // Que no falten jugadores (no haya brincos de un jugador a otro)
@@ -155,6 +158,10 @@ export class Mapa{
       return false
     }
     return true
+  }
+
+  generarMapaSimple = ():MapaSimple => {
+    
   }
 
   constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]){
