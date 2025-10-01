@@ -189,3 +189,7 @@ img{
   opacity: .9;
   background-color: lightgrey;
 }
+
+.hidden{
+  display: none;
+}

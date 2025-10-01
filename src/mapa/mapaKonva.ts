@@ -11,6 +11,7 @@ import { arregloTerrenosNombres } from './terreno.ts'
 import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
 import type { nombreTerreno, Terreno } from './terreno.ts'
 import type { Unidad } from '../unidades/unidades.ts'
+import type { TextConfig } from 'konva/lib/shapes/Text'
 
 export const tamanoCasilla = 32
 const standardSpriteSize = 16
@@ -211,36 +212,31 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   });
 }
 
-export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Sprite|null{
-  // Cambiar. Ocupo que el objeto sea así:
-  /*class UnidadKonvaContainer {
-    contenedor: Konva.Container
-    sprite: Sprite
-    status: Konva.Sprite
-    hp: Konva.Text;
-  } */
-
+export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Group|null{
   if(casilla.unidad == null){
     console.error('Esta casilla no tiene una unidad', casilla)
     return null
   }
 
-  const unitSprite = casilla.unidad.obtenerTipo().sprite.clone()
-  
   const { x, y } = coordenada
-  unitSprite.setAttrs({
+  const unitKonvaGroup = new Konva.Group({
     x: (x * tamanoCasilla),
     y: y * tamanoCasilla,
+    name: casilla.unidad.id
   })
-  
+
+  const unitSprite = casilla.unidad.obtenerTipo().sprite.clone()
+  unitSprite.setAttrs({
+    x: 0, y: 0,
+    name: 'sprite-unidad'
+  })
   const escala = tamanoCasilla / 16
   if(casilla.unidad.propietario % 2 === 0){
     unitSprite.scale({x: escala, y: escala})
   } else{
     unitSprite.offsetX( tamanoCasilla / 2 )
     unitSprite.scale({x: (escala * -1), y: escala})
-  }
-  
+  }  
   // Filtro sprite unidad
   if( listaPaises[casilla.unidad.propietario] != null ){
     unitSprite.width(tamanoCasilla)
@@ -256,8 +252,35 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
   } else{
     console.error('No existe este pais', casilla.unidad.propietario)
   }
+  unitKonvaGroup.add(unitSprite)
 
-  return unitSprite
+  const hpActual = Math.ceil( casilla.unidad.hp / 10 )
+  const hpTextConfBase:TextConfig = {
+    name: 'hp-texto',
+    fontSize: Math.ceil(tamanoCasilla / 2),
+    fontFamily: 'monospace', fill: 'white',
+    fontStyle: 'bold',
+    // stroke: 'white', strokeWidth: 2,
+    x: Math.ceil(tamanoCasilla * .67 ), y: 0
+  }
+
+  if( hpActual < 9 ){
+    const hpText = new Konva.Text({ 
+      text: hpActual.toString(),
+      ...hpTextConfBase
+    })
+    unitKonvaGroup.add(hpText)
+  } else{
+    const hpText = new Konva.Text({ 
+      text: '',
+      ...hpTextConfBase
+    })
+    unitKonvaGroup.add(hpText)
+  }
+
+  casilla.unidad.setUnitKonvaGroup(unitKonvaGroup)
+  return unitKonvaGroup
+  // return unitSprite
 }
 export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, mapa: Mapa){
   const terreno = ListaTerrenos[casilla.tipo]

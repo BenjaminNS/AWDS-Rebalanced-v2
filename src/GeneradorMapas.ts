@@ -3,7 +3,7 @@ import Konva from 'konva'
 import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad } from './mapa/mapaKonva'
 import { Mapa, type coordenada } from './mapa/mapa'
 import { ListaTerrenos, type nombreTerreno } from './mapa/terreno'
-import { ListaUnidades, UnidadCasilla, type nombreUnidad } from './unidades/unidades'
+import { ListaUnidades, Unidad, UnidadCasilla, type nombreUnidad } from './unidades/unidades'
 let layerUnidad:Konva.Layer
 
 let mapaGenerado:Mapa|null = null
@@ -15,6 +15,15 @@ type dimensiones = {
 type accionBrocha = 'pintar'|'seleccionar'|'borrar'
 type espejoOpcion = 'Ninguno'|'Horizontal'|'Vertical'|'Diagonal'
 type tipoBrocha = 'Terreno'|'Unidad'
+type brochaUnidad = {
+  accion: accionBrocha,
+  unidad: nombreUnidad,
+  propietario: number,
+  hp: number,
+  gas: number,
+  munPrincipal: number|null,
+  munSecundaria: number|null
+}
 type formulario = {
   dimensiones: dimensiones,
   brochaSeleccionada: tipoBrocha,
@@ -23,10 +32,7 @@ type formulario = {
     valor: nombreTerreno,
     espejo: espejoOpcion
   },
-  brochaUnidad: {
-    accion: accionBrocha,
-    unidad: nombreUnidad
-  },
+  brochaUnidad: brochaUnidad,
   propietarioTerreno: null|number
 }
 const formularioMapa:formulario = {
@@ -43,7 +49,10 @@ const formularioMapa:formulario = {
   },
   brochaUnidad: {
     accion: 'pintar',
-    unidad: 'infanteria'
+    unidad: 'infanteria',
+    propietario: 0,
+    gas: 1, hp: 100,
+    munPrincipal: null, munSecundaria: null
   },
   propietarioTerreno: null
 }
@@ -57,10 +66,19 @@ function configurarFormulario(){
   const btnRedimensionarMapa = document.querySelector('#btn-redimensionar-mapa') as HTMLButtonElement
 
   const brochaTerrenoSelect = document.querySelector('#brocha-terreno') as HTMLSelectElement
-  const brochaUnidadSelect = document.querySelector('#brocha-unidad') as HTMLSelectElement
   const seccionPropietarioTerreno = document.querySelector('#seccion-propietario') as HTMLInputElement
   const propietarioTerreno = document.querySelector('#propietario-casilla') as HTMLInputElement
   const espejoInput = document.querySelector('#opcion-espejo') as HTMLInputElement
+  
+  const brochaUnidadSelect = document.querySelector('#brocha-unidad') as HTMLSelectElement
+
+  const inputUnidadPropietario = document.querySelector('#unidad_propietario') as HTMLInputElement
+  const inputUnidadHP = document.querySelector('#unidad_hp') as HTMLInputElement
+  const inputUnidadGas = document.querySelector('#unidad_gas') as HTMLInputElement
+  const inputUnidadMun_Principales = document.querySelector('#unidad_municiones_principales') as HTMLInputElement
+  const inputUnidadMun_Secundarias = document.querySelector('#unidad_municiones_secundarias') as HTMLInputElement
+  
+  
   const btnGuardarMapa = document.querySelector('#btn-guardar') as HTMLButtonElement
 
   btnNavBrochaTerreno.addEventListener('click', ()=>{
@@ -115,7 +133,52 @@ function configurarFormulario(){
   //Unidad 
   brochaUnidadSelect?.addEventListener('change', (ev)=>{
     formularioMapa.brochaUnidad.unidad = ev.target?.value
+    inputUnidadGas?.setAttribute('value', ListaUnidades[ev.target?.value].maxGasolina)
+    inputUnidadGas?.setAttribute('max', ListaUnidades[ev.target?.value].maxGasolina)
+    formularioMapa.brochaUnidad.gas = ListaUnidades[ev.target?.value].maxGasolina
+
+    const munPrincipalMax = ListaUnidades[ev.target?.value].maxMuniciones?.principal
+    if( munPrincipalMax ){
+      document.querySelector('#seccion-mun-principal')?.classList.remove('hidden')
+      inputUnidadMun_Principales?.removeAttribute('disabled')
+      inputUnidadMun_Principales?.setAttribute('max', munPrincipalMax)
+      inputUnidadMun_Principales?.setAttribute('value', munPrincipalMax)
+      formularioMapa.brochaUnidad.munPrincipal = munPrincipalMax
+    } else{
+      document.querySelector('#seccion-mun-principal')?.classList.add('hidden')
+      inputUnidadMun_Principales?.setAttribute('disabled', '')
+      formularioMapa.brochaUnidad.munPrincipal = null
+    }
+
+    const munSecundariaMax = ListaUnidades[ev.target?.value].maxMuniciones?.secundaria
+    if( munSecundariaMax ){
+      document.querySelector('#seccion-mun-secundaria')?.classList.remove('hidden')
+      inputUnidadMun_Secundarias?.removeAttribute('disabled')
+      inputUnidadMun_Secundarias?.setAttribute('max', munSecundariaMax)
+      inputUnidadMun_Secundarias?.setAttribute('value', munSecundariaMax)
+      formularioMapa.brochaUnidad.munSecundaria = munSecundariaMax
+    } else{
+      document.querySelector('#seccion-mun-secundaria')?.classList.add('hidden')
+      inputUnidadMun_Secundarias?.setAttribute('disabled', '')
+      formularioMapa.brochaUnidad.munSecundaria = null
+    }
   })
+  inputUnidadPropietario?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.propietario = ev.target?.value
+  })
+  inputUnidadHP?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.hp = ev.target?.value
+  })
+  inputUnidadGas?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.gas = ev.target?.value
+  })
+  inputUnidadMun_Principales?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.munPrincipal = ev.target?.value
+  })
+  inputUnidadMun_Secundarias?.addEventListener('change', (ev)=>{
+    formularioMapa.brochaUnidad.munSecundaria = ev.target?.value
+  })
+
 
   btnGuardarMapa?.addEventListener('click', ()=>{
     // Convertir a un dato más simple
@@ -136,6 +199,8 @@ function configurarFormulario(){
     ev.preventDefault()
   }, )
 
+  // brochaUnidadSelect.dispatchEvent(new Event('change', { bubbles: true }))
+  brochaUnidadSelect.dispatchEvent(new Event('change', { bubbles: false }))
 
   function mostrarPropietarioTerreno(terreno: nombreTerreno){
     if( ListaTerrenos[terreno].esPropiedad ){
@@ -186,7 +251,7 @@ function AgregarEventosMapa(mapa: Mapa){
       case 'Unidad':
         switch(formularioMapa.brochaUnidad.accion){
           case 'pintar':
-            pintarUnidad(formularioMapa.brochaUnidad.unidad, {x: casillaX, y: casillaY}, mapa)
+            pintarUnidad(formularioMapa.brochaUnidad, {x: casillaX, y: casillaY}, mapa)
             break
           case 'borrar':
             break
@@ -211,7 +276,7 @@ function AgregarEventosMapa(mapa: Mapa){
       case 'Unidad':
         switch(formularioMapa.brochaUnidad.accion){
           case 'pintar':
-            pintarUnidad(formularioMapa.brochaUnidad.unidad, {x: casillaX, y: casillaY}, mapa)
+            pintarUnidad(formularioMapa.brochaUnidad, {x: casillaX, y: casillaY}, mapa)
             break
           case 'borrar':
             break
@@ -330,8 +395,8 @@ async function pintarTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada,
 }
 
 // FUNCIONES CASILLAS UNIDAD
-async function pintarUnidad(tipoUnidad: nombreUnidad, coordenada: coordenada, mapa: Mapa){
-  if( !tipoUnidad && ListaUnidades[tipoUnidad] ){
+async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, mapa: Mapa){
+  if( !brochaUnidad.unidad && ListaUnidades[brochaUnidad.unidad] ){
     console.log('Unidad inválida')
     return
   }
@@ -344,7 +409,19 @@ async function pintarUnidad(tipoUnidad: nombreUnidad, coordenada: coordenada, ma
   const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
   spriteAnterior?.destroy()
 
-  casillaUnidad.unidad = new UnidadCasilla(tipoUnidad, 0, 100, {principal: 6}, 20, null, 'normal')
+  let municiones:object|null= {}
+  if( !brochaUnidad.munPrincipal && !brochaUnidad.munSecundaria ){
+    municiones = null
+  }
+  
+  if ( brochaUnidad.munPrincipal ){
+    municiones.principal = brochaUnidad.munPrincipal
+  }
+  if ( brochaUnidad.munSecundaria ){
+    municiones.secundaria = brochaUnidad.munSecundaria
+  }
+
+  casillaUnidad.unidad = new UnidadCasilla(brochaUnidad.unidad, brochaUnidad.propietario, brochaUnidad.hp, municiones, brochaUnidad.gas, null, 'normal')
   const spriteUnidad = generarSpriteUnidad(casillaUnidad, coordenada) as Konva.Sprite
   casillaUnidad.unidad.sprite = spriteUnidad
 
@@ -373,7 +450,7 @@ async function pintarUnidad(tipoUnidad: nombreUnidad, coordenada: coordenada, ma
   layerUnidad.add(spriteUnidad)
 }
 
-window.addEventListener('load', async ()=>{
+window.addEventListener('load', async ()=> {
   configurarFormulario()
   mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
   layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
@@ -382,11 +459,12 @@ window.addEventListener('load', async ()=>{
 
 // POR HACER
 /*
-▄ Pintar correctamente la casilla dependiendo el propietario (en caso de propiedades)
-▄ Brocha para unidades
-▄ Editar valores de vida, municiones y gasolina de unidades
-▄ Modo de brocha seleccionar
-▄ Modo de brocha borrar
-▄ Guardar el JSON del mapa localmente
+▄ Evitar que se redibuje el mapa cuando se haga enter en cualquier input (solo debe funcionar haciendo click en el botón de ridimensionar)
+▄ Despachar evento de botón de redimensionar y de select de terreno
+▄ Calcular el número de jugadores basados en las unidades dentro del mapa (solo está contando las propiedades)
 ▄ Redibujar casillas alrededor cuando se pinte un terreno (para corregir apariencia)
+▄ Modo de brocha borrar
+▄ Pintar correctamente la casilla dependiendo el propietario (en caso de propiedades)
+▄ *Modo de brocha seleccionar
+▄ Guardar el JSON del mapa localmente
 */

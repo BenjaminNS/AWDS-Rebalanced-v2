@@ -12,22 +12,21 @@ import { spriteInfanteria, spriteMecha,
   spriteCruiser, spriteSubmarino, spriteBattleship, 
   // spriteCarrier, spriteLanchas 
 } from './spriteUnidades';
-import { Sprite } from 'konva/lib/shapes/Sprite';
+import { type SpriteConfig } from 'konva/lib/shapes/Sprite';
+import type { GroupConfig } from 'konva/lib/Group';
+import type { TextConfig } from 'konva/lib/shapes/Text';
 // export type nombreUnidades = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 
 export type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
-
-
 type municiones = {
   principal: number|null,
   secundaria?: number|null,
 }
-
 type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'|'naval';
 // Se supone que si es soldado, no puede ser vehiculo
 // Y si es Terrestre, no puede ser aereo o naval
 // No hay problema si se empalma Directo, Indirecto y Transporte
-// Técnincamente lo de directo e indirecto tendría que ser con una función que verifique si el rango minimo es de 1 y el rango máximo es de 2 
+// Técnicamente lo de directo e indirecto tendría que ser con una función que verifique si el rango minimo es de 1 y el rango máximo es de 2 
 type categorias = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo';
 type habilidades = {
   moverUnidad: Function,
@@ -49,18 +48,6 @@ type estado = 'normal'|'oculto';
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
-class unitKonvaGroup{
-  sprite: Konva.Sprite|null
-  hpTexto: Konva.Text|null
-  indicadores: Konva.Sprite|null
-
-  constructor(){
-    this.sprite = null
-    this.hpTexto = null
-    this.indicadores = null
-  }
-}
-
 export class UnidadCasilla {
   id: string;
   propietario: number;
@@ -69,47 +56,9 @@ export class UnidadCasilla {
   gasActual: number;
   estado: estado;
   nombreUnidad: nombreUnidad;
-  sprite: Konva.Sprite;
-  unitKonvaGroup: {
-    sprite: Konva.Sprite|null,
-    hpTexto: Konva.Text|null,
-    indicadores: Konva.Sprite|null
-  };
-
-  // animarMovimiento = () => {  }
-  obtenerTipo = () =>{
-    return ListaUnidades[this.nombreUnidad]
-  }
-
-  actualizarTextoHP(){
-    if( this.unitKonvaGroup ){
-      this.unitKonvaGroup.hpTexto.setAttr('text', String(this.hp))
-    } else{
-      this.unitKonvaGroup?.hpTexto = new Konva.Text({
-        text: String(this.hp),
-        fontSize: 14,
-        fill: 'white',
-        x: 0, y: 24 
-      })
-    }
-  }
-
-  // efecto: congelado, paralizado, 
-  actualizarIndicadores(faltaGas: boolean, faltaMuniciones: boolean){
-    if( faltaGas && faltaMuniciones ){
-      this.unitKonvaGroup?.indicadores = 'Animación falta gas y municiones'
-      return
-    }
-    if( faltaGas ){
-      this.unitKonvaGroup?.indicadores = 'Animación falta gas'
-      return
-    }
-    if( faltaMuniciones ){
-      this.unitKonvaGroup?.indicadores = 'Animación falta municiones'
-      return
-    }
-  }
-
+  sprite: Konva.Sprite|null;
+  private unitKonvaGroup: Konva.Group|null;
+  
   constructor(nombreUnidad: nombreUnidad, propietario: number, hp: number, municiones: municiones|null, gasActual: number, sprite: Konva.Sprite|null, estado: estado ){
     // Talvez también pueda validar que el nombre de la unidad si exista
     this.nombreUnidad = nombreUnidad;
@@ -144,9 +93,64 @@ export class UnidadCasilla {
       this.gasActual = gasActual;
     }
     this.sprite = null;
-    this.unitKonvaGroup = null
+    this.unitKonvaGroup = null;
     this.estado = estado;
   }
+  
+  // {
+  //   sprite: Konva.Sprite|null,
+  //   hpTexto: Konva.Text|null,
+  //   // indicadores: Konva.Sprite|null
+  // };
+
+  // animarMovimiento = () => {  }
+  obtenerTipo = ():Unidad =>{
+    return ListaUnidades[this.nombreUnidad]
+  }
+
+  setUnitKonvaGroup(unitKonvaGroupConf: Konva.Group){
+    // if( this.unitKonvaGroup instanceof Konva.Group){
+    //   console.log('Ya existe el grupo')
+    //   return
+    // }
+
+    this.unitKonvaGroup = unitKonvaGroupConf
+  }
+  getUnitKonvaGroup(){
+    return this.unitKonvaGroup
+  }
+
+  actualizarTextoHP(){
+    if( !this.unitKonvaGroup.hpTexto ){
+      this.unitKonvaGroup.hpTexto = new Konva.Text({
+        name: 'textoHp',
+        text: String(this.hp),
+        fontSize: 14,
+        fill: 'white',
+        x: 0, y: 24 
+      })
+    } else{
+      this.unitKonvaGroup.hpTexto.setAttr('text', String(this.hp))
+    }
+  }
+
+  // efecto: congelado, paralizado, 
+  // actualizarIndicadores(faltaGas: boolean, faltaMuniciones: boolean){
+  //   if( faltaGas && faltaMuniciones ){
+  //     this.unitKonvaGroup?.indicadores = 'Animación falta gas y municiones'
+  //     return
+  //   }
+  //   if( faltaGas ){
+  //     this.unitKonvaGroup?.indicadores = 'Animación falta gas'
+  //     return
+  //   }
+  //   if( faltaMuniciones ){
+  //     this.unitKonvaGroup?.indicadores = 'Animación falta municiones'
+  //     return
+  //   }
+  // }
+
+  
 }
 
 export class Unidad {
@@ -192,41 +196,41 @@ export class Unidad {
   }
 }
 
-// type ListaUnidades = {
-//   infanteria: Unidad,
-//   mecha: Unidad,
-//   recon: Unidad,
-//   tanqueLigero: Unidad,
-//   tanqueMediano: Unidad,
-//   neotanque: Unidad,
-//   megatanque: Unidad,
-//   apc: Unidad,
-//   artilleria: Unidad,
-//   cohetes: Unidad,
-//   tanqueAntiaereo: Unidad,
-//   misiles: Unidad,
-//   piperunner: Unidad,
-//   bCopter: Unidad,
-//   tCopter: Unidad,
-//   fighter: Unidad,
-//   bomber: Unidad,
-//   stealthFighter: Unidad,
-//   blackBomb: Unidad,
-//   lander: Unidad,
-//   cruiser: Unidad,
-//   submarino: Unidad,
-//   battleship: Unidad,
-//   carrier: Unidad,
-//   blackBoat: Unidad,
-//   motocicletas: Unidad,
-//   lanchas: Unidad,
-//   sniper: Unidad,
-// }
+type listUnidades = {
+  infanteria: Unidad,
+  mecha: Unidad,
+  recon: Unidad,
+  tanqueLigero: Unidad,
+  tanqueMediano: Unidad,
+  neotanque: Unidad,
+  // megatanque: Unidad,
+  apc: Unidad,
+  artilleria: Unidad,
+  cohetes: Unidad,
+  tanqueAntiaereo: Unidad,
+  misiles: Unidad,
+  // piperunner: Unidad,
+  bCopter: Unidad,
+  tCopter: Unidad,
+  fighter: Unidad,
+  bomber: Unidad,
+  // stealthFighter: Unidad,
+  // blackBomb: Unidad,
+  lander: Unidad,
+  cruiser: Unidad,
+  submarino: Unidad,
+  battleship: Unidad,
+  // carrier: Unidad,
+  // blackBoat: Unidad,
+  // motocicletas: Unidad,
+  // lanchas: Unidad,
+  // sniper: Unidad,
+}
 
-export const ListaUnidades = {
+export const ListaUnidades:listUnidades = {
   //Soldados terrestres
   infanteria: new Unidad('Infantería', 'Soldado capaz de capturar propiedades.', ['Soldado', 'Terrestre', 'Directo'], 
-    1000, 1, 1, 3, 'pie', 2, 40, (estado: estado)=>{return 0}, {'principal': 6, 'secundaria': 1 }, 1, true, spriteInfanteria),
+    1000, 1, 1, 3, 'pie', 2, 40, (estado: estado)=>{return 0}, {'principal': 6, }, 1, true, spriteInfanteria),
 
   mecha: new Unidad('Mecha', 'Soldado que puede atacar vehiculos y capturar propiedades.', ['Soldado', 'Terrestre', 'Directo'], 
     3000, 1, 1, 2, 'mecha', 2, 50, (estado: estado)=>{return 0}, {'principal': 4, 'secundaria': 6 }, 1, true, spriteMecha),

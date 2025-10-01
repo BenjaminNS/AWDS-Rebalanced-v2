@@ -39,11 +39,6 @@
         <!-- TAB -->
         <section class="seccion-brocha tab border-2 border-black border-solid rounded-sm overflow-hidden">
           <div class="nav-tabs bg-zinc-300 w-1/1 grid grid-cols-2 grid-rows-1">
-            <!-- <input type="radio" name="tipo-brocha" id="brocha-terreno-radio">
-            <label for="brocha-terreno-radio">Brocha terreno</label>
-            <input type="radio" name="tipo-brocha" id="brocha-unidad-radio">
-            <label for="brocha-unidad-radio">Brocha unidad</label> -->
-
             <button class="nav-link seleccionado text-center font-bold px-3 py-2 block" id="nav-brocha-terreno" data-bs-target="#tab-terreno">Brocha terreno</button>
             <button class="nav-link text-center font-bold px-3 py-2 block" id="nav-brocha-unidad" data-bs-target="#tab-unidad">Brocha unidad</button>
           </div>
@@ -108,11 +103,37 @@
                   <label for="brocha-unidad-borrar">Borrar</label>
                 </div>
               </div>
-              <label for="brocha-unidad">Unidad</label>
-              <select name="brocha-unidad" id="brocha-unidad" class="bg-gray-300 rounded-sm px-2 py-1">
-                <option value="infanteria">Infantería</option>
-                <!-- Rellenar automáticamente -->
-              </select>
+              
+              <div class="flex flex-wrap justify-center gap-2">
+                <div>
+                  <label for="brocha-unidad">Unidad</label>
+                  <select name="brocha-unidad" id="brocha-unidad" class="bg-gray-300 rounded-sm px-2 py-1">
+                    <option value="infanteria">Infantería</option>
+                    <!-- Rellenar automáticamente -->
+                  </select>
+                </div>
+                <div id="seccion-propietario">
+                  <label for="unidad_propietario">Propietario:</label>
+                  <input class="input bg-gray-200 rounded-sm p-1" id="unidad_propietario" name="unidad_propietario" type="number" value="0" min="0" max="3">
+                </div>
+                <div id="seccion-hp">
+                  <label for="unidad_hp">HP:</label>
+                  <input class="input bg-gray-200 rounded-sm p-1" id="unidad_hp" name="unidad_hp" type="number" min="1" max="100" value="100">
+                </div>
+                <div id="seccion-gas">
+                  <label for="unidad_gas">Gas:</label>
+                  <input class="input bg-gray-200 rounded-sm p-1" id="unidad_gas" name="unidad_gas" type="number" min="0" max="99">
+                </div>
+                <div id="seccion-mun-principal">
+                  <label for="unidad_municiones_principales">Municiones principales:</label>
+                  <input class="input bg-gray-200 rounded-sm p-1" id="unidad_municiones_principales" name="unidad_municiones_principales" type="number" min="1" max="9">
+                </div>
+                <div id="seccion-mun-secundaria">
+                  <label for="unidad_municiones_secundarias">Municiones secundarias:</label>
+                  <input class="input bg-gray-200 rounded-sm p-1" id="unidad_municiones_secundarias" name="unidad_municiones_secundarias" type="number" min="1" max="9">
+                </div>
+              </div>
+              
 
             </section>
           </div>
