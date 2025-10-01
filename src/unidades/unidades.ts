@@ -48,22 +48,21 @@ type estado = 'normal'|'oculto';
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
-export class UnidadCasilla {
+export class UnidadSimple {
   id: string;
-  propietario: number;
+  propietario: number|null;
   hp: number;
   municiones: municiones|null;
   gasActual: number;
   estado: estado;
   nombreUnidad: nombreUnidad;
-  sprite: Konva.Sprite|null;
-  private unitKonvaGroup: Konva.Group|null;
   
-  constructor(nombreUnidad: nombreUnidad, propietario: number, hp: number, municiones: municiones|null, gasActual: number, sprite: Konva.Sprite|null, estado: estado ){
+  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado ){
     // Talvez también pueda validar que el nombre de la unidad si exista
     this.nombreUnidad = nombreUnidad;
     this.id = crypto.randomUUID();
-    if( propietario < 0 ){
+    
+    if( propietario && propietario < 0 ){
       console.error('La unidad no puede tener este propietario: ', propietario )
       this.propietario = null;
     } else{
@@ -92,9 +91,18 @@ export class UnidadCasilla {
     }else{
       this.gasActual = gasActual;
     }
+    this.estado = estado;
+  }
+}
+
+export class UnidadCasilla extends UnidadSimple{
+  sprite: Konva.Sprite|null;
+  private unitKonvaGroup: Konva.Group|null;
+  
+  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado, sprite: Konva.Sprite|null ){
+    super(nombreUnidad, propietario, hp, municiones, gasActual, estado)
     this.sprite = null;
     this.unitKonvaGroup = null;
-    this.estado = estado;
   }
   
   // {

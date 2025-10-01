@@ -58,12 +58,13 @@ const formularioMapa:formulario = {
 }
 
 function configurarFormulario(){
-  const btnNavBrochaTerreno = document.querySelector('#nav-brocha-terreno') as HTMLButtonElement
-  const btnNavBrochaUnidad = document.querySelector('#nav-brocha-unidad') as HTMLButtonElement
-
+  const nombreMapaInput = document.querySelector('#nombre-mapa') as HTMLInputElement
   const anchoMapaInput = document.querySelector('#ancho-mapa') as HTMLInputElement
   const altoMapaInput = document.querySelector('#alto-mapa') as HTMLInputElement
   const btnRedimensionarMapa = document.querySelector('#btn-redimensionar-mapa') as HTMLButtonElement
+
+  const btnNavBrochaTerreno = document.querySelector('#nav-brocha-terreno') as HTMLButtonElement
+  const btnNavBrochaUnidad = document.querySelector('#nav-brocha-unidad') as HTMLButtonElement
 
   const brochaTerrenoSelect = document.querySelector('#brocha-terreno') as HTMLSelectElement
   const seccionPropietarioTerreno = document.querySelector('#seccion-propietario') as HTMLInputElement
@@ -78,7 +79,13 @@ function configurarFormulario(){
   const inputUnidadMun_Principales = document.querySelector('#unidad_municiones_principales') as HTMLInputElement
   const inputUnidadMun_Secundarias = document.querySelector('#unidad_municiones_secundarias') as HTMLInputElement
   
-  
+  const outputJugadores = document.querySelector('#num-jugador') as HTMLOutputElement
+  const outputFabricas = document.querySelector('#num-fabricas') as HTMLOutputElement
+  const outputAeropuertos = document.querySelector('#num-aeropuertos') as HTMLOutputElement
+  const outputPuertosNavales = document.querySelector('#num-torres-com') as HTMLOutputElement
+  const outputTorresCom = document.querySelector('#num-puertos-navales') as HTMLOutputElement
+  const outputNumCiudades = document.querySelector('#num-ciudades') as HTMLOutputElement
+
   const btnGuardarMapa = document.querySelector('#btn-guardar') as HTMLButtonElement
 
   btnNavBrochaTerreno.addEventListener('click', ()=>{
@@ -109,6 +116,7 @@ function configurarFormulario(){
     formularioMapa.dimensiones.altoActual = alto
 
     mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
+    layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
     AgregarEventosMapa(mapaGenerado)
     btnRedimensionarMapa.setAttribute('disabled', 'true')
   })
@@ -119,6 +127,8 @@ function configurarFormulario(){
     formularioMapa.brochaTerreno.valor = ev.target?.value
     mostrarPropietarioTerreno(formularioMapa.brochaTerreno.valor)
   })
+  brochaTerrenoSelect.dispatchEvent(new Event('change', { bubbles: false }))
+
   espejoInput?.addEventListener('change', (ev)=>{
     formularioMapa.brochaTerreno.espejo = ev.target?.value
     console.log(formularioMapa.brochaTerreno.espejo)
@@ -164,7 +174,7 @@ function configurarFormulario(){
     }
   })
   inputUnidadPropietario?.addEventListener('change', (ev)=>{
-    formularioMapa.brochaUnidad.propietario = ev.target?.value
+    formularioMapa.brochaUnidad.propietario = parseInt(ev.target?.value)
   })
   inputUnidadHP?.addEventListener('change', (ev)=>{
     formularioMapa.brochaUnidad.hp = ev.target?.value
@@ -179,23 +189,41 @@ function configurarFormulario(){
     formularioMapa.brochaUnidad.munSecundaria = ev.target?.value
   })
 
-
+  function analizarMapa(mapa: Mapa){
+    outputJugadores.innerText = `${mapa.obtenerComandantesJugables().size} jugadores`
+    outputFabricas.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'fabrica').size} fábricas`
+    outputAeropuertos.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'aeropuerto').size} aeropuertos`
+    outputPuertosNavales.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'puertoNaval').size} puertos navales`
+    outputTorresCom.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'torreComunicacion').size} torres de comunicación`
+    outputNumCiudades.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'ciudad').size} ciudades`
+  }
   btnGuardarMapa?.addEventListener('click', ()=>{
-    // Convertir a un dato más simple
+    if(!mapaGenerado){
+      console.log('Mapa no disponible')
+      return
+    }
+    
     console.log('Guardar mapa')
-    const datos = JSON.stringify({x: 0, y: 0})
+    const _mapaSimple = Mapa.generarMapaSimple(mapaGenerado)
+    const datos = JSON.stringify(_mapaSimple)
     const blob = new Blob([datos], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `mapa_${Math.floor(Math.random()*999999)}.json`
+    debugger
+    const nombreMapa = nombreMapaInput?.value
+    a.download = `mapa_${nombreMapa}_${Math.floor(Math.random()*999999)}.json`
     a.click()
     URL.revokeObjectURL(url)
   
-    console.log(mapaGenerado)
+    console.log('Mapa juego: ', mapaGenerado)
+    console.log('Mapa simple: ', _mapaSimple)
   })
 
-  document.querySelector('#creador-mapas')?.addEventListener('submit', (ev)=>{
+  document.querySelector('#resolucion-mapas')?.addEventListener('submit', (ev)=>{
+    ev.preventDefault()
+  }, )
+  document.querySelector('#brocha-mapas')?.addEventListener('submit', (ev)=>{
     ev.preventDefault()
   }, )
 
@@ -234,9 +262,11 @@ function configurarFormulario(){
 
     selectUnidad.innerHTML = opcionesUnidad
   }
+
+  return analizarMapa
 }
 
-function AgregarEventosMapa(mapa: Mapa){
+function AgregarEventosMapa(mapa: Mapa, analizarMapa: Function){
   // mapa.konvaStage?.container().style.cursor = 'pointer'
   let mousePresionado = false
   habilitarBotonGuardar()
@@ -274,25 +304,29 @@ function AgregarEventosMapa(mapa: Mapa){
         pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, {x: casillaX, y: casillaY}, mapa, formularioMapa.brochaTerreno.espejo)
         break
       case 'Unidad':
+        formularioMapa.brochaUnidad.accion = document.querySelector('[name="modo-brocha-unidad"]:checked')?.value
         switch(formularioMapa.brochaUnidad.accion){
           case 'pintar':
             pintarUnidad(formularioMapa.brochaUnidad, {x: casillaX, y: casillaY}, mapa)
             break
           case 'borrar':
+            borrarUnidad({x: casillaX, y: casillaY}, mapa)
             break
-          case 'seleccionar':
-            break
+          // case 'seleccionar':
+          //   break
         }
         break;
     }
   })
   mapa.konvaStage?.on('mouseup', () => {
     mousePresionado = false
-    // actualizarAnálisis (num de jugadores y de cada tipo de propiedad)
+    analizarMapa(mapaGenerado)
     habilitarBotonGuardar()
   })
   function habilitarBotonGuardar(){
-    // Falta validar que tenga nombre el archivo
+    // Falta validar que nombre tiene el archivo
+
+    mapaGenerado?.obtenerComandantesJugables()
     if( mapaGenerado != null && mapaGenerado.esMapaValido() ){
       document.querySelector('#btn-guardar')?.removeAttribute('disabled')
     } else{
@@ -449,21 +483,30 @@ async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, 
 
   layerUnidad.add(spriteUnidad)
 }
+async function borrarUnidad(coordenada: coordenada, mapa: Mapa){
+  const casillaUnidad = mapa.obtenerCasilla(coordenada)
+  if(casillaUnidad != 'inexistente'){
+    const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
+    spriteAnterior?.destroy()
+    casillaUnidad.unidad = null
+  }
+}
 
 window.addEventListener('load', async ()=> {
-  configurarFormulario()
+  const analizarMapa = configurarFormulario()
   mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
   layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
-  AgregarEventosMapa(mapaGenerado)
+  AgregarEventosMapa(mapaGenerado, analizarMapa)
 })
 
 // POR HACER
 /*
-▄ Evitar que se redibuje el mapa cuando se haga enter en cualquier input (solo debe funcionar haciendo click en el botón de ridimensionar)
-▄ Despachar evento de botón de redimensionar y de select de terreno
-▄ Calcular el número de jugadores basados en las unidades dentro del mapa (solo está contando las propiedades)
+▄ Simplificar Mapa Simple: borrar datos nulos para reducir el texto y el peso del archivo
+▄ Guardar el jugador que hizo el mapa
+▄ Cambiar textos por iconos donde aplique
+▄ Hacer el menú más horizontal (para que abarque menos espacio vertical)
+▄ Cambiar input de propietario por un select (para poner nulo, jugador1, jugador2...)
 ▄ Redibujar casillas alrededor cuando se pinte un terreno (para corregir apariencia)
-▄ Modo de brocha borrar
 ▄ Pintar correctamente la casilla dependiendo el propietario (en caso de propiedades)
 ▄ *Modo de brocha seleccionar
 ▄ Guardar el JSON del mapa localmente

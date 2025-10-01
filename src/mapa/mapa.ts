@@ -1,7 +1,7 @@
 import { ListaTerrenos } from './terreno'
 import type { nombreTerreno } from './terreno'
 import Konva from 'konva'
-import { UnidadCasilla } from '../unidades/unidades'
+import { UnidadCasilla, UnidadSimple } from '../unidades/unidades'
 
 export type dimension = {
   filas: number,
@@ -12,26 +12,26 @@ export type coordenada = {
   y: number
 }
 
-// export type CasillaSimple = {
-//   tipo: nombreTerreno,
-//   propietario: number|null,
-//   unidad: UnidadCasilla|null
-//   clima?: Clima
-// }
-// type KonvaSprite = Konva.Sprite|null
-// export type Casilla = CasillaSimple & KonvaSprite
-// export type MapaObjeto = {
-//   nombre: String,
-//   dimensiones: dimension,
-//   casillas: Casilla[]
-//   konvaStage: Konva.Stage|null;
-//   obtenerCasilla: Function;
-// }
+export class CasillaSimple{
+  tipo: nombreTerreno;
+  propietario?: number|null;
+  // clima?: Clima
+  unidad?: UnidadSimple|null;
 
+  constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
+    if(ListaTerrenos[tipo] == undefined){
+      console.error('Tipo de casilla no encontrada: ', tipo)
+      this.tipo='invalido';
+    } else{
+      this.tipo=tipo;
+    }
+    this.propietario = propietario;
+    this.unidad = unidad;
+  }
+}
 export class Casilla{
   tipo: nombreTerreno;
   propietario: number|null;
-  // clima?: Clima
   sprite: Konva.Image|null; //¿Debería ser spriteTerreno o Konva.Image?
   unidad: UnidadCasilla|null;
 
@@ -59,22 +59,7 @@ export class Casilla{
   }
 }
 
-export class CasillaSimple{
-  tipo: nombreTerreno;
-  propietario: number|null;
-  unidad: UnidadCasilla|null;
 
-  constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
-    if(ListaTerrenos[tipo] == undefined){
-      console.error('Tipo de casilla no encontrada: ', tipo)
-      this.tipo='invalido';
-    } else{
-      this.tipo=tipo;
-    }
-    this.propietario = propietario;
-    this.unidad = unidad;
-  }
-}
 
 export class Mapa{
   nombre: string;
@@ -160,8 +145,46 @@ export class Mapa{
     return true
   }
 
-  generarMapaSimple = ():MapaSimple => {
-    
+  static generarMapaSimple(mapa:Mapa):MapaSimple{
+    let _casillasSimples:CasillaSimple[] = [];
+    mapa.casillas.forEach(casilla => {
+      const _unidadSimple:UnidadSimple|null = casilla.unidad ?
+      new UnidadSimple(casilla.unidad.nombreUnidad, casilla.unidad.propietario, casilla.unidad.hp, 
+        casilla.unidad.municiones, casilla.unidad.gasActual, casilla.unidad.estado) : null
+      // Simplificar: No mandar datos si son nulos para no mandar contenido de más (se reduce el peso casi la mitad cuando no mandas datos nulos)
+      
+      _casillasSimples.push({ 
+        propietario: casilla.propietario, 
+        tipo: casilla.tipo, 
+        unidad: _unidadSimple
+      })
+    })
+
+    const _mapaSimple = new MapaSimple(mapa.nombre, mapa.dimensiones, _casillasSimples)
+    return _mapaSimple
+  }
+
+  static obtenerTerrenos1Tipo(mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
+    const setCoordTerrenos = new Set()
+    if(!ListaTerrenos[tipo]){
+      console.error('No existe ese tipo de terreno')
+      return setCoordTerrenos
+    }
+    if( !mapa || !(mapa instanceof Mapa) && !(mapa instanceof MapaSimple)){
+      console.error('El mapa no es válido')
+      return setCoordTerrenos
+    }
+
+    for (let coordY = 0; coordY < mapa.dimensiones.filas; coordY++) {
+      for (let coordX = 0; coordX < mapa.dimensiones.columnas; coordX++) {
+        const casillaComparar = mapa.casillas[ ( ( coordY * mapa.dimensiones.columnas ) + coordX ) ]
+        if( casillaComparar.tipo === tipo ){
+          setCoordTerrenos.add({x: coordX, y: coordY})
+        }
+      }
+    }
+
+    return setCoordTerrenos
   }
 
   constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]){
@@ -195,10 +218,11 @@ export class Mapa{
 export class MapaSimple{
   nombre: String;
   dimensiones: dimension
+  // clima?: Clima
   // idCreador: number; //Jugador que creo el mapa
-  casillas: Casilla[];
+  casillas: CasillaSimple[];
 
-  constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]){
+  constructor(nombre: string, dimensiones: dimension, casillas: CasillaSimple[]){
     this.nombre=nombre;
     this.dimensiones = dimensiones
     if(dimensiones.columnas <= 0){

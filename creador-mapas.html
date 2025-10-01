@@ -14,7 +14,7 @@
         <button id="btn-ayuda" class="boton-duda text-center rounded-md text-3xl font-black" data-bs-toggle="modal" data-bs-target="#modal-recomendaciones">?</button>
       </div>
 
-      <form id="creador-mapas" action="" class="bg-gray-50 text-black p-4 mx-auto mb-3 flex flex-col rounded-md" style="max-width: 650px; row-gap: .5rem;">
+      <form id="resolucion-mapas" action="" class="bg-gray-50 text-black p-4 mx-auto mb-3 flex flex-col rounded-md" style="max-width: 650px; row-gap: .5rem;">
         <div class="seccion-nombre dato flex items-center justify-center gap-3">
           <label for="nombre-mapa">Nombre del mapa</label>
           <!-- Aplicar un regex al nombre del mapa -->
@@ -31,10 +31,12 @@
             <input name="alto-mapa" id="alto-mapa" type="number" class="input bg-gray-200 rounded-sm p-1 text-right" min="1" max="30" value="10">
           </div>
            <div class="flex justify-end">
-             <button id="btn-redimensionar-mapa" class="bg-indigo-600 rounded-sm text-white font-bold px-2 py-1 text-center cursor-pointer">Aplicar dimensiones</button>
+             <button id="btn-redimensionar-mapa" class="bg-indigo-600 rounded-sm text-white font-bold px-2 py-1 text-center cursor-pointer" disabled>Aplicar dimensiones</button>
            </div>
         </div>
+      </form>
 
+      <form id="brocha-mapas" action="" class="bg-gray-50 text-black p-4 mx-auto mb-3 flex flex-col rounded-md" style="max-width: 650px; row-gap: .5rem;">
         <!-- Brocha pintar, seleccionar o borrar (solo en brocha de unidad) -->
         <!-- TAB -->
         <section class="seccion-brocha tab border-2 border-black border-solid rounded-sm overflow-hidden">
@@ -95,8 +97,8 @@
                   <label for="brocha-unidad-pintar">Pintar</label>
                 </div>
                 <div>
-                  <input id="brocha-unidad-seleccionar" type="radio" name="modo-brocha-unidad" value="seleccionar">
-                  <label for="brocha-unidad-seleccionar">Seleccionar</label>
+                  <!-- <input id="brocha-unidad-seleccionar" type="radio" name="modo-brocha-unidad" value="seleccionar">
+                  <label for="brocha-unidad-seleccionar">Seleccionar</label> -->
                 </div>
                 <div>
                   <input id="brocha-unidad-borrar" type="radio" name="modo-brocha-unidad" value="borrar">
@@ -151,12 +153,12 @@
           <output id="num-jugador">0 jugadores</output>
           <!-- poner conteo de unidades por jugador -->
           <div class="seccion-num-propiedades ">
-            <h1>Propiedades</h1>
             <!-- TODO: cambiar por iconos -->
-            <output id="num-ciudades">0 ciudades</output>
-            <output id="num-fabricas">0 fábricas</output>
-            <output id="num-aeropuertos">0 Aeropuertos</output>
-            <output id="num-puertos-navales">0 puertos navales</output>
+            <output class="block" id="num-fabricas">0 fábricas</output>
+            <output class="block" id="num-aeropuertos">0 aeropuertos</output>
+            <output class="block" id="num-puertos-navales">0 puertos navales</output>
+            <output class="block" id="num-torres-com">0 torres de comunicación</output>
+            <output class="block" id="num-ciudades">0 ciudades</output>
           </div>
 
           <h1 id="txt-apto" class="font-bold">Apto para juegos: <output class="text-green-600">SI/NO</output></h1>
