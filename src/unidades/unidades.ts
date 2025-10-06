@@ -96,10 +96,10 @@ export class UnidadSimple {
 }
 
 export class UnidadCasilla extends UnidadSimple{
-  sprite: Konva.Sprite|null;
+  sprite?: Konva.Sprite|null;
   private unitKonvaGroup: Konva.Group|null;
   
-  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado, sprite: Konva.Sprite|null ){
+  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado, sprite?: Konva.Sprite|null ){
     super(nombreUnidad, propietario, hp, municiones, gasActual, estado)
     this.sprite = null;
     this.unitKonvaGroup = null;

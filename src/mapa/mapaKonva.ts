@@ -302,12 +302,11 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
     image: TerrainTilesheets,
     crop: objTerreno.crop,
     strokeWidth: 0,
-    name: 'casilla_' + coordenada.x + '-' + coordenada.y,
+    name: `casilla_${coordenada.x}_${coordenada.y}`,
   })
   
   const propietario = casilla.propietario
 
-  spriteTerreno.tintColor = null
   if( ( casilla.tipo === 'ciudad' || casilla.tipo === 'fabrica' || casilla.tipo === 'aeropuerto' || 
     casilla.tipo === 'puertoNaval' ) && propietario != null ){
       spriteTerreno.cache({
@@ -322,7 +321,7 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
 }
 
 // Shaders y tintes de unidad por Comandante Jugable
-function generarShaderPropiedad () {
+export function generarShaderPropiedad () {
   // Al parecer, cada propiedad requiere un shader ligeramente diferente
   // Este casi funciona para ciudades, pero parece que necesito indicarle otros colores
   // Tiene que variar el "tinte" de color de cada propiedad basado en el dueño
@@ -332,7 +331,11 @@ function generarShaderPropiedad () {
     const data = imageData.data;
     const n = this;
 
-    const tint = n.tintColor || { r: 255, g: 255, b: 255 };
+    const tint = n.tintColor;
+
+    if( tint == null ){
+      return
+    }
 
     for (let i = 0; i < data.length; i += 4) {
       const gray = data[i]; 

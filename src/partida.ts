@@ -1,5 +1,5 @@
 import './style.css'
-import { MapaSimple, Mapa } from './mapa/mapa.ts'
+import { Mapa, MapaSimple } from './mapa/mapa.ts'
 import { Jugador } from './jugador.ts'
 import { Reglas } from './reglas.ts'
 import { esClima } from './clima.ts'
@@ -8,7 +8,7 @@ import type { Clima } from './clima.ts'
 import { generarMapaKonva } from './mapa/mapaKonva.ts'
 // Se debería cargar una partida con un id único de partida solicitando a una DB
 
-// Clase PartidaSnapshot: una captura del estatus de una partida. No contiene el canvas de Konva
+// Clase PartidaSnapshot: una captura del estatus de una partida.
 export class PartidaSnapshot {
   Mapa: MapaSimple
   // Aquí pudieran guardarse los id's de los jugadores en vez de todo el objeto

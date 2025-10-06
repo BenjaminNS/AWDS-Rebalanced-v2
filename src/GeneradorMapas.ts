@@ -1,10 +1,10 @@
 import './style.css'
 import Konva from 'konva'
-import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad } from './mapa/mapaKonva'
-import { Mapa, type coordenada } from './mapa/mapa'
+import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad, generarShaderPropiedad } from './mapa/mapaKonva'
+import { Casilla, Mapa, type coordenada } from './mapa/mapa'
 import { ListaTerrenos, type nombreTerreno } from './mapa/terreno'
 import { ListaUnidades, Unidad, UnidadCasilla, type nombreUnidad } from './unidades/unidades'
-let layerUnidad:Konva.Layer
+let layerUnidad:Konva.Layer, layerTerreno:Konva.Layer
 
 let mapaGenerado:Mapa|null = null
 type dimensiones = {
@@ -68,7 +68,7 @@ function configurarFormulario(){
 
   const brochaTerrenoSelect = document.querySelector('#brocha-terreno') as HTMLSelectElement
   const seccionPropietarioTerreno = document.querySelector('#seccion-propietario') as HTMLInputElement
-  const propietarioTerreno = document.querySelector('#propietario-casilla') as HTMLInputElement
+  const propietarioTerreno = document.querySelector('#propietario-casilla') as HTMLSelectElement
   const espejoInput = document.querySelector('#opcion-espejo') as HTMLInputElement
   
   const brochaUnidadSelect = document.querySelector('#brocha-unidad') as HTMLSelectElement
@@ -82,8 +82,8 @@ function configurarFormulario(){
   const outputJugadores = document.querySelector('#num-jugador') as HTMLOutputElement
   const outputFabricas = document.querySelector('#num-fabricas') as HTMLOutputElement
   const outputAeropuertos = document.querySelector('#num-aeropuertos') as HTMLOutputElement
-  const outputPuertosNavales = document.querySelector('#num-torres-com') as HTMLOutputElement
-  const outputTorresCom = document.querySelector('#num-puertos-navales') as HTMLOutputElement
+  const outputPuertosNavales = document.querySelector('#num-puertos-navales') as HTMLOutputElement
+  const outputTorresCom = document.querySelector('#num-torres-com') as HTMLOutputElement
   const outputNumCiudades = document.querySelector('#num-ciudades') as HTMLOutputElement
 
   const btnGuardarMapa = document.querySelector('#btn-guardar') as HTMLButtonElement
@@ -115,9 +115,7 @@ function configurarFormulario(){
     formularioMapa.dimensiones.anchoActual = ancho
     formularioMapa.dimensiones.altoActual = alto
 
-    mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
-    layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
-    AgregarEventosMapa(mapaGenerado)
+    RegenerarMapa(()=>{analizarMapa(mapaGenerado)})
     btnRedimensionarMapa.setAttribute('disabled', 'true')
   })
 
@@ -194,7 +192,7 @@ function configurarFormulario(){
     outputFabricas.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'fabrica').size} fábricas`
     outputAeropuertos.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'aeropuerto').size} aeropuertos`
     outputPuertosNavales.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'puertoNaval').size} puertos navales`
-    outputTorresCom.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'torreComunicacion').size} torres de comunicación`
+    // outputTorresCom.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'torreComunicacion').size} torres de comunicación`
     outputNumCiudades.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'ciudad').size} ciudades`
   }
   btnGuardarMapa?.addEventListener('click', ()=>{
@@ -210,14 +208,13 @@ function configurarFormulario(){
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    debugger
     const nombreMapa = nombreMapaInput?.value
     a.download = `mapa_${nombreMapa}_${Math.floor(Math.random()*999999)}.json`
     a.click()
     URL.revokeObjectURL(url)
   
-    console.log('Mapa juego: ', mapaGenerado)
-    console.log('Mapa simple: ', _mapaSimple)
+    // console.log('Mapa juego: ', mapaGenerado)
+    // console.log('Mapa simple: ', _mapaSimple)
   })
 
   document.querySelector('#resolucion-mapas')?.addEventListener('submit', (ev)=>{
@@ -233,6 +230,20 @@ function configurarFormulario(){
   function mostrarPropietarioTerreno(terreno: nombreTerreno){
     if( ListaTerrenos[terreno].esPropiedad ){
       seccionPropietarioTerreno.style.display = ''
+
+      // Deshabilitar opción de nulo y escoger la segunda opcion
+      if( terreno === 'cuartelGeneral' || terreno === 'laboratorio' ){
+        propietarioTerreno.querySelector('option').disabled = true
+        propietarioTerreno.querySelectorAll('option').forEach((opt) => {
+          opt.selected = false
+        })
+        propietarioTerreno.querySelectorAll('option')[1].selected = true
+      } else{
+        propietarioTerreno.querySelector('option').disabled = false
+        propietarioTerreno.querySelectorAll('option').forEach((opt, i) => {
+          opt.disabled = false
+        })
+      }
     } else{
       seccionPropietarioTerreno.style.display = 'none'
     }
@@ -397,35 +408,37 @@ async function pintarTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada,
     return
   }
 
-  const casillaPintada = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
-  if( casillaPintada == null){
+  const casillaSeleccionada = mapa.obtenerCasilla(coordenada)
+  if( casillaSeleccionada == null){
     return
   }
   
-  casillaPintada.tipo = tipoCasilla
+
+  casillaSeleccionada.tipo = tipoCasilla
 
   if( ListaTerrenos[tipoCasilla].esPropiedad ){
-    casillaPintada.propietario = formularioMapa.propietarioTerreno
+    casillaSeleccionada.propietario = formularioMapa.propietarioTerreno
   } else{
-    casillaPintada.propietario = null
+    casillaSeleccionada.propietario = null
   }
   
-  const tileCasilla = generarSpriteTerreno(casillaPintada, coordenada, mapa)
-  const cropObject = await tileCasilla.getAttr('crop')
-  casillaPintada.sprite?.crop({
-    x: cropObject.x,
-    y: cropObject.y,
-    width: cropObject.width,
-    height: cropObject.height,
-  });
-  casillaPintada.sprite?.setAttrs({
-    y: tileCasilla.getAttr('y'),
-    height: tileCasilla.getAttr('height'),
-    offsetY: tileCasilla.getAttr('offsetY')
-  })
+  const listaCoordenadas = []
+  listaCoordenadas.push({x: coordenada.x, y: (coordenada.y - 1)})
+  listaCoordenadas.push({x: (coordenada.x - 1), y: coordenada.y})
+  listaCoordenadas.push(coordenada) //original
+  listaCoordenadas.push({x: (coordenada.x + 1), y: coordenada.y})
+  listaCoordenadas.push({x: coordenada.x, y: (coordenada.y + 1)})
 
-  // casillaPintada.sprite?.filters(tileCasilla.filters())
-  // casillaPintada.sprite?.tintColor = tileCasilla.tintColor
+  listaCoordenadas.forEach((coordenada) => {
+    const casillaSeleccionada = mapa.obtenerCasilla(coordenada)
+    if(casillaSeleccionada instanceof Casilla){
+      const spriteAnterior = layerUnidad.findOne(`#casilla_${coordenada.x}_${coordenada.y}`)
+      spriteAnterior?.destroy()
+
+      const nuevaCasillaTerreno = generarSpriteTerreno(casillaSeleccionada, coordenada, mapa)
+      layerTerreno.add(nuevaCasillaTerreno)
+    }
+  })
 }
 
 // FUNCIONES CASILLAS UNIDAD
@@ -434,7 +447,8 @@ async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, 
     console.log('Unidad inválida')
     return
   }
-  const casillaUnidad = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
+  // const casillaUnidad = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
+  const casillaUnidad = mapa.obtenerCasilla({x: coordenada.x, y: coordenada.y})
   if( casillaUnidad == null){
     return
   }
@@ -458,29 +472,6 @@ async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, 
   casillaUnidad.unidad = new UnidadCasilla(brochaUnidad.unidad, brochaUnidad.propietario, brochaUnidad.hp, municiones, brochaUnidad.gas, null, 'normal')
   const spriteUnidad = generarSpriteUnidad(casillaUnidad, coordenada) as Konva.Sprite
   casillaUnidad.unidad.sprite = spriteUnidad
-
-  // if(casillaUnidad.unidad){
-  //   // Si existe, reemplazar info
-  //   const cropObject = await spriteUnidad?.getAttr('crop')
-  //   casillaUnidad.unidad.sprite?.crop({
-  //     x: cropObject.x,
-  //     y: cropObject.y,
-  //     width: cropObject.width,
-  //     height: cropObject.height,
-  //   });
-    
-
-  //   // casillaUnidad.unidad?.sprite?.filters(spriteUnidad?.filters())
-  //   // casillaUnidad.unidad?.sprite?.tintColor = spriteUnidad?.tintColor
-  //   // casillaUnidad.hue( hsv.h )
-  //   // casillaUnidad.saturation( hsv.s )
-  //   // casillaUnidad.value( hsv.v )
-
-  // } else{
-  //   // Si no existe, agregarlo
-  //   layerUnidad.add(spriteUnidad)
-  // }
-
   layerUnidad.add(spriteUnidad)
 }
 async function borrarUnidad(coordenada: coordenada, mapa: Mapa){
@@ -492,22 +483,27 @@ async function borrarUnidad(coordenada: coordenada, mapa: Mapa){
   }
 }
 
-window.addEventListener('load', async ()=> {
-  const analizarMapa = configurarFormulario()
+async function RegenerarMapa(analizarMapa: Function){
   mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
   layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
+  layerTerreno = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.TERRENO)
+  analizarMapa(mapaGenerado)
   AgregarEventosMapa(mapaGenerado, analizarMapa)
+}
+
+window.addEventListener('load', async ()=> {
+  const analizarMapa = configurarFormulario()
+  generarShaderPropiedad()
+  RegenerarMapa(analizarMapa)
 })
 
 // POR HACER
 /*
+▄ Reemplazar correctamente los HQ, montañas (solo se reemplazan la mitad inferior)
 ▄ Simplificar Mapa Simple: borrar datos nulos para reducir el texto y el peso del archivo
 ▄ Guardar el jugador que hizo el mapa
 ▄ Cambiar textos por iconos donde aplique
 ▄ Hacer el menú más horizontal (para que abarque menos espacio vertical)
-▄ Cambiar input de propietario por un select (para poner nulo, jugador1, jugador2...)
-▄ Redibujar casillas alrededor cuando se pinte un terreno (para corregir apariencia)
-▄ Pintar correctamente la casilla dependiendo el propietario (en caso de propiedades)
 ▄ *Modo de brocha seleccionar
-▄ Guardar el JSON del mapa localmente
+▄ Guardar el JSON del mapa localmente en servidor
 */

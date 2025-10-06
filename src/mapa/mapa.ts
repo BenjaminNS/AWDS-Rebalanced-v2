@@ -14,7 +14,7 @@ export type coordenada = {
 
 export class CasillaSimple{
   tipo: nombreTerreno;
-  propietario?: number|null;
+  propietario: number|null;
   // clima?: Clima
   unidad?: UnidadSimple|null;
 
@@ -164,10 +164,28 @@ export class Mapa{
     return _mapaSimple
   }
 
+  static generarMapaCompleto(mapaSimple:MapaSimple):Mapa{
+    let _casillasCompletas:Casilla[] = [];
+    mapaSimple.casillas.forEach(casillaSimple => {
+      const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
+      new UnidadCasilla(casillaSimple.unidad.nombreUnidad, casillaSimple.unidad.propietario, casillaSimple.unidad.hp, 
+        casillaSimple.unidad.municiones, casillaSimple.unidad.gasActual, casillaSimple.unidad.estado) : null
+        _casillasCompletas.push({
+          sprite: null,
+          propietario: casillaSimple.propietario, 
+          tipo: casillaSimple.tipo, 
+          unidad: _unidadJuego
+        })
+    })
+
+    const _mapaCompleto = new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
+    return _mapaCompleto
+  }
+
   static obtenerTerrenos1Tipo(mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
     const setCoordTerrenos = new Set()
     if(!ListaTerrenos[tipo]){
-      console.error('No existe ese tipo de terreno')
+      console.error('No existe ese tipo de terreno: ', tipo)
       return setCoordTerrenos
     }
     if( !mapa || !(mapa instanceof Mapa) && !(mapa instanceof MapaSimple)){
@@ -216,7 +234,7 @@ export class Mapa{
 }
 
 export class MapaSimple{
-  nombre: String;
+  nombre: string;
   dimensiones: dimension
   // clima?: Clima
   // idCreador: number; //Jugador que creo el mapa

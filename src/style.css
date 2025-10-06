@@ -193,3 +193,7 @@ img{
 .hidden{
   display: none;
 }
+
+form{
+  max-width: 900px;
+}
