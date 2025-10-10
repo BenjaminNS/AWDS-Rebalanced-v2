@@ -70,10 +70,10 @@ export class Mapa{
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
-  obtenerCasilla = (coord: coordenada):(Casilla|'inexistente') => {
+  obtenerCasilla = (coord: coordenada):(Casilla|'invalida') => {
     // Fuera del mapa
     if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length ){
-      return 'inexistente'
+      return 'invalida'
     } else{
       return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )]
     }

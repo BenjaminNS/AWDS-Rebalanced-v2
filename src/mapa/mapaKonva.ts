@@ -288,7 +288,7 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
   const casillasAdyacentes = {
     top: mapa.obtenerCasilla({x: (x), y:(y-1)}).tipo,
     left: mapa.obtenerCasilla({x: (x-1), y:(y)}).tipo,
-    right: mapa.obtenerCasilla({x: (x+2), y:(y)}).tipo,
+    right: mapa.obtenerCasilla({x: (x+1), y:(y)}).tipo,
     bottom: mapa.obtenerCasilla({x: (x), y:(y+1)}).tipo
   }
   // Objeto terreno

@@ -4,7 +4,7 @@ import { tamanoCasilla, planicieSpriteFn, aeropuertoSpriteFn, arrecifeSpriteFn, 
   puertoNavalSpriteFn, rioSpriteFn, siloSpriteFn, tuberiaSpriteFn } from "./spriteTerrenos"
 
 // 'laboratorio'|'torreDeComunicacion'|
-export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
+export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'|'inexistente'
 
 export const arregloTerrenosNombres = [
   'planicie', 'bosque', 'montana', 'cuartelGeneral', 'ciudad', 'fabrica', 'aeropuerto', 'puertoNaval', 'silo', 'camino', 'puente', 'tuberia', 'mar', 'arrecife', 'rio', 'costa', 'invalido']
