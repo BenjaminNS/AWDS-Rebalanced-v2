@@ -57,6 +57,10 @@ export class Casilla{
     this.unidad = unidad;
     this.sprite = null;
   }
+
+  public getTipo = () => {
+    return ListaTerrenos[this.tipo]
+  }
 }
 
 
@@ -70,10 +74,10 @@ export class Mapa{
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
-  obtenerCasilla = (coord: coordenada):(Casilla|'invalida') => {
+  obtenerCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
     if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length ){
-      return 'invalida'
+      return null
     } else{
       return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )]
     }
@@ -145,6 +149,23 @@ export class Mapa{
     return true
   }
 
+  public agregarEventoClick(fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
+    // Que sea remplazar el evento, no agregar más
+    if( this.konvaStage && tamanoCasilla > 0){
+      this.konvaStage?.on('click', () => {
+        const pos = this.konvaStage?.getPointerPosition()
+        if (!pos) return
+        const casillaX = Math.floor(pos.x / tamanoCasilla)
+        const casillaY = Math.floor(pos.y / tamanoCasilla)
+
+        fnClick({x: casillaX, y: casillaY})
+      })
+    }
+  }
+  public quitarEventoClick(){
+    this.konvaStage?.off('click')
+  }
+
   static generarMapaSimple(mapa:Mapa):MapaSimple{
     let _casillasSimples:CasillaSimple[] = [];
     mapa.casillas.forEach(casilla => {
@@ -205,7 +226,7 @@ export class Mapa{
     return setCoordTerrenos
   }
 
-  constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]){
+  constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
     this.nombre=nombre;
     this.dimensiones = dimensiones
     if(dimensiones.columnas <= 0){

@@ -243,6 +243,7 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
     unitSprite.height(tamanoCasilla)
     unitSprite.name(casilla.unidad.id)
     unitSprite.id(casilla.unidad.id)
+    unitSprite.
     unitSprite.cache({
       pixelRatio: 1,
       imageSmoothingEnabled: false
@@ -286,10 +287,10 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
   const terreno = ListaTerrenos[casilla.tipo]
   const {x,y} = coordenada
   const casillasAdyacentes = {
-    top: mapa.obtenerCasilla({x: (x), y:(y-1)}).tipo,
-    left: mapa.obtenerCasilla({x: (x-1), y:(y)}).tipo,
-    right: mapa.obtenerCasilla({x: (x+1), y:(y)}).tipo,
-    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)}).tipo
+    top: mapa.obtenerCasilla({x: (x), y:(y-1)})?.tipo,
+    left: mapa.obtenerCasilla({x: (x-1), y:(y)})?.tipo,
+    right: mapa.obtenerCasilla({x: (x+1), y:(y)})?.tipo,
+    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)})?.tipo
   }
   // Objeto terreno
   const objTerreno = terreno.obtenerSprite(casillasAdyacentes)

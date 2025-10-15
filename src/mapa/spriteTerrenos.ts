@@ -1,5 +1,5 @@
 import type { nombreTerreno } from "./terreno"
-export const tamanoCasilla=16
+export const tamanoCasilla = 16
 
 export type spriteTerreno = {
   width: number, height: number, offsetY: number

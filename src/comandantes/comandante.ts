@@ -43,10 +43,16 @@ export class ComandanteJugable{
   constructor(personaje: nombreComandantes, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
     this.personaje = personaje;
     this.idInstancia = idInstancia;
-    this.dineroActual=dineroActual;
-    this.cargaActual=cargaActual;
-    this.usosPoder=usosPoder;
-    this.activo=activo;
+    this.dineroActual = dineroActual;
+    this.cargaActual = cargaActual;
+    this.usosPoder = usosPoder;
+    this.activo = activo;
+  }
+
+  rendirse(){
+    this.activo = false
+    // destruir todas las unidades
+    // perder todas las propiedades
   }
 }  
 

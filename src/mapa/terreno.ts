@@ -18,6 +18,10 @@ export class Terreno {
   esPropiedad: boolean;
   obtenerSprite: obtenerSprite;
 
+  // static obtenerTerreno(terreno:nombreTerreno){
+  //   if( ListaTerrenos[terreno] ){}
+  // }
+
   constructor(nombre: string, estrellasDefensa: number, descripcion: string, costosMovimientos: object, puedeOcultarEnFOW: boolean, esPropiedad: boolean, obtenerSprite: obtenerSprite){
     this.nombre= nombre
     this.estrellasDefensa = estrellasDefensa;
