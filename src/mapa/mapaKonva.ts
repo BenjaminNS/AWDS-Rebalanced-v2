@@ -10,7 +10,7 @@ import { listaPaises } from "../comandantes/paises.ts"
 import { arregloTerrenosNombres } from './terreno.ts'
 import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
 import type { nombreTerreno, Terreno } from './terreno.ts'
-import type { Unidad } from '../unidades/unidades.ts'
+// import type { Unidad } from '../unidades/unidades.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 
 export const tamanoCasilla = 32
@@ -222,7 +222,8 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
   const unitKonvaGroup = new Konva.Group({
     x: (x * tamanoCasilla),
     y: y * tamanoCasilla,
-    name: casilla.unidad.id
+    name: casilla.unidad.id,
+    id: casilla.unidad.id
   })
 
   const unitSprite = casilla.unidad.obtenerTipo().sprite.clone()
@@ -241,9 +242,8 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
   if( listaPaises[casilla.unidad.propietario] != null ){
     unitSprite.width(tamanoCasilla)
     unitSprite.height(tamanoCasilla)
-    unitSprite.name(casilla.unidad.id)
-    unitSprite.id(casilla.unidad.id)
-    unitSprite.
+    // unitSprite.name(casilla.unidad.id)
+    // unitSprite.id(casilla.unidad.id)
     unitSprite.cache({
       pixelRatio: 1,
       imageSmoothingEnabled: false
