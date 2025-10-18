@@ -1,7 +1,8 @@
 import { ListaTerrenos } from './terreno'
-import type { nombreTerreno } from './terreno'
+import type { nombreTerreno, Terreno } from './terreno'
 import Konva from 'konva'
 import { UnidadCasilla, UnidadSimple } from '../unidades/unidades'
+import { tamanoCasilla } from './spriteTerrenos'
 
 export type dimension = {
   filas: number,
@@ -58,7 +59,7 @@ export class Casilla{
     this.sprite = null;
   }
 
-  public getTipo = () => {
+  public getTipo = ():Terreno|null => {
     return ListaTerrenos[this.tipo]
   }
 }
@@ -70,7 +71,8 @@ export class Mapa{
   dimensiones: dimension
   casillas: Casilla[];
   konvaStage: Konva.Stage|null;
-  // modo: 'estricto'|'permisivo'
+  tamanoCasilla = tamanoCasilla
+  modo:'estricto'|'permisivo' = 'permisivo'
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
@@ -150,9 +152,11 @@ export class Mapa{
   }
 
   public agregarEventoClick(fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
-    // Que sea remplazar el evento, no agregar más
     if( this.konvaStage && tamanoCasilla > 0){
-      this.konvaStage?.on('click', () => {
+      this.konvaStage?.on('click', (evt) => {
+        // Si no es click izquierdo
+        if( evt.evt.button != 0 ) return
+
         const pos = this.konvaStage?.getPointerPosition()
         if (!pos) return
         const casillaX = Math.floor(pos.x / tamanoCasilla)

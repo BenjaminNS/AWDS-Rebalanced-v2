@@ -1,5 +1,5 @@
 export const listaHabilidades = {
-  'mover': ()=>{},
+  'esperar': ()=>{},
   'atacar': ()=>{},
   'combinar': ()=>{},
   'capturar': ()=>{},

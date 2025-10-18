@@ -242,8 +242,6 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
   if( listaPaises[casilla.unidad.propietario] != null ){
     unitSprite.width(tamanoCasilla)
     unitSprite.height(tamanoCasilla)
-    // unitSprite.name(casilla.unidad.id)
-    // unitSprite.id(casilla.unidad.id)
     unitSprite.cache({
       pixelRatio: 1,
       imageSmoothingEnabled: false

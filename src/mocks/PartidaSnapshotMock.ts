@@ -1,6 +1,7 @@
 import { PartidaSnapshot } from "../partida";
 // import mapaPrueba from './mapas/test.json'
-import { mapaPrueba } from "./mapaPrueba";
+// import { mapaPrueba } from "./mapaPrueba";
+import { mapaPrueba } from "./mapaPrueba copy";
 // import mapaFastBrawl from "./mapa_fast-brawl_513014.json";
 import { usuario1, usuario2 } from "./jugadoresMocks";
 import { Reglas } from "../reglas";
