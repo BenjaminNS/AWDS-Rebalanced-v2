@@ -15,6 +15,7 @@ import { spriteInfanteria, spriteMecha,
 import { type SpriteConfig } from 'konva/lib/shapes/Sprite';
 import type { GroupConfig } from 'konva/lib/Group';
 import type { TextConfig } from 'konva/lib/shapes/Text';
+import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno';
 // export type nombreUnidades = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 
 export type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
@@ -55,9 +56,10 @@ export class UnidadSimple {
   municiones: municiones|null;
   gasActual: number;
   estado: estado;
+  #turnos: number;
   nombreUnidad: nombreUnidad;
   
-  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado ){
+  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado, turnos?: number ){
     // Talvez también pueda validar que el nombre de la unidad si exista
     this.nombreUnidad = nombreUnidad;
     this.id = crypto.randomUUID();
@@ -69,8 +71,8 @@ export class UnidadSimple {
       this.propietario = propietario;
     }
 
-    if( hp <= 0 ){
-      console.error('El HP no puede ser menos de 1')
+    if( hp < 1 ){
+      console.error('El HP no puede ser menor a 1')
       this.hp = 1;
     } else if( hp > 100 ){
       console.error('El HP no puede ser mayor a 100')
@@ -92,6 +94,23 @@ export class UnidadSimple {
       this.gasActual = gasActual;
     }
     this.estado = estado;
+
+    if(turnos) this.#turnos = turnos
+    else this.#turnos = 1
+  }
+
+  public obtenerTipo = ():Unidad =>{
+    return ListaUnidades[this.nombreUnidad]
+  }
+
+  protected restarTurno(turnos:number){
+    this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
+  }
+  protected recuperarTurno(){
+    this.#turnos++
+  }
+  public getTurnos(){
+    return this.#turnos
   }
 }
 
@@ -112,9 +131,6 @@ export class UnidadCasilla extends UnidadSimple{
   // };
 
   // animarMovimiento = () => {  }
-  obtenerTipo = ():Unidad =>{
-    return ListaUnidades[this.nombreUnidad]
-  }
 
   setUnitKonvaGroup(unitKonvaGroupConf: Konva.Group){
     // if( this.unitKonvaGroup instanceof Konva.Group){
@@ -142,6 +158,24 @@ export class UnidadCasilla extends UnidadSimple{
     }
   }
 
+  public gastarTurno(): void {
+    this.restarTurno(1)
+    if( this.getTurnos() <= 0 ){
+      // Aplicar filtro de "apagado", para dar a entender que la unidad ya no se puede escoger
+      // this.sprite?.filters([Konva.Filters.Contrast(img)])
+    }
+  }
+
+  public gastarGasolinaTerreno(tipoTerreno:nombreTerreno){
+    const costosMovimientos:Terreno|null = ListaTerrenos[tipoTerreno]?.costosMovimientos
+    if( costosMovimientos ){
+      const gasConsumida = costosMovimientos[this.obtenerTipo().tipoMovimiento]
+      if( gasConsumida ){
+        this.gasActual -= gasConsumida
+      }
+    }
+  }
+
   // efecto: congelado, paralizado, 
   // actualizarIndicadores(faltaGas: boolean, faltaMuniciones: boolean){
   //   if( faltaGas && faltaMuniciones ){
@@ -158,7 +192,7 @@ export class UnidadCasilla extends UnidadSimple{
   //   }
   // }
 
-  
+  // Mover funcion a Mapa
 }
 
 export class Unidad {

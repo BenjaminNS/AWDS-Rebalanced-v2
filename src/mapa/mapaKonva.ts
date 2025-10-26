@@ -4,11 +4,10 @@ const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src=terrainTilesheets
 import { ListaTerrenos } from './terreno.ts'
 import { sleep } from '../common.js'
-import { Casilla, Mapa } from './mapa.ts'
 // import { Unidad } from '../unidades/unidades.ts'
 import { listaPaises } from "../comandantes/paises.ts"
 import { arregloTerrenosNombres } from './terreno.ts'
-import type { coordenada, dimension, CasillaSimple } from './mapa.ts'
+import { type coordenada, type dimension, Casilla, CasillaSimple, Mapa } from './mapa.ts'
 import type { nombreTerreno, Terreno } from './terreno.ts'
 // import type { Unidad } from '../unidades/unidades.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -54,7 +53,8 @@ export const MAPA_CAPAS={
   FONDO: 'fondo',
   TERRENO: 'terreno',
   CASILLAS: 'casillas',
-  UNIDADES: 'unidades'
+  UNIDADES: 'unidades',
+  // GUI: 'gui',
 }
 
 // Generación de mapas
@@ -131,9 +131,11 @@ function generarCapaCasillas({mapa}: {mapa: Mapa}):Konva.Layer{
         y: y * tamanoCasilla,
         width: tamanoCasilla,
         height: tamanoCasilla,
-        fill: COLORES_INTERACCION.ATAQUE,
-        // stroke: 'black',
+        fill: COLORES_INTERACCION.MOVIMIENTO,
+        stroke: '#00000033',
         // strokeWidth: (tamanoCasilla * .01)
+        name: `cuadro_${x}_${y}`,
+        id: `cuadro_${x}_${y}`,
       })
 
       capaCasillas.add(cuadroCasilla)
@@ -175,7 +177,7 @@ function generarCapaUnidades({mapa}: {mapa: Mapa}){
 
   for (let y = 0; y < filas; y++) {
     for (let x = 0; x < columnas; x++) {
-      if( mapa.casillas[( ( y * columnas ) + x )].unidad != null ){
+      if( mapa.casillas[( ( y * columnas ) + x )].getUnidad() != null ){
         const spriteUnidad = generarSpriteUnidad(
           mapa.casillas[( ( y * columnas ) + x )],
           {x: x, y: y}
@@ -202,8 +204,9 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   const capaTerreno = generarCapaTerreno({mapa: mapa})
   mapa.konvaStage.add(capaTerreno)
   generarListaTilesTerreno({capaTerreno: capaTerreno, mapa: mapa})
-  // const capaCasillas = generarCapaCasillas({mapa: mapa})
-  // mapa.konvaStage.add(capaCasillas)
+  const capaCasillas = generarCapaCasillas({mapa: mapa})
+  mapa.konvaStage.add(capaCasillas)
+  capaCasillas.hide()
   const capaUnidades = generarCapaUnidades({mapa: mapa})
   mapa.konvaStage.add(capaUnidades)
 
@@ -212,8 +215,8 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   });
 }
 
-export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordenada):Konva.Group|null{
-  if(casilla.unidad == null){
+export function generarSpriteUnidad(casilla: Casilla, coordenada: coordenada):Konva.Group|null{
+  if(casilla.getUnidad() == null){
     console.error('Esta casilla no tiene una unidad', casilla)
     return null
   }
@@ -222,24 +225,24 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
   const unitKonvaGroup = new Konva.Group({
     x: (x * tamanoCasilla),
     y: y * tamanoCasilla,
-    name: casilla.unidad.id,
-    id: casilla.unidad.id
+    name: casilla.getUnidad()?.id,
+    id: casilla.getUnidad()?.id
   })
 
-  const unitSprite = casilla.unidad.obtenerTipo().sprite.clone()
+  const unitSprite = casilla.getUnidad()?.obtenerTipo().sprite.clone()
   unitSprite.setAttrs({
     x: 0, y: 0,
     name: 'sprite-unidad'
   })
   const escala = tamanoCasilla / 16
-  if(casilla.unidad.propietario % 2 === 0){
+  if(casilla.getUnidad().propietario % 2 === 0){
     unitSprite.scale({x: escala, y: escala})
   } else{
     unitSprite.offsetX( tamanoCasilla / 2 )
     unitSprite.scale({x: (escala * -1), y: escala})
   }  
   // Filtro sprite unidad
-  if( listaPaises[casilla.unidad.propietario] != null ){
+  if( listaPaises[casilla.getUnidad().propietario] != null ){
     unitSprite.width(tamanoCasilla)
     unitSprite.height(tamanoCasilla)
     unitSprite.cache({
@@ -247,13 +250,13 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
       imageSmoothingEnabled: false
     })
     unitSprite.filters([Konva.Filters.HSV])
-    aplicarTinteUnidad({unidadSprite: unitSprite, hsv: listaPaises[casilla.unidad.propietario].hsv})
+    aplicarTinteUnidad({unidadSprite: unitSprite, hsv: listaPaises[casilla.getUnidad().propietario].hsv})
   } else{
-    console.error('No existe este pais', casilla.unidad.propietario)
+    console.error('No existe este pais', casilla.getUnidad().propietario)
   }
   unitKonvaGroup.add(unitSprite)
 
-  const hpActual = Math.ceil( casilla.unidad.hp / 10 )
+  const hpActual = Math.ceil( casilla.getUnidad().hp / 10 )
   const hpTextConfBase:TextConfig = {
     name: 'hp-texto',
     fontSize: Math.ceil(tamanoCasilla / 2),
@@ -277,18 +280,18 @@ export function generarSpriteUnidad(casilla: CasillaSimple, coordenada: coordena
     unitKonvaGroup.add(hpText)
   }
 
-  casilla.unidad.setUnitKonvaGroup(unitKonvaGroup)
+  casilla.getUnidad()?.setUnitKonvaGroup(unitKonvaGroup)
   return unitKonvaGroup
   // return unitSprite
 }
-export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coordenada, mapa: Mapa){
-  const terreno = ListaTerrenos[casilla.tipo]
+export function generarSpriteTerreno(casilla: Casilla, coordenada: coordenada, mapa: Mapa){
+  const terreno = casilla.getTerrenoObjeto()
   const {x,y} = coordenada
   const casillasAdyacentes = {
-    top: mapa.obtenerCasilla({x: (x), y:(y-1)})?.tipo,
-    left: mapa.obtenerCasilla({x: (x-1), y:(y)})?.tipo,
-    right: mapa.obtenerCasilla({x: (x+1), y:(y)})?.tipo,
-    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)})?.tipo
+    top: mapa.obtenerCasilla({x: (x), y:(y-1)})?.getTipo(),
+    left: mapa.obtenerCasilla({x: (x-1), y:(y)})?.getTipo(),
+    right: mapa.obtenerCasilla({x: (x+1), y:(y)})?.getTipo(),
+    bottom: mapa.obtenerCasilla({x: (x), y:(y+1)})?.getTipo()
   }
   // Objeto terreno
   const objTerreno = terreno.obtenerSprite(casillasAdyacentes)
@@ -304,10 +307,10 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
     name: `casilla_${coordenada.x}_${coordenada.y}`,
   })
   
-  const propietario = casilla.propietario
+  const propietario = casilla.getPropietario()
 
-  if( ( casilla.tipo === 'ciudad' || casilla.tipo === 'fabrica' || casilla.tipo === 'aeropuerto' || 
-    casilla.tipo === 'puertoNaval' ) && propietario != null ){
+  if( ( casilla.getTipo() === 'ciudad' || casilla.getTipo() === 'fabrica' || casilla.getTipo() === 'aeropuerto' || 
+    casilla.getTipo() === 'puertoNaval' ) && propietario != null ){
       spriteTerreno.cache({
         pixelRatio: 1,
         imageSmoothingEnabled: false
@@ -319,6 +322,25 @@ export function generarSpriteTerreno(casilla: CasillaSimple, coordenada: coorden
   return spriteTerreno
 }
 
+export async function mostrarCasillas(layerCasillas: Konva.Layer, coordCasillas: coordenada[]){
+  layerCasillas.show()
+
+  for(const coordCasilla of coordCasillas){
+    const cuadroCasilla = layerCasillas.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
+    // animar cada cuadro creciendo (de 0 a 100% al final)
+  }
+
+}
+export async function ocultarCasillas(layerCasillas: Konva.Layer){
+  layerCasillas.find('Rect').forEach(rect => {
+    rect.hide()
+    // animar cuadros decreciendo
+  });
+  
+  layerCasillas.hide()
+}
+
+// Esto talvez lo pueda mover a otro archivo
 // Shaders y tintes de unidad por Comandante Jugable
 export function generarShaderPropiedad () {
   // Al parecer, cada propiedad requiere un shader ligeramente diferente
@@ -344,7 +366,7 @@ export function generarShaderPropiedad () {
       data[i+2] = (gray / 255) * tint.b; // B
     }
   };
-};
+}
 function aplicarTinteUnidad({unidadSprite, hsv} : {unidadSprite: Konva.Sprite, hsv: {h: number|null, s: number|null, v: number|null}}): void{
   if( hsv.h != null ){
     unidadSprite.hue( hsv.h )

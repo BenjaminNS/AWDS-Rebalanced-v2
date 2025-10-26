@@ -36,46 +36,46 @@ export class Terreno {
 export const ListaTerrenos = {
   "planicie": new Terreno(
     "Planicie", 1, "Terreno de fácil navegación pero poca protección", 
-    {tractorOruga: 1,ruedas: 2,aereo: 1, infanteria: 1}, false, false, planicieSpriteFn
+    {oruga: 1,ruedas: 2,aereo: 1, pie: 1}, false, false, planicieSpriteFn
   ),
   "bosque": new Terreno(
     "Bosque", 2, "Terreno difícil de atravesar pero que otorga buena defensa y permite ocultar unidades terrestres", 
-    {tractorOruga: 2,ruedas: 3,aereo: 1, infanteria: 1}, true, false, bosqueSpriteFn
+    {oruga: 2,ruedas: 3,aereo: 1, pie: 1}, true, false, bosqueSpriteFn
   ),
   "montana": new Terreno(
-    "Montaña", 0, "Terreno que ofrece una excelente defensa pero de muy difícil acceso. Solo puede ser navegada por Soldados y unidades aéreas. Ofrece una unidad extra de visión a Soldados a Pie.", {infanteria: 2, aereo: 1}, false, false, 
+    "Montaña", 0, "Terreno que ofrece una excelente defensa pero de muy difícil acceso. Solo puede ser navegada por Soldados y unidades aéreas. Ofrece una unidad extra de visión a Soldados a Pie.", {pie: 2, aereo: 1}, false, false, 
     montanaSpriteFn
   ),
   "cuartelGeneral": new Terreno(
-    "Cuartel General", 4, "Base de operaciones. Si es capturada, pierdes automáticamente el juego y todas tus propiedades pasan al personaje que te quitó esta propiedad.Excelentes defensas. ", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Cuartel General", 4, "Base de operaciones. Si es capturada, pierdes automáticamente el juego y todas tus propiedades pasan al personaje que te quitó esta propiedad.Excelentes defensas. ", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, true,
     cuartelGeneralSpriteFn
   ),
   "ciudad": new Terreno(
-    "Ciudad", 3, "Propiedad que puede reparar unidades terrestres 2 de HP y puede ser capturada por Soldados", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Ciudad", 3, "Propiedad que puede reparar unidades terrestres 2 de HP y puede ser capturada por Soldados", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, true,
     ciudadSpriteFn
   ),
   "fabrica": new Terreno(
-    "Fábrica", 3, "Puedes comprar y reparar unidades terrestres aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Fábrica", 3, "Puedes comprar y reparar unidades terrestres aquí.", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, true,
     fabricaSpriteFn
   ),
   "aeropuerto": new Terreno(
-    "Aeropuerto", 3, "Puedes comprar y reparar unidades aéreas aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, true,
+    "Aeropuerto", 3, "Puedes comprar y reparar unidades aéreas aquí.", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, true,
     aeropuertoSpriteFn
   ),
   "puertoNaval": new Terreno(
-    "Puerto naval", 3, "Puedes comprar y reparar unidades navales aquí.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1, naval: 1}, false, true,
+    "Puerto naval", 3, "Puedes comprar y reparar unidades navales aquí.", {oruga: 1,ruedas: 1,aereo: 1, pie: 1, naval: 1}, false, true,
     puertoNavalSpriteFn
   ),
   "silo": new Terreno(
-    "Silo", 3, "Contiene un misil que puede ser dirigido por un soldado, haciendo 3 de daño en un área de 3x3", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, false,
+    "Silo", 3, "Contiene un misil que puede ser dirigido por un soldado, haciendo 3 de daño en un área de 3x3", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, false,
     siloSpriteFn
   ),
   "camino": new Terreno(
-    "Camino", 0, "Camino pavimentado de fácil acceso pero que no ofrece defensas", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1}, false, false,
+    "Camino", 0, "Camino pavimentado de fácil acceso pero que no ofrece defensas", {oruga: 1,ruedas: 1,aereo: 1, pie: 1}, false, false,
     caminoSpriteFn
   ),
   "puente": new Terreno(
-    "Puente", 0, "Conecta islas para permitir el acceso a unidades terrestres. Las unidades navales pueden atravesarlo, pero con algo de dificultad. No ofrece bonus defensivos.", {tractorOruga: 1,ruedas: 1,aereo: 1, infanteria: 1, naval: 2}, false, false, 
+    "Puente", 0, "Conecta islas para permitir el acceso a unidades terrestres. Las unidades navales pueden atravesarlo, pero con algo de dificultad. No ofrece bonus defensivos.", {oruga: 1,ruedas: 1,aereo: 1, pie: 1, naval: 2}, false, false, 
     puenteSpriteFn
   ),
   "tuberia": new Terreno(
@@ -91,11 +91,11 @@ export const ListaTerrenos = {
     arrecifeSpriteFn
   ),
   "rio": new Terreno(
-    "Rio", 0, "Puede ser atravesado por soldados y unidades navales. No ofrece defensa", {aereo: 1, naval: 1, infanteria: 2}, false, false, 
+    "Rio", 0, "Puede ser atravesado por soldados y unidades navales. No ofrece defensa", {aereo: 1, naval: 1, pie: 2}, false, false, 
     rioSpriteFn
   ),
   "costa": new Terreno(
-    "Costa", 0, "Puede ser navegador por cualquier unidad. Conecta mar con tierra. No ofrece defensa", {tractorOruga: 1,ruedas: 1,aereo: 1, naval: 1, infanteria: 1}, false, false, 
+    "Costa", 0, "Puede ser navegador por cualquier unidad. Conecta mar con tierra. No ofrece defensa", {oruga: 1,ruedas: 1,aereo: 1, naval: 1, pie: 1}, false, false, 
     costaSpriteFn
   ),
   "invalido": new Terreno(

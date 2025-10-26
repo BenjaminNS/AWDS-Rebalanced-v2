@@ -1,7 +1,8 @@
-import type { Mapa, coordenada, Casilla } from "./mapa/mapa"
-import { tamanoCasilla, MAPA_CAPAS } from './mapa/mapaKonva.ts'
+import { Mapa, type coordenada, type Casilla } from "./mapa/mapa"
+import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './mapa/mapaKonva.ts'
 import { moverUnidad } from "./orden.ts"
 import Konva from "konva"
+import type { UnidadCasilla } from "./unidades/unidades.ts"
 
 // Interfaz para interactuar con el mapa
 export class CursorMapaJuego {
@@ -13,6 +14,7 @@ export class CursorMapaJuego {
   private mapa:Mapa
   private layerUnidad:Konva.Layer
   private layerTerreno:Konva.Layer
+  private layerCasillas:Konva.Layer
   // private layerGUI:Konva.Layer
 
   constructor(mapa: Mapa){
@@ -20,6 +22,8 @@ export class CursorMapaJuego {
     this.mapa = mapa
     this.layerUnidad = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES) as Konva.Layer
     this.layerTerreno = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.TERRENO) as Konva.Layer
+    this.layerCasillas = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.CASILLAS) as Konva.Layer
+    ocultarCasillas(this.layerCasillas)
 
     this.mapa.agregarEventoClick((coord:coordenada) => {
       if( !this.leftClick ) return
@@ -40,25 +44,29 @@ export class CursorMapaJuego {
       const tempCasilla = this.mapa.obtenerCasilla(coord)
       if( tempCasilla == null ) return false
       
-      if( tempCasilla.unidad != null ){
+      if( tempCasilla.getUnidad() != null && tempCasilla.getUnidad()?.getTurnos() ){
         // this.seleccionarUnidad()
-          // pintar casillas destino
-          this.coordSeleccionada = coord
           this.casillaSeleccionada = this.mapa.obtenerCasilla(coord)
-          console.log('Casilla seleccionada: ', this.casillaSeleccionada)
-
+          this.coordSeleccionada = coord
+          const coordSeleccionadas = Mapa.obtenerCoordenadasMovimiento(this.mapa, this.coordSeleccionada, this.casillaSeleccionada?.getUnidad())
+          mostrarCasillas(this.layerCasillas, coordSeleccionadas)
         return true
-      } else if( tempCasilla.getTipo()?.esPropiedad ){
-        // this.seleccionarPropiedad()
-          // mostrarOpcionesPropiedad
-        return true
-      } else{
+      } 
+      // else if( tempCasilla.getTerrenoObjeto()?.esPropiedad && tempCasilla.getUnidad() == null ){
+      //   // Si es tu propiedad y no tiene unidad encima
+      //   console.log('Escogiste tu propiedad')
+      //   // this.seleccionarPropiedad()
+      //     // mostrarOpcionesPropiedad
+      //   return true
+      // } 
+      else{
         return false
       }
     } else{
-      const spriteUnidad = this.layerUnidad.findOne(`#${this.casillaSeleccionada?.unidad.id}`)
+      const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
+      const spriteUnidad = this.layerUnidad.findOne(`#${unidadSeleccionada?.id}`)
       if( spriteUnidad ){
-        // despintar casillas
+        ocultarCasillas(this.layerCasillas)
         this.leftClick = false
         this.rightClick = false
         moverUnidad(this.coordSeleccionada, spriteUnidad, ['derecha', 'arriba', 'arriba', 'derecha'], tamanoCasilla, this.mapa).then(res => {
@@ -72,6 +80,7 @@ export class CursorMapaJuego {
         .finally(() => {
           this.leftClick = true
           this.rightClick = true
+          unidadSeleccionada.gastarTurno()
           this.deseleccionarCasilla()
         })
       }

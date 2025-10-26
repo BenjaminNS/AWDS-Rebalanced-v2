@@ -31,40 +31,58 @@ export class CasillaSimple{
   }
 }
 export class Casilla{
-  tipo: nombreTerreno;
-  propietario: number|null;
+  #tipo: nombreTerreno;
+  #propietario: number|null;
+  #unidad: UnidadCasilla|null;
   sprite: Konva.Image|null; //¿Debería ser spriteTerreno o Konva.Image?
-  unidad: UnidadCasilla|null;
 
   constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
     if(ListaTerrenos[tipo] == undefined){
       console.error('Tipo de casilla no encontrada: ', tipo)
-      this.tipo = 'invalido';
-      this.propietario = null
+      this.#tipo = 'invalido';
+      this.#propietario = null
     } else{
-      this.tipo=tipo;
+      this.#tipo=tipo;
 
       if( ListaTerrenos[tipo].esPropiedad ){
-        this.propietario=propietario;
+        this.#propietario=propietario;
       } else if ( !ListaTerrenos[tipo].esPropiedad && propietario != null ) {
         console.error(`No se puede ser dueño de las casillas tipo "${tipo}"`)
-        this.propietario=null;
+        this.#propietario=null;
       } else{
-        this.propietario=null;
+        this.#propietario=null;
       }
     }
     
     // ¿Debería validar?
-    this.unidad = unidad;
+    this.#unidad = unidad;
     this.sprite = null;
   }
 
-  public getTipo = ():Terreno|null => {
-    return ListaTerrenos[this.tipo]
+  public getTerrenoObjeto = ():Terreno|null =>{
+    return ListaTerrenos[this.#tipo]
+  }
+  public getTipo = () => {
+    return this.#tipo
+  }
+  public setTipo = ():Terreno|null => {
+    return ListaTerrenos[this.#tipo]
+  }
+  public getPropietario = () => this.#propietario
+  public setPropietario(propietario:number|null){
+    this.#propietario = propietario
+  }
+  public getUnidad = () => this.#unidad
+  public setUnidad(unidad:UnidadCasilla|null){
+    this.#unidad = unidad
+  }
+  public getSprite(){
+    return
+  }
+  public setSprite(sprite:Konva.Image){
+    this.sprite = sprite
   }
 }
-
-
 
 export class Mapa{
   nombre: string;
@@ -78,7 +96,8 @@ export class Mapa{
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
   obtenerCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
-    if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length ){
+    if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
+      || coord.x >= this.dimensiones.columnas || coord.y >= this.dimensiones.filas ){
       return null
     } else{
       return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )]
@@ -230,6 +249,31 @@ export class Mapa{
     return setCoordTerrenos
   }
 
+  static obtenerCoordenadasMovimiento(mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple){
+    const distanciaMax = Math.min(unidad.obtenerTipo()?.movilidad, unidad.gasActual)
+    const listaCoordMovimiento = [{...coordOriginal, movDisponible: distanciaMax}]
+
+    // El paso puede ser de +0.5 para aceptar movimientos intermedios
+    for (let movDisponible = distanciaMax; movDisponible > 0; movDisponible--) {
+      const tempCoords = listaCoordMovimiento.filter(coord => coord.movDisponible === movDisponible)
+
+      for(const coord of tempCoords){
+        const top = esCoordenadaValida( {...coord, y: ( coord.y - 1 )}, mapa, unidad, listaCoordMovimiento )
+        if( top != null ) listaCoordMovimiento.push(top)
+        const left = esCoordenadaValida( {...coord, x: ( coord.x - 1 )}, mapa, unidad, listaCoordMovimiento )
+        if( left != null ) listaCoordMovimiento.push(left)
+        const right = esCoordenadaValida( {...coord, x: ( coord.x + 1 )}, mapa, unidad, listaCoordMovimiento )
+        if( right != null ) listaCoordMovimiento.push(right)
+        const bottom = esCoordenadaValida( {...coord, y: ( coord.y + 1 )}, mapa, unidad, listaCoordMovimiento )
+        if( bottom != null ) listaCoordMovimiento.push(bottom)
+      }
+    }
+
+    return listaCoordMovimiento
+  }
+  
+
+
   constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
     this.nombre=nombre;
     this.dimensiones = dimensiones
@@ -253,7 +297,19 @@ export class Mapa{
       console.error(`Total de casillas: ${casillas.length}`)
     }
 
-    this.casillas = casillas
+    const casillasTemp:Casilla[] = []
+    for(const casilla of casillas){
+      // if( casilla instanceof Casilla ){
+      if( casilla instanceof Casilla ) {
+        casillasTemp.push(casilla)
+      } else {
+        // ### Aquí haríamos la validación
+        // Si los datos no existen desde el json, los ponemos como nulos
+        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad))
+      }
+    }
+
+    this.casillas = casillasTemp
     this.konvaStage = null
   }
 }
@@ -290,4 +346,31 @@ export class MapaSimple{
 
     this.casillas=casillas;
   }
+}
+
+type coordDist = {
+  x: number,
+  y: number,
+  movDisponible: number
+}
+
+function esCoordenadaValida(coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa, unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number}|null{
+  const casilla = mapa.obtenerCasilla(coordDato)
+  if( casilla == null ) return null
+
+  const objTerreno = casilla.getTerrenoObjeto()
+  if( objTerreno == null ) return null
+
+  const costoMovimiento = objTerreno.costosMovimientos[unidad.obtenerTipo().tipoMovimiento]
+  if( costoMovimiento == null ) return null
+
+  if( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
+
+  // Si hay vista y hay una unidad del equipo oponente en esa casilla
+
+  // Si ya existe la coordenada con dist
+  const coordExistente = coordCasillas.find(c => c.x === coordDato.x && c.y === coordDato.y && c.movDisponible >= coordDato.movDisponible )
+  if( coordExistente != null ) return null
+
+  return { ...coordDato, movDisponible: coordDato.movDisponible - costoMovimiento }
 }

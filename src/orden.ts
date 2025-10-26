@@ -1,6 +1,7 @@
 import type { Casilla, coordenada, Mapa } from "./mapa/mapa";
 // import type { Unidad } from "./unidades/unidades";
 import Konva from "konva";
+import type { Unidad, UnidadCasilla } from "./unidades/unidades";
 export type direccion = 'arriba'|'izquierda'|'derecha'|'abajo'
 const durationMovement = .3
 
@@ -25,6 +26,8 @@ export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Spr
   // Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
     const coordDestino = { ...coordOrigen }
+    const unidadSeleccionada = mapa.obtenerCasilla(coordDestino)?.getUnidad() as UnidadCasilla
+
     for (const direccion of direcciones) {
       const translateCoord = obtenerDireccion(direccion)
       if (translateCoord.x === 0 && translateCoord.y === 0) {
@@ -37,8 +40,8 @@ export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Spr
       coordDestino.y += translateCoord.y
       const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
 
-      if( casillaDestino == null || casillaDestino.unidad != null ){
-        // Animar fallo
+      if( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
+        // Animación de fallo
         reject()
         return
       } else{
@@ -49,8 +52,9 @@ export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Spr
             x: spriteUnidad.x() + tamanoCasilla * translateCoord.x,
             y: spriteUnidad.y() + tamanoCasilla * translateCoord.y,
             onFinish: () => {
-              casillaDestino.unidad = casillaOrigen.unidad
-              casillaOrigen.unidad = null
+              unidadSeleccionada.gastarGasolinaTerreno(casillaDestino.getTipo())
+              casillaDestino.setUnidad(unidadSeleccionada)
+              casillaOrigen.setUnidad(null)
               res(true)
             }
           }).play()
@@ -81,9 +85,9 @@ export class OrdenUnidad {
   coordOrigen: coordenada
   accion: Accion
 
-  constructor(dirrecciones:direccion[], coordOrigen:coordenada, direcciones: direccion[], accion: Accion){
-    this.coordOrigen = coordOrigen
+  constructor(coordOrigen:coordenada, direcciones: direccion[], accion: Accion){
     this.direcciones = direcciones
+    this.coordOrigen = coordOrigen
     this.accion = accion
   }
 
@@ -132,8 +136,8 @@ export class OrdenUnidad {
           y: spriteUnidad.y() + mapa.tamanoCasilla * translateCoord.y,
           onFinish: () => {
             listaMovimientos.push(direccion)
-            casillaDestino.unidad = casillaOrigen.unidad
-            casillaOrigen.unidad = null
+            casillaDestino.setUnidad(casillaOrigen.getUnidad())
+            casillaOrigen.setUnidad(null)
             res(true)
           }
         }).play()
