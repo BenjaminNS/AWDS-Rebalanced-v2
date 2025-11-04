@@ -249,26 +249,43 @@ export class Mapa{
     return setCoordTerrenos
   }
 
-  static obtenerCoordenadasMovimiento(mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple){
+  obtenerCoordenadasMovimiento(mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple|undefined|null){
+    const listaCoordMovimiento = [{ ...coordOriginal, movDisponible: 0, ...casAdyacentes }]
+    if( unidad == null ){
+      return listaCoordMovimiento
+    }
     const distanciaMax = Math.min(unidad.obtenerTipo()?.movilidad, unidad.gasActual)
-    const listaCoordMovimiento = [{...coordOriginal, movDisponible: distanciaMax}]
+    listaCoordMovimiento[0].movDisponible = distanciaMax
 
     // El paso puede ser de +0.5 para aceptar movimientos intermedios
     for (let movDisponible = distanciaMax; movDisponible > 0; movDisponible--) {
       const tempCoords = listaCoordMovimiento.filter(coord => coord.movDisponible === movDisponible)
 
       for(const coord of tempCoords){
-        const top = esCoordenadaValida( {...coord, y: ( coord.y - 1 )}, mapa, unidad, listaCoordMovimiento )
-        if( top != null ) listaCoordMovimiento.push(top)
-        const left = esCoordenadaValida( {...coord, x: ( coord.x - 1 )}, mapa, unidad, listaCoordMovimiento )
-        if( left != null ) listaCoordMovimiento.push(left)
-        const right = esCoordenadaValida( {...coord, x: ( coord.x + 1 )}, mapa, unidad, listaCoordMovimiento )
-        if( right != null ) listaCoordMovimiento.push(right)
-        const bottom = esCoordenadaValida( {...coord, y: ( coord.y + 1 )}, mapa, unidad, listaCoordMovimiento )
-        if( bottom != null ) listaCoordMovimiento.push(bottom)
+        const top = esCoordenadaValida( {...coord, y: ( coord.y - 1 )}, this, unidad, listaCoordMovimiento )
+        if( top != null ) {
+          coord.top = {...top, ...casAdyacentes}
+          listaCoordMovimiento.push(coord.top)
+        }
+        const left = esCoordenadaValida( {...coord, x: ( coord.x - 1 )}, this, unidad, listaCoordMovimiento )
+        if( left != null ) {
+          coord.left = {...left, ...casAdyacentes}
+          listaCoordMovimiento.push(coord.left)
+        }
+        const right = esCoordenadaValida( {...coord, x: ( coord.x + 1 )}, this, unidad, listaCoordMovimiento )
+        if( right != null ) {
+          coord.right = {...right, ...casAdyacentes}
+          listaCoordMovimiento.push(coord.right)
+        }
+        const bottom = esCoordenadaValida( {...coord, y: ( coord.y + 1 )}, this, unidad, listaCoordMovimiento )
+        if( bottom != null ) {
+          coord.bottom = {...bottom, ...casAdyacentes}
+          listaCoordMovimiento.push(coord.bottom)
+        }
       }
     }
 
+    console.log(listaCoordMovimiento)
     return listaCoordMovimiento
   }
   
@@ -314,6 +331,13 @@ export class Mapa{
   }
 }
 
+const casAdyacentes:{ top: any|null, left: any|null, right: any|null, bottom: any|null } = { top: null, left: null, right: null, bottom: null }
+// type casillaAlcanzable = {x: number, y: number, movDisponible: number}
+// type casillaAdyacente = {
+//   top: casillaAlcanzable, top
+// }
+
+
 export class MapaSimple{
   nombre: string;
   dimensiones: dimension
@@ -346,12 +370,6 @@ export class MapaSimple{
 
     this.casillas=casillas;
   }
-}
-
-type coordDist = {
-  x: number,
-  y: number,
-  movDisponible: number
 }
 
 function esCoordenadaValida(coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa, unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number}|null{

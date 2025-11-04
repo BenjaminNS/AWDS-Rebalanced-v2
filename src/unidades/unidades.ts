@@ -59,7 +59,7 @@ export class UnidadSimple {
   #turnos: number;
   nombreUnidad: nombreUnidad;
   
-  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado, turnos?: number ){
+  constructor(nombreUnidad: nombreUnidad, propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos?: number ){
     // Talvez también pueda validar que el nombre de la unidad si exista
     this.nombreUnidad = nombreUnidad;
     this.id = crypto.randomUUID();
@@ -93,7 +93,12 @@ export class UnidadSimple {
     }else{
       this.gasActual = gasActual;
     }
-    this.estado = estado;
+    // O que no es un posible estado
+    if(estado == null ){
+      this.estado = 'normal';
+    } else{
+      this.estado = estado;
+    }
 
     if(turnos) this.#turnos = turnos
     else this.#turnos = 1
