@@ -2,7 +2,8 @@ import { type Casilla, type coordenada, Mapa } from "./mapa/mapa";
 // import type { Unidad } from "./unidades/unidades";
 import Konva from "konva";
 import type { Unidad, UnidadCasilla } from "./unidades/unidades";
-export type direccion = 'arriba'|'izquierda'|'derecha'|'abajo'
+import { generarCoordenadaVector } from "./camino";
+import { type direccion } from "./camino";
 const durationMovement = .3
 
 type nombreAccion = 'esperar'|'atacar'|'combinar'|'capturar'|'abordar' |'soltar' |'construir'|'sumergir'|'subir' |'esconder'|'reaparecer' |'detonar'|'seleccionar unidad'|'seleccionar propiedad'|'unidad movida'
@@ -152,7 +153,7 @@ export class OrdenUnidad {
   }
 }
 
-export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: direccion[], tamanoCasilla:number, mapa:Mapa):Promise<any>{
+export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<any>{
   // Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
     const coordDestino = { ...coordOrigen }
@@ -193,34 +194,4 @@ export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Spr
     }
     resolve(true)
   })
-}
-
-export function generarCoordenadaVector(direccion:direccion):coordenada{
-  switch(direccion){
-    case "arriba":
-      return {x: 0, y: - 1}
-    case "izquierda":
-      return {x: - 1, y: 0}
-    case "derecha":
-      return {x: 1, y: 0}
-    case "abajo":
-      return {x: 0, y: 1}
-    default:
-      return {x:0, y: 0}
-  }
-}
-
-export function generarDireccion(coord:coordenada):direccion|'ninguno'{
-  switch(coord){
-    case {x: 0, y: - 1}:
-      return "arriba"
-    case {x: - 1, y: 0}:
-      return "izquierda"
-    case {x: 1, y: 0}:
-      return "derecha"
-    case {x: 0, y: 1}:
-      return "abajo"
-    default:
-      return 'ninguno'
-  }
 }

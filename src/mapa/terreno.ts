@@ -43,7 +43,7 @@ export const ListaTerrenos = {
     {oruga: 2,ruedas: 3,aereo: 1, pie: 1}, true, false, bosqueSpriteFn
   ),
   "montana": new Terreno(
-    "Montaña", 0, "Terreno que ofrece una excelente defensa pero de muy difícil acceso. Solo puede ser navegada por Soldados y unidades aéreas. Ofrece una unidad extra de visión a Soldados a Pie.", {pie: 2, aereo: 1}, false, false, 
+    "Montaña", 4, "Terreno que ofrece una excelente defensa pero de muy difícil acceso. Solo puede ser navegada por Soldados y unidades aéreas. Ofrece una unidad extra de visión a Soldados a Pie.", {pie: 2, aereo: 1}, false, false, 
     montanaSpriteFn
   ),
   "cuartelGeneral": new Terreno(

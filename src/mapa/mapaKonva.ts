@@ -2,6 +2,10 @@ import Konva from 'konva'
 import terrainTilesheets from '/img/terrenos/terrains_tilesheets.png'
 const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src=terrainTilesheets
+import caminoInicio from '/img/terrenos/terrains_tilesheets.png'
+const CaminoSprite = new window.Image()
+TerrainTilesheets.src = caminoInicio
+
 import { ListaTerrenos } from './terreno.ts'
 import { sleep } from '../common.js'
 // import { Unidad } from '../unidades/unidades.ts'
@@ -11,6 +15,7 @@ import { type coordenada, type dimension, Casilla, CasillaSimple, Mapa } from '.
 import type { nombreTerreno, Terreno } from './terreno.ts'
 // import type { Unidad } from '../unidades/unidades.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
+import { generarCapaCaminos } from './konvaCamino.ts'
 
 export const tamanoCasilla = 32
 const standardSpriteSize = 16
@@ -53,6 +58,7 @@ export const MAPA_CAPAS={
   FONDO: 'fondo',
   TERRENO: 'terreno',
   CASILLAS: 'casillas',
+  CAMINO: 'camino',
   UNIDADES: 'unidades',
   // GUI: 'gui',
 }
@@ -191,7 +197,6 @@ function generarCapaUnidades({mapa}: {mapa: Mapa}){
   return capaUnidades
 }
 
-
 async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor: string}){
   generarShaderPropiedad()
   mapa.konvaStage = generarStage({
@@ -207,6 +212,9 @@ async function generarCapasMapa({mapa, idContenedor} : {mapa: Mapa, idContenedor
   const capaCasillas = generarCapaCasillas({mapa: mapa})
   mapa.konvaStage.add(capaCasillas)
   capaCasillas.hide()
+  const capaCamino = generarCapaCaminos({mapa: mapa})
+  mapa.konvaStage.add(capaCamino)
+  capaCamino.hide()
   const capaUnidades = generarCapaUnidades({mapa: mapa})
   mapa.konvaStage.add(capaUnidades)
 
@@ -326,7 +334,7 @@ export async function mostrarCasillas(layerCasillas: Konva.Layer, coordCasillas:
   layerCasillas.show()
 
   for(const coordCasilla of coordCasillas){
-    const cuadroCasilla = layerCasillas.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
+    layerCasillas.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
     // animar cada cuadro creciendo (de 0 a 100% al final)
   }
 

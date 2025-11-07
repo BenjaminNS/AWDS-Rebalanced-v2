@@ -1,11 +1,13 @@
 import { Mapa, type coordenada, type Casilla } from "./mapa/mapa"
 import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './mapa/mapaKonva.ts'
-import { Accion, moverUnidad, OrdenUnidad, type direccion, generarDireccion } from "./orden.ts"
+import { Accion, moverUnidad, OrdenUnidad } from "./orden.ts"
 import Konva from "konva"
 import type { UnidadCasilla } from "./unidades/unidades.ts"
 import { getInfoCasillaVariables, actualizarInfo } from "./componentes/info_casilla.ts"
+import { Camino, type cordCosto } from "./camino.ts"
+import { ocultarCaminos } from "./mapa/konvaCamino.ts"
 
-type coordVector = {x: 0, y:-1}|{x: -1, y:0}|{x: 1, y:0}|{x: 0, y:1}
+// type coordVector = {x: 0, y:-1}|{x: -1, y:0}|{x: 1, y:0}|{x: 0, y:1}
 
 // Cursor
 import CursorSprite from './../public/img/huds/cursor_mapa.png'
@@ -20,15 +22,15 @@ export class CursorMapaJuego {
   private casillaSeleccionada: null|Casilla
   private leftClick = true
   private rightClick = true
+  private camino = new Camino()
 
   private mapa:Mapa
-  private layerUnidad:Konva.Layer
   private layerTerreno:Konva.Layer
+  private layerCamino:Konva.Layer
+  private layerUnidad:Konva.Layer
   private layerCasillas:Konva.Layer
   private layerCursor:Konva.Layer
-
-  private casillasMovimiento
-
+  
   private cursorImg:Konva.Image
   // private layerGUI:Konva.Layer
 
@@ -40,15 +42,17 @@ export class CursorMapaJuego {
   //     rej({status: false, movimientos: ['abajo']})
   //   }
   // })))
-  private camino:coordVector[] = []
 
   constructor(mapa: Mapa){
     this.coordSeleccionada = null
     this.mapa = mapa
     this.layerUnidad = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES) as Konva.Layer
     this.layerTerreno = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.TERRENO) as Konva.Layer
+    this.layerCamino = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.CAMINO) as Konva.Layer
     this.layerCasillas = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.CASILLAS) as Konva.Layer
     ocultarCasillas(this.layerCasillas)
+
+    this.camino.setLayerCamino(this.layerCamino)
 
     this.layerCursor = new Konva.Layer({ name: 'cursor' })
     this.cursorImg = new Konva.Image({
@@ -85,29 +89,9 @@ export class CursorMapaJuego {
       
       // if hay unidad seleccionada en proceso de escoger camino y casillaHover es nueva en la ruta
       if( this.casillaSeleccionada?.getUnidad() != null && this.coordSeleccionada != null ){
-        if( this.camino.length === 0 ){
-          const coordVector = { x: ( this.coordSeleccionada.x - coordHover.x), y: ( this.coordSeleccionada.y - coordHover.y ) }
-          // Math.abs( this.coordSeleccionada.x - coordHover.x) + Math.abs(this.coordSeleccionada.y - coordHover.y )
-          const direccion = generarDireccion(coordVector)
-          if( direccion != "ninguno" ) { 
-            this.camino.push(direccion) 
-          }
-          // else { la coordenada generada no es posible }
-        } else {
-          this.camino[0]
-          const coordVector = { x: ( this.camino[0] - coordHover.x), y: ( this.coordSeleccionada.y - coordHover.y ) }
-          const direccion = generarDireccion(coordVector)
-          if( direccion != "ninguno" ) { 
-            this.camino.push(direccion) 
-          }
-          // else { la coordenada generada no es posible }
-        }
-        // añadir casilla de hover a la ruta
-        // if costo total de movimiento es mayor al disponible (movilidad o gasolina)
-          // recalcular camino
-        // pintar camino
+        this.camino.agregarCoordenada(coordHover)
       } else{
-        // Acomoda la imagen del cursor
+        // Solo debería acomodar la imagen del cursor cuando no hay algún menú abierto en el canva
         this.cursorImg.x(coordHover.x * tamanoCasilla)
         this.cursorImg.y(coordHover.y * tamanoCasilla)
   
@@ -129,8 +113,6 @@ export class CursorMapaJuego {
     })
     // this.mapa.agregarEventoHover(handleHoverMapa, tamanoCasilla)
     this.casillaSeleccionada = null
-
-    this.ordenActual 
   }
 
   // Quitar parte asíncrona, va donde se ejecute la orden
@@ -140,11 +122,12 @@ export class CursorMapaJuego {
       if( tempCasilla == null ) return false
       
       if( tempCasilla.getUnidad() != null && tempCasilla.getUnidad()?.getTurnos() ){
-        // this.seleccionarUnidad()
-          this.casillaSeleccionada = this.mapa.obtenerCasilla(coord)
-          this.coordSeleccionada = coord
-          const coordSeleccionadas = this.mapa.obtenerCoordenadasMovimiento(this.mapa, this.coordSeleccionada, this.casillaSeleccionada?.getUnidad())
-          mostrarCasillas(this.layerCasillas, coordSeleccionadas)
+        this.coordSeleccionada = coord
+        this.casillaSeleccionada = this.mapa.obtenerCasilla(coord) as Casilla
+        this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, this.casillaSeleccionada?.getUnidad()))
+        this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento())
+        this.camino.agregarCoordenada(coord) //Se supone que es la primera coordenada
+        mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
         return true
       } 
       // else if( tempCasilla.getTerrenoObjeto()?.esPropiedad && tempCasilla.getUnidad() == null ){
@@ -165,8 +148,7 @@ export class CursorMapaJuego {
         this.leftClick = false
         this.rightClick = false
 
-        const movimientos:direccion[] = ['derecha', 'arriba', 'arriba', 'derecha']
-        moverUnidad(this.coordSeleccionada, spriteUnidad, movimientos, tamanoCasilla, this.mapa).then(res => {
+        moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), tamanoCasilla, this.mapa).then(res => {
           console.log("Response: ", res)
           return true
         })
@@ -176,9 +158,11 @@ export class CursorMapaJuego {
           return false
         })
         .finally(() => {
+          console.log('Camino: ', this.camino.getCamino())
           this.leftClick = true
           this.rightClick = true
           unidadSeleccionada.gastarTurno()
+          this.camino.limpiarCoordenadasCamino()
           this.deseleccionarCasilla()
         })
       }
@@ -191,6 +175,7 @@ export class CursorMapaJuego {
       this.coordSeleccionada = null
       this.casillaSeleccionada = null
       ocultarCasillas(this.layerCasillas)
+      ocultarCaminos(this.layerCamino)
       // Si se seleccionó una propiedad
       // ocultarMenuOpciones()
   }
@@ -208,33 +193,4 @@ export class CursorMapaJuego {
       return this.coordSeleccionada
   }
 
-}
-
-export class Camino{
-  private coordOrigen:coordenada|null = null
-  private coordenadas:coordenada[] = []
-  constructor(){}
-
-  public setCoordOrigen(coord:coordenada){
-    this.coordOrigen = coord
-  }
-  public agregarCoordenada(coord:coordenada){
-    // if no existe y es adyacente a la ultima casilla añadida
-    if( this.coordOrigen != null ){
-      if( this.coordenadas[(this.coordenadas.length)].x != coord.x && this.coordenadas[(this.coordenadas.length)].y != coord.y ){
-        this.coordenadas.push(coord)
-      }
-      return true
-    } else{
-      return false
-    }
-  }
-
-  private recalcularCamino(){
-
-  }
-
-  public limpiarCoordenadas(){
-    this.coordenadas = []
-  }
 }

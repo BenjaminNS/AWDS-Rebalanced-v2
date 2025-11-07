@@ -117,6 +117,10 @@ export class UnidadSimple {
   public getTurnos(){
     return this.#turnos
   }
+
+  public getMaxMovimiento(){
+    return Math.min(this.obtenerTipo()?.movilidad, this.gasActual)
+  }
 }
 
 export class UnidadCasilla extends UnidadSimple{
