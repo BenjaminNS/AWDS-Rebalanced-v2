@@ -2,18 +2,10 @@ import Konva from 'konva'
 import terrainTilesheets from '/img/terrenos/terrains_tilesheets.png'
 const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src=terrainTilesheets
-import caminoInicio from '/img/terrenos/terrains_tilesheets.png'
-const CaminoSprite = new window.Image()
-TerrainTilesheets.src = caminoInicio
-
-import { ListaTerrenos } from './terreno.ts'
 import { sleep } from '../common.js'
-// import { Unidad } from '../unidades/unidades.ts'
 import { listaPaises } from "../comandantes/paises.ts"
-import { arregloTerrenosNombres } from './terreno.ts'
-import { type coordenada, type dimension, Casilla, CasillaSimple, Mapa } from './mapa.ts'
-import type { nombreTerreno, Terreno } from './terreno.ts'
-// import type { Unidad } from '../unidades/unidades.ts'
+import { arregloTerrenosNombres, type nombreTerreno } from './terreno.ts'
+import { type coordenada, type dimension, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 import { generarCapaCaminos } from './konvaCamino.ts'
 
