@@ -14,52 +14,52 @@ export type coordenada = {
 }
 
 export class CasillaSimple{
-  tipo: nombreTerreno;
-  propietario: number|null;
+  tipo: nombreTerreno
+  propietario: number|null
   // clima?: Clima
-  unidad?: UnidadSimple|null;
+  unidad?: UnidadSimple|null
 
-  constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
-    if(ListaTerrenos[tipo] == undefined){
+  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
+    if (ListaTerrenos[tipo] == undefined){
       console.error('Tipo de casilla no encontrada: ', tipo)
-      this.tipo='invalido';
-    } else{
-      this.tipo=tipo;
+      this.tipo = 'invalido'
+    } else {
+      this.tipo = tipo
     }
-    this.propietario = propietario;
-    this.unidad = unidad;
+    this.propietario = propietario
+    this.unidad = unidad
   }
 }
 export class Casilla{
-  #tipo: nombreTerreno;
-  #propietario: number|null;
-  #unidad: UnidadCasilla|null;
-  sprite: Konva.Image|null; //¿Debería ser spriteTerreno o Konva.Image?
+  #tipo: nombreTerreno
+  #propietario: number|null
+  #unidad: UnidadCasilla|null
+  sprite: Konva.Image|null // ¿Debería ser spriteTerreno o Konva.Image?
 
-  constructor(tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
-    if(ListaTerrenos[tipo] == undefined){
+  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
+    if (ListaTerrenos[tipo] == undefined){
       console.error('Tipo de casilla no encontrada: ', tipo)
-      this.#tipo = 'invalido';
+      this.#tipo = 'invalido'
       this.#propietario = null
-    } else{
-      this.#tipo=tipo;
+    } else {
+      this.#tipo = tipo
 
-      if( ListaTerrenos[tipo].esPropiedad ){
-        this.#propietario=propietario;
+      if ( ListaTerrenos[tipo].esPropiedad ){
+        this.#propietario = propietario
       } else if ( !ListaTerrenos[tipo].esPropiedad && propietario != null ) {
         console.error(`No se puede ser dueño de las casillas tipo "${tipo}"`)
-        this.#propietario=null;
-      } else{
-        this.#propietario=null;
+        this.#propietario = null
+      } else {
+        this.#propietario = null
       }
     }
-    
+
     // ¿Debería validar?
-    this.#unidad = unidad;
-    this.sprite = null;
+    this.#unidad = unidad
+    this.sprite = null
   }
 
-  public getTerrenoObjeto = ():Terreno|null =>{
+  public getTerrenoObjeto = ():Terreno|null => {
     return ListaTerrenos[this.#tipo]
   }
   public getTipo = () => {
@@ -69,26 +69,26 @@ export class Casilla{
     return ListaTerrenos[this.#tipo]
   }
   public getPropietario = () => this.#propietario
-  public setPropietario(propietario:number|null){
+  public setPropietario (propietario:number|null){
     this.#propietario = propietario
   }
   public getUnidad = () => this.#unidad
-  public setUnidad(unidad:UnidadCasilla|null){
+  public setUnidad (unidad:UnidadCasilla|null){
     this.#unidad = unidad
   }
-  public getSprite(){
+  public getSprite (){
     return
   }
-  public setSprite(sprite:Konva.Image){
+  public setSprite (sprite:Konva.Image){
     this.sprite = sprite
   }
 }
 
 export class Mapa{
-  nombre: string;
+  nombre: string
   dimensiones: dimension
-  casillas: Casilla[];
-  konvaStage: Konva.Stage|null;
+  casillas: Casilla[]
+  konvaStage: Konva.Stage|null
   tamanoCasilla = tamanoCasilla
   modo:'estricto'|'permisivo' = 'permisivo'
   // estricto: No permite poner unidades en casillas inválidas
@@ -96,110 +96,108 @@ export class Mapa{
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
   obtenerCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
-    if( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
+    if ( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
       || coord.x >= this.dimensiones.columnas || coord.y >= this.dimensiones.filas ){
       return null
-    } else{
+    } else {
       return this.casillas[( ( coord.y * this.dimensiones.columnas ) + coord.x )]
     }
   }
 
   // Talvez debería mover esta función a partida
-  obtenerComandantesJugables = ():Set<number|null> =>{
+  obtenerComandantesJugables = ():Set<number|null> => {
     const setComandanteJugables = new Set()
     for (let i = 0; i < this.casillas.length; i++) {
-      if( typeof this.casillas[i].propietario === 'number' ){
+      if ( typeof this.casillas[i].propietario === 'number' ){
         setComandanteJugables.add(this.casillas[i].propietario)
       }
-      if( this.casillas[i].unidad != null && typeof this.casillas[i].unidad?.propietario === 'number' ){
+      if ( this.casillas[i].unidad != null && typeof this.casillas[i].unidad?.propietario === 'number' ){
         setComandanteJugables.add(this.casillas[i].unidad?.propietario)
 
       }
     }
 
-    return setComandanteJugables;
+    return setComandanteJugables
   }
 
   esMapaValido = ():boolean => {
     const setComandanteJugables = this.obtenerComandantesJugables()
 
-    if( setComandanteJugables.size == 0 ){
+    if ( setComandanteJugables.size == 0 ){
       console.error('No existen jugadores para este mapa')
       return false
-    } else if( setComandanteJugables.size < 2 ){
+    } else if ( setComandanteJugables.size < 2 ){
       console.error('Deben haber al menos 2 jugador para que un mapa sea jugable')
       return false
     }
 
     // Que no falten jugadores (no haya brincos de un jugador a otro)
-    let jugadoresFaltantes:number[] = []
+    const jugadoresFaltantes:number[] = []
     for (let i = 0; i < setComandanteJugables.size; i++) {
-      if( !setComandanteJugables.has(i) ) {
+      if ( !setComandanteJugables.has(i) ) {
         jugadoresFaltantes.push(i)
         setComandanteJugables.delete(i)
       }
     }
-    if( jugadoresFaltantes.length > 0  ){
+    if ( jugadoresFaltantes.length > 0 ){
       console.error('Hay jugadores faltantes en este mapa', jugadoresFaltantes)
     }
-
 
     // Que al menos cada comandante jugable tenga una unidad o al menos algún tipo de fábrica
     for (let i = 0; i < this.casillas.length; i++) {
       // Que al menos cada comandante jugable tenga un tipo de fábrica
-      if( typeof this.casillas[i].propietario === 'number' 
-        && 
+      if ( typeof this.casillas[i].propietario === 'number'
+        &&
         ( this.casillas[i].tipo === 'fabrica' || this.casillas[i].tipo === 'aeropuerto' || this.casillas[i].tipo === 'puertoNaval' )
       ){
         setComandanteJugables.delete(this.casillas[i].propietario)
       }
 
       // O al menos una unidad
-      if( this.casillas[i].unidad != null && typeof this.casillas[i].unidad.propietario === 'number' ){
+      if ( this.casillas[i].unidad != null && typeof this.casillas[i].unidad.propietario === 'number' ){
         setComandanteJugables.delete(this.casillas[i].unidad.propietario)
       }
     }
-    if( setComandanteJugables.size > 0 ){
+    if ( setComandanteJugables.size > 0 ){
       console.error('Hay jugadores invalidos en este mapa', setComandanteJugables)
     }
 
-
-    if( jugadoresFaltantes.length > 0 || setComandanteJugables.size > 0 ){
+    if ( jugadoresFaltantes.length > 0 || setComandanteJugables.size > 0 ){
       return false
     }
     return true
   }
 
-  public agregarEventoClick(fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
-    if( this.konvaStage && tamanoCasilla > 0){
+  public agregarEventoClick (fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
+    if ( this.konvaStage && tamanoCasilla > 0){
       this.konvaStage?.on('click', (evt) => {
         // Si no es click izquierdo
-        if( evt.evt.button != 0 ) return
+        if ( evt.evt.button != 0 ) return
 
         const pos = this.konvaStage?.getPointerPosition()
         if (!pos) return
         const casillaX = Math.floor(pos.x / tamanoCasilla)
         const casillaY = Math.floor(pos.y / tamanoCasilla)
 
-        fnClick({x: casillaX, y: casillaY})
+        fnClick({ x: casillaX, y: casillaY })
       })
     }
   }
-  public quitarEventoClick(){
+  public quitarEventoClick (){
     this.konvaStage?.off('click')
   }
 
-  static generarMapaSimple(mapa:Mapa):MapaSimple{
-    let _casillasSimples:CasillaSimple[] = [];
+  static generarMapaSimple (mapa:Mapa):MapaSimple{
+    const _casillasSimples:CasillaSimple[] = []
     mapa.casillas.forEach(casilla => {
       const _unidadSimple:UnidadSimple|null = casilla.unidad ?
-      new UnidadSimple(casilla.unidad.nombreUnidad, casilla.unidad.propietario, casilla.unidad.hp, 
-        casilla.unidad.municiones, casilla.unidad.gasActual, casilla.unidad.estado) : null
+        new UnidadSimple(casilla.unidad.nombreUnidad, casilla.unidad.propietario, casilla.unidad.hp,
+          casilla.unidad.municiones, casilla.unidad.gasActual, casilla.unidad.estado) : null
       // Simplificar: No mandar datos si son nulos para no mandar contenido de más (se reduce el peso casi la mitad cuando no mandas datos nulos)
-      
-      _casillasSimples.push({ 
-        propietario: casilla.propietario, 
-        tipo: casilla.tipo, 
+
+      _casillasSimples.push({
+        propietario: casilla.propietario,
+        tipo: casilla.tipo,
         unidad: _unidadSimple
       })
     })
@@ -208,31 +206,31 @@ export class Mapa{
     return _mapaSimple
   }
 
-  static generarMapaCompleto(mapaSimple:MapaSimple):Mapa{
-    let _casillasCompletas:Casilla[] = [];
+  static generarMapaCompleto (mapaSimple:MapaSimple):Mapa{
+    const _casillasCompletas:Casilla[] = []
     mapaSimple.casillas.forEach(casillaSimple => {
       const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
-      new UnidadCasilla(casillaSimple.unidad.nombreUnidad, casillaSimple.unidad.propietario, casillaSimple.unidad.hp, 
-        casillaSimple.unidad.municiones, casillaSimple.unidad.gasActual, casillaSimple.unidad.estado) : null
-        _casillasCompletas.push({
-          sprite: null,
-          propietario: casillaSimple.propietario, 
-          tipo: casillaSimple.tipo, 
-          unidad: _unidadJuego
-        })
+        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, casillaSimple.unidad.propietario, casillaSimple.unidad.hp,
+          casillaSimple.unidad.municiones, casillaSimple.unidad.gasActual, casillaSimple.unidad.estado) : null
+      _casillasCompletas.push({
+        sprite: null,
+        propietario: casillaSimple.propietario,
+        tipo: casillaSimple.tipo,
+        unidad: _unidadJuego
+      })
     })
 
     const _mapaCompleto = new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
     return _mapaCompleto
   }
 
-  static obtenerTerrenos1Tipo(mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
+  static obtenerTerrenos1Tipo (mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
     const setCoordTerrenos = new Set()
-    if(!ListaTerrenos[tipo]){
+    if (!ListaTerrenos[tipo]){
       console.error('No existe ese tipo de terreno: ', tipo)
       return setCoordTerrenos
     }
-    if( !mapa || !(mapa instanceof Mapa) && !(mapa instanceof MapaSimple)){
+    if ( !mapa || !(mapa instanceof Mapa) && !(mapa instanceof MapaSimple)){
       console.error('El mapa no es válido')
       return setCoordTerrenos
     }
@@ -240,8 +238,8 @@ export class Mapa{
     for (let coordY = 0; coordY < mapa.dimensiones.filas; coordY++) {
       for (let coordX = 0; coordX < mapa.dimensiones.columnas; coordX++) {
         const casillaComparar = mapa.casillas[ ( ( coordY * mapa.dimensiones.columnas ) + coordX ) ]
-        if( casillaComparar.tipo === tipo ){
-          setCoordTerrenos.add({x: coordX, y: coordY})
+        if ( casillaComparar.tipo === tipo ){
+          setCoordTerrenos.add({ x: coordX, y: coordY })
         }
       }
     }
@@ -249,9 +247,9 @@ export class Mapa{
     return setCoordTerrenos
   }
 
-  obtenerCoordenadasMovimiento(mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple|undefined|null){
+  obtenerCoordenadasMovimiento (mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple|undefined|null){
     const listaCoordMovimiento = [{ ...coordOriginal, movDisponible: 0, costo: 0 }]
-    if( unidad == null ){
+    if ( unidad == null ){
       return listaCoordMovimiento
     }
     const distanciaMax = Math.min(unidad.obtenerTipo()?.movilidad, unidad.gasActual)
@@ -261,21 +259,21 @@ export class Mapa{
     for (let movDisponible = distanciaMax; movDisponible > 0; movDisponible--) {
       const tempCoords = listaCoordMovimiento.filter(coord => coord.movDisponible === movDisponible)
 
-      for(const coord of tempCoords){
-        const top = esCoordenadaValida( {...coord, y: ( coord.y - 1 )}, this, unidad, listaCoordMovimiento )
-        if( top != null ) {
+      for (const coord of tempCoords){
+        const top = esCoordenadaValida( { ...coord, y: ( coord.y - 1 ) }, this, unidad, listaCoordMovimiento )
+        if ( top != null ) {
           listaCoordMovimiento.push(top)
         }
-        const left = esCoordenadaValida( {...coord, x: ( coord.x - 1 )}, this, unidad, listaCoordMovimiento )
-        if( left != null ) {
+        const left = esCoordenadaValida( { ...coord, x: ( coord.x - 1 ) }, this, unidad, listaCoordMovimiento )
+        if ( left != null ) {
           listaCoordMovimiento.push(left)
         }
-        const right = esCoordenadaValida( {...coord, x: ( coord.x + 1 )}, this, unidad, listaCoordMovimiento )
-        if( right != null ) {
+        const right = esCoordenadaValida( { ...coord, x: ( coord.x + 1 ) }, this, unidad, listaCoordMovimiento )
+        if ( right != null ) {
           listaCoordMovimiento.push(right)
         }
-        const bottom = esCoordenadaValida( {...coord, y: ( coord.y + 1 )}, this, unidad, listaCoordMovimiento )
-        if( bottom != null ) {
+        const bottom = esCoordenadaValida( { ...coord, y: ( coord.y + 1 ) }, this, unidad, listaCoordMovimiento )
+        if ( bottom != null ) {
           listaCoordMovimiento.push(bottom)
         }
       }
@@ -283,36 +281,34 @@ export class Mapa{
 
     return listaCoordMovimiento
   }
-  
 
-
-  constructor(nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
-    this.nombre=nombre;
+  constructor (nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
+    this.nombre = nombre
     this.dimensiones = dimensiones
-    if(dimensiones.columnas <= 0){
+    if (dimensiones.columnas <= 0){
       console.error('columnas menor a 1: ', dimensiones.columnas)
-      this.dimensiones.columnas=1;
+      this.dimensiones.columnas = 1
     }
-    if(dimensiones.filas <= 0){
+    if (dimensiones.filas <= 0){
       console.error('filas menor a 1: ', dimensiones.filas)
-      this.dimensiones.filas=1;
+      this.dimensiones.filas = 1
     }
 
     // Área de casillas no corresponde con la cantidad de casillas
-    if( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
+    if ( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
       console.error('El número de casillas es menor que el área definido')
       console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
       console.error(`Total de casillas: ${casillas.length}`)
-    } else if( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
+    } else if ( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
       console.error('El número de casillas es mayor que el área definido')
       console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
       console.error(`Total de casillas: ${casillas.length}`)
     }
 
     const casillasTemp:Casilla[] = []
-    for(const casilla of casillas){
+    for (const casilla of casillas){
       // if( casilla instanceof Casilla ){
-      if( casilla instanceof Casilla ) {
+      if ( casilla instanceof Casilla ) {
         casillasTemp.push(casilla)
       } else {
         // ### Aquí haríamos la validación
@@ -332,58 +328,57 @@ const casAdyacentes:{ top: any|null, left: any|null, right: any|null, bottom: an
 //   top: casillaAlcanzable, top
 // }
 
-
 export class MapaSimple{
-  nombre: string;
+  nombre: string
   dimensiones: dimension
   // clima?: Clima
   // idCreador: number; //Jugador que creo el mapa
-  casillas: CasillaSimple[];
+  casillas: CasillaSimple[]
 
-  constructor(nombre: string, dimensiones: dimension, casillas: CasillaSimple[]){
-    this.nombre=nombre;
+  constructor (nombre: string, dimensiones: dimension, casillas: CasillaSimple[]){
+    this.nombre = nombre
     this.dimensiones = dimensiones
-    if(dimensiones.columnas <= 0){
+    if (dimensiones.columnas <= 0){
       console.error('columnas menor a 1: ', dimensiones.columnas)
-      this.dimensiones.columnas=1;
+      this.dimensiones.columnas = 1
     }
-    if(dimensiones.filas <= 0){
+    if (dimensiones.filas <= 0){
       console.error('filas menor a 1: ', dimensiones.filas)
-      this.dimensiones.filas=1;
+      this.dimensiones.filas = 1
     }
 
     // Área de casillas no corresponde con la cantidad de casillas
-    if( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
+    if ( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
       console.error('El número de casillas es menor que el área definido')
       console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
       console.error(`Total de casillas: ${casillas.length}`)
-    } else if( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
+    } else if ( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
       console.error('El número de casillas es mayor que el área definido')
       console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
       console.error(`Total de casillas: ${casillas.length}`)
     }
 
-    this.casillas=casillas;
+    this.casillas = casillas
   }
 }
 
-function esCoordenadaValida(coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa, unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
+function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa, unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
   const casilla = mapa.obtenerCasilla(coordDato)
-  if( casilla == null ) return null
+  if ( casilla == null ) return null
 
   const objTerreno = casilla.getTerrenoObjeto()
-  if( objTerreno == null ) return null
+  if ( objTerreno == null ) return null
 
   const costoMovimiento = objTerreno.costosMovimientos[unidad.obtenerTipo().tipoMovimiento]
-  if( costoMovimiento == null ) return null
+  if ( costoMovimiento == null ) return null
 
-  if( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
+  if ( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
 
   // Si hay vista y hay una unidad del equipo oponente en esa casilla
 
   // Si ya existe la coordenada con dist
   const coordExistente = coordCasillas.find(c => c.x === coordDato.x && c.y === coordDato.y && c.movDisponible >= coordDato.movDisponible )
-  if( coordExistente != null ) return null
+  if ( coordExistente != null ) return null
 
   return { ...coordDato, movDisponible: ( coordDato.movDisponible - costoMovimiento ), costo: costoMovimiento }
 }
