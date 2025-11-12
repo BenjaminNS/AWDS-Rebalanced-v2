@@ -2,7 +2,6 @@
 // const { listaPaises } = PaisesJS()
 import type { nombresPaises } from './paises'
 
-
 type nombreComandantes = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
 type DayToDay = {
   descripcion: string,
@@ -29,38 +28,38 @@ type records = {
 // type perks = {}
 
 export class ComandanteJugable{
-  personaje: nombreComandantes;
-  idInstancia: string; // crypto.randomUUID
-  dineroActual: number;
-  cargaActual: number;
-  usosPoder: number;
-  activo: boolean;
+  personaje: nombreComandantes
+  idInstancia: string // crypto.randomUUID
+  dineroActual: number
+  cargaActual: number
+  usosPoder: number
+  activo: boolean
   // records: records;
 
   // Será el nombre del poder en vez de solo cop o scop y así poder tener más opciones para más poderes (pienso que máximo 3)
   // estadoActual: 'normal'|'cop'|'scop';
 
-  constructor(personaje: nombreComandantes, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
-    this.personaje = personaje;
-    this.idInstancia = idInstancia;
-    this.dineroActual = dineroActual;
-    this.cargaActual = cargaActual;
-    this.usosPoder = usosPoder;
-    this.activo = activo;
+  constructor (personaje: nombreComandantes, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
+    this.personaje = personaje
+    this.idInstancia = idInstancia
+    this.dineroActual = dineroActual
+    this.cargaActual = cargaActual
+    this.usosPoder = usosPoder
+    this.activo = activo
   }
 
-  rendirse(){
+  rendirse (){
     this.activo = false
     // destruir todas las unidades
     // perder todas las propiedades
   }
-}  
+}
 
 export class Comandante{
-  nombre: string;
-  descripcion: string;
-  pais: nombresPaises;
-  cancion: AudioData|null;
+  nombre: string
+  descripcion: string
+  pais: nombresPaises
+  cancion: AudioData|null
   // spritesComandante: spritesComandante; //Talvez sean coordenadas como los terrenos
   // canciones: {normal: AudioData, cop: AudioData, scop: AudioData};
 
@@ -72,14 +71,14 @@ export class Comandante{
   // Si pierdes tu unidad con zona de comandante, pierdes toda tu carga
   // Debes gastar el turno de tu unidad con CO para activar el poder (no puede atacar el mismo turno)
   // tipoCarga: 'Advance Wars 2'|'Days of Ruin';
-  poderes: ComandantePoder[]|null;
+  poderes: ComandantePoder[]|null
 
   // Funciones de daño, ataque, defensa, costo, movimiento, rango, etc.
-  constructor(nombre: string, descripcion: string, pais: nombresPaises, cancion: AudioData|null){
-    this.nombre=nombre;
-    this.descripcion=descripcion;
-    this.pais=pais;
-    this.poderes=null;
-    this.cancion=cancion;
+  constructor (nombre: string, descripcion: string, pais: nombresPaises, cancion: AudioData|null){
+    this.nombre = nombre
+    this.descripcion = descripcion
+    this.pais = pais
+    this.poderes = null
+    this.cancion = cancion
   }
 }

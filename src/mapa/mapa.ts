@@ -3,6 +3,7 @@ import type { nombreTerreno, Terreno } from './terreno'
 import Konva from 'konva'
 import { UnidadCasilla, UnidadSimple } from '../unidades/unidades'
 import { tamanoCasilla } from './spriteTerrenos'
+import type { equipo } from '../jugador'
 
 export type dimension = {
   filas: number,
@@ -91,9 +92,50 @@ export class Mapa{
   konvaStage: Konva.Stage|null
   tamanoCasilla = tamanoCasilla
   modo:'estricto'|'permisivo' = 'permisivo'
+  #casillasVision:boolean[] = []
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
+  constructor (nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
+    this.nombre = nombre
+    this.dimensiones = dimensiones
+    if (dimensiones.columnas <= 0){
+      console.error('columnas menor a 1: ', dimensiones.columnas)
+      this.dimensiones.columnas = 1
+    }
+    if (dimensiones.filas <= 0){
+      console.error('filas menor a 1: ', dimensiones.filas)
+      this.dimensiones.filas = 1
+    }
+
+    // Área de casillas no corresponde con la cantidad de casillas
+    if ( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
+      console.error('El número de casillas es menor que el área definido')
+      console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
+      console.error(`Total de casillas: ${casillas.length}`)
+    } else if ( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
+      console.error('El número de casillas es mayor que el área definido')
+      console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
+      console.error(`Total de casillas: ${casillas.length}`)
+    }
+
+    const casillasTemp:Casilla[] = []
+    for (const casilla of casillas){
+      // if( casilla instanceof Casilla ){
+      if ( casilla instanceof Casilla ) {
+        casillasTemp.push(casilla)
+      } else {
+        // ### Aquí haríamos la validación
+        // Si los datos no existen desde el json, los ponemos como nulos
+        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad))
+      }
+      this.#casillasVision.push(true)
+    }
+
+    this.casillas = casillasTemp
+    this.konvaStage = null
+  }
+
   obtenerCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
     if ( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
@@ -282,43 +324,52 @@ export class Mapa{
     return listaCoordMovimiento
   }
 
-  constructor (nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
-    this.nombre = nombre
-    this.dimensiones = dimensiones
-    if (dimensiones.columnas <= 0){
-      console.error('columnas menor a 1: ', dimensiones.columnas)
-      this.dimensiones.columnas = 1
-    }
-    if (dimensiones.filas <= 0){
-      console.error('filas menor a 1: ', dimensiones.filas)
-      this.dimensiones.filas = 1
-    }
+  // (equipo:equipo, jugadores: jugador[])
+  public getCasillasVision (){
+    return this.#casillasVision
+  }
+  public calcularCasillasVision ( propietario:number ){
+    this.casillas.forEach((casilla, index) => {
+      const unidad = casilla.getUnidad()
+      const propietarioPropiedad = casilla.getPropietario()
 
-    // Área de casillas no corresponde con la cantidad de casillas
-    if ( casillas.length < ( dimensiones.columnas * dimensiones.filas ) ){
-      console.error('El número de casillas es menor que el área definido')
-      console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
-      console.error(`Total de casillas: ${casillas.length}`)
-    } else if ( casillas.length > ( dimensiones.columnas * dimensiones.filas ) ){
-      console.error('El número de casillas es mayor que el área definido')
-      console.error(`${dimensiones.columnas} x ${dimensiones.filas} = ${dimensiones.columnas * dimensiones.filas}`)
-      console.error(`Total de casillas: ${casillas.length}`)
-    }
-
-    const casillasTemp:Casilla[] = []
-    for (const casilla of casillas){
-      // if( casilla instanceof Casilla ){
-      if ( casilla instanceof Casilla ) {
-        casillasTemp.push(casilla)
-      } else {
-        // ### Aquí haríamos la validación
-        // Si los datos no existen desde el json, los ponemos como nulos
-        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad))
+      // Debería revisar el equipo, no si coincide con el id del jugador
+      if ( casilla.getTerrenoObjeto()?.esPropiedad && propietarioPropiedad !== propietario ){
+        const coordInicio = { x: index % this.dimensiones.columnas, y: Math.floor(index / this.dimensiones.columnas) }
+        this.marcarCasillasVision(coordInicio, 0)
       }
-    }
 
-    this.casillas = casillasTemp
-    this.konvaStage = null
+      if ( unidad !== null && unidad.getPropietario() === propietario ){
+        const coordInicio = { x: index % this.dimensiones.columnas, y: Math.floor(index / this.dimensiones.columnas) }
+        this.marcarCasillasVision(coordInicio, unidad.obtenerTipo().vision)
+      }
+    })
+  }
+
+  private marcarCasillasVision (coord:coordenada, vision:number){
+    // marcar todas las casillas en falso
+    // marcar la casilla indicada
+    // marcar casillas alrededor (basandose en la visión)
+
+    // let indexCasilla = getIndexCoord(coord)
+
+    // for (let i = 0; i < vision; i++) {
+    //   const element = array[i];
+    // }
+
+    // if( indexCasilla !== -1 ){
+    //   this.#casillasVision
+    // }
+  }
+
+  public getIndexCoord (coord:coordenada){
+    // Fuera del mapa
+    if ( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
+      || coord.x >= this.dimensiones.columnas || coord.y >= this.dimensiones.filas ){
+      return -1
+    } else {
+      return ( ( coord.y * this.dimensiones.columnas ) + coord.x )
+    }
   }
 }
 
@@ -362,11 +413,12 @@ export class MapaSimple{
   }
 }
 
-function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa, unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
-  const casilla = mapa.obtenerCasilla(coordDato)
-  if ( casilla == null ) return null
+function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa,
+  unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
+  const casillaValida = mapa.obtenerCasilla(coordDato)
+  if ( casillaValida == null ) return null
 
-  const objTerreno = casilla.getTerrenoObjeto()
+  const objTerreno = casillaValida.getTerrenoObjeto()
   if ( objTerreno == null ) return null
 
   const costoMovimiento = objTerreno.costosMovimientos[unidad.obtenerTipo().tipoMovimiento]
@@ -374,7 +426,12 @@ function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: nu
 
   if ( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
 
-  // Si hay vista y hay una unidad del equipo oponente en esa casilla
+  // Falta calcular la vista (en caso de ser dia soleado, el mapa de vista siempre lo ve todo)
+  const unidadCasilla = casillaValida.getUnidad()
+  const indexCoord = mapa.getIndexCoord(coordDato)
+  if ( indexCoord !== -1 && mapa.getCasillasVision()[indexCoord] && unidadCasilla && unidadCasilla.getPropietario() !== unidad.getPropietario() ){
+    return null
+  }
 
   // Si ya existe la coordenada con dist
   const coordExistente = coordCasillas.find(c => c.x === coordDato.x && c.y === coordDato.y && c.movDisponible >= coordDato.movDisponible )

@@ -122,7 +122,7 @@ export class CursorMapaJuego {
         this.coordSeleccionada = coord
         this.casillaSeleccionada = this.mapa.obtenerCasilla(coord) as Casilla
         this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, this.casillaSeleccionada?.getUnidad()))
-        this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento())
+        this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento() ?? 0)
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
         mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
         return true

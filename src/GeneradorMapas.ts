@@ -39,7 +39,7 @@ const formularioMapa:formulario = {
   dimensiones: {
     anchoMin: 10, altoMin: 10,
     anchoActual: 10, altoActual: 10,
-    anchoMax: 40, altoMax: 40,
+    anchoMax: 40, altoMax: 40
   },
   brochaSeleccionada: 'Terreno',
   brochaTerreno: {
@@ -57,7 +57,7 @@ const formularioMapa:formulario = {
   propietarioTerreno: null
 }
 
-function configurarFormulario(){
+function configurarFormulario (){
   const nombreMapaInput = document.querySelector('#nombre-mapa') as HTMLInputElement
   const anchoMapaInput = document.querySelector('#ancho-mapa') as HTMLInputElement
   const altoMapaInput = document.querySelector('#alto-mapa') as HTMLInputElement
@@ -70,7 +70,7 @@ function configurarFormulario(){
   const seccionPropietarioTerreno = document.querySelector('#seccion-propietario') as HTMLInputElement
   const propietarioTerreno = document.querySelector('#propietario-casilla') as HTMLSelectElement
   const espejoInput = document.querySelector('#opcion-espejo') as HTMLInputElement
-  
+
   const brochaUnidadSelect = document.querySelector('#brocha-unidad') as HTMLSelectElement
 
   const inputUnidadPropietario = document.querySelector('#unidad_propietario') as HTMLInputElement
@@ -78,7 +78,7 @@ function configurarFormulario(){
   const inputUnidadGas = document.querySelector('#unidad_gas') as HTMLInputElement
   const inputUnidadMun_Principales = document.querySelector('#unidad_municiones_principales') as HTMLInputElement
   const inputUnidadMun_Secundarias = document.querySelector('#unidad_municiones_secundarias') as HTMLInputElement
-  
+
   const outputJugadores = document.querySelector('#num-jugador') as HTMLOutputElement
   const outputFabricas = document.querySelector('#num-fabricas') as HTMLOutputElement
   const outputAeropuertos = document.querySelector('#num-aeropuertos') as HTMLOutputElement
@@ -88,17 +88,17 @@ function configurarFormulario(){
 
   const btnGuardarMapa = document.querySelector('#btn-guardar') as HTMLButtonElement
 
-  btnNavBrochaTerreno.addEventListener('click', ()=>{
+  btnNavBrochaTerreno.addEventListener('click', () => {
     formularioMapa.brochaSeleccionada = 'Terreno'
   })
-  btnNavBrochaUnidad.addEventListener('click', ()=>{
+  btnNavBrochaUnidad.addEventListener('click', () => {
     formularioMapa.brochaSeleccionada = 'Unidad'
   })
 
-  anchoMapaInput.addEventListener('change', ()=>{
+  anchoMapaInput.addEventListener('change', () => {
     btnRedimensionarMapa.removeAttribute('disabled')
   })
-  altoMapaInput.addEventListener('change', ()=>{
+  altoMapaInput.addEventListener('change', () => {
     btnRedimensionarMapa.removeAttribute('disabled')
   })
 
@@ -108,86 +108,85 @@ function configurarFormulario(){
   formularioMapa.brochaUnidad.unidad = 'infanteria'
   formularioMapa.brochaTerreno.espejo = espejoInput.value as espejoOpcion
 
-  btnRedimensionarMapa.addEventListener('click', async ()=>{
+  btnRedimensionarMapa.addEventListener('click', async () => {
     const ancho = parseInt(anchoMapaInput.value)
     const alto = parseInt(altoMapaInput.value)
 
     formularioMapa.dimensiones.anchoActual = ancho
     formularioMapa.dimensiones.altoActual = alto
 
-    RegenerarMapa(()=>{analizarMapa(mapaGenerado)})
+    RegenerarMapa(() => {analizarMapa(mapaGenerado)})
     btnRedimensionarMapa.setAttribute('disabled', 'true')
   })
 
-
   // Terreno
-  brochaTerrenoSelect?.addEventListener('change', (ev)=>{
+  brochaTerrenoSelect?.addEventListener('change', (ev) => {
     formularioMapa.brochaTerreno.valor = ev.target?.value
     mostrarPropietarioTerreno(formularioMapa.brochaTerreno.valor)
   })
   brochaTerrenoSelect.dispatchEvent(new Event('change', { bubbles: false }))
 
-  espejoInput?.addEventListener('change', (ev)=>{
+  espejoInput?.addEventListener('change', (ev) => {
     formularioMapa.brochaTerreno.espejo = ev.target?.value
     console.log(formularioMapa.brochaTerreno.espejo)
   })
-  propietarioTerreno?.addEventListener('change', (ev)=>{
-    if( ev.target?.value === '' ) {
+  propietarioTerreno?.addEventListener('change', (ev) => {
+    if ( ev.target?.value === '' ) {
       formularioMapa.propietarioTerreno = ev.target?.value
-    } else{
+    } else {
       formularioMapa.propietarioTerreno = parseInt(ev.target?.value)
     }
   })
-  //Unidad 
-  brochaUnidadSelect?.addEventListener('change', (ev)=>{
+  // Unidad
+  brochaUnidadSelect?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.unidad = ev.target?.value
     inputUnidadGas?.setAttribute('value', ListaUnidades[ev.target?.value].maxGasolina)
     inputUnidadGas?.setAttribute('max', ListaUnidades[ev.target?.value].maxGasolina)
     formularioMapa.brochaUnidad.gas = ListaUnidades[ev.target?.value].maxGasolina
 
     const munPrincipalMax = ListaUnidades[ev.target?.value].maxMuniciones?.principal
-    if( munPrincipalMax ){
+    if ( munPrincipalMax ){
       document.querySelector('#seccion-mun-principal')?.classList.remove('hidden')
       inputUnidadMun_Principales?.removeAttribute('disabled')
       inputUnidadMun_Principales?.setAttribute('max', munPrincipalMax)
       inputUnidadMun_Principales?.setAttribute('value', munPrincipalMax)
       formularioMapa.brochaUnidad.munPrincipal = munPrincipalMax
-    } else{
+    } else {
       document.querySelector('#seccion-mun-principal')?.classList.add('hidden')
       inputUnidadMun_Principales?.setAttribute('disabled', '')
       formularioMapa.brochaUnidad.munPrincipal = null
     }
 
     const munSecundariaMax = ListaUnidades[ev.target?.value].maxMuniciones?.secundaria
-    if( munSecundariaMax ){
+    if ( munSecundariaMax ){
       document.querySelector('#seccion-mun-secundaria')?.classList.remove('hidden')
       inputUnidadMun_Secundarias?.removeAttribute('disabled')
       inputUnidadMun_Secundarias?.setAttribute('max', munSecundariaMax)
       inputUnidadMun_Secundarias?.setAttribute('value', munSecundariaMax)
       formularioMapa.brochaUnidad.munSecundaria = munSecundariaMax
-    } else{
+    } else {
       document.querySelector('#seccion-mun-secundaria')?.classList.add('hidden')
       inputUnidadMun_Secundarias?.setAttribute('disabled', '')
       formularioMapa.brochaUnidad.munSecundaria = null
     }
   })
-  inputUnidadPropietario?.addEventListener('change', (ev)=>{
+  inputUnidadPropietario?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.propietario = parseInt(ev.target?.value)
   })
-  inputUnidadHP?.addEventListener('change', (ev)=>{
+  inputUnidadHP?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.hp = ev.target?.value
   })
-  inputUnidadGas?.addEventListener('change', (ev)=>{
+  inputUnidadGas?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.gas = ev.target?.value
   })
-  inputUnidadMun_Principales?.addEventListener('change', (ev)=>{
+  inputUnidadMun_Principales?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.munPrincipal = ev.target?.value
   })
-  inputUnidadMun_Secundarias?.addEventListener('change', (ev)=>{
+  inputUnidadMun_Secundarias?.addEventListener('change', (ev) => {
     formularioMapa.brochaUnidad.munSecundaria = ev.target?.value
   })
 
-  function analizarMapa(mapa: Mapa){
+  function analizarMapa (mapa: Mapa){
     outputJugadores.innerText = `${mapa.obtenerComandantesJugables().size} jugadores`
     outputFabricas.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'fabrica').size} fábricas`
     outputAeropuertos.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'aeropuerto').size} aeropuertos`
@@ -195,12 +194,12 @@ function configurarFormulario(){
     // outputTorresCom.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'torreComunicacion').size} torres de comunicación`
     outputNumCiudades.innerText = `${Mapa.obtenerTerrenos1Tipo(mapa, 'ciudad').size} ciudades`
   }
-  btnGuardarMapa?.addEventListener('click', ()=>{
-    if(!mapaGenerado){
+  btnGuardarMapa?.addEventListener('click', () => {
+    if (!mapaGenerado){
       console.log('Mapa no disponible')
       return
     }
-    
+
     console.log('Guardar mapa')
     const _mapaSimple = Mapa.generarMapaSimple(mapaGenerado)
     const datos = JSON.stringify(_mapaSimple)
@@ -209,64 +208,64 @@ function configurarFormulario(){
     const a = document.createElement('a')
     a.href = url
     const nombreMapa = nombreMapaInput?.value
-    a.download = `mapa_${nombreMapa}_${Math.floor(Math.random()*999999)}.json`
+    a.download = `mapa_${nombreMapa}_${Math.floor(Math.random() * 999999)}.json`
     a.click()
     URL.revokeObjectURL(url)
-  
+
     // console.log('Mapa juego: ', mapaGenerado)
     // console.log('Mapa simple: ', _mapaSimple)
   })
 
-  document.querySelector('#resolucion-mapas')?.addEventListener('submit', (ev)=>{
+  document.querySelector('#resolucion-mapas')?.addEventListener('submit', (ev) => {
     ev.preventDefault()
-  }, )
-  document.querySelector('#brocha-mapas')?.addEventListener('submit', (ev)=>{
+  } )
+  document.querySelector('#brocha-mapas')?.addEventListener('submit', (ev) => {
     ev.preventDefault()
-  }, )
+  } )
 
   // brochaUnidadSelect.dispatchEvent(new Event('change', { bubbles: true }))
   brochaUnidadSelect.dispatchEvent(new Event('change', { bubbles: false }))
 
-  function mostrarPropietarioTerreno(terreno: nombreTerreno){
-    if( ListaTerrenos[terreno].esPropiedad ){
+  function mostrarPropietarioTerreno (terreno: nombreTerreno){
+    if ( ListaTerrenos[terreno].esPropiedad ){
       seccionPropietarioTerreno.style.display = ''
 
       // Deshabilitar opción de nulo y escoger la segunda opcion
-      if( terreno === 'cuartelGeneral' || terreno === 'laboratorio' ){
+      if ( terreno === 'cuartelGeneral' || terreno === 'laboratorio' ){
         propietarioTerreno.querySelector('option').disabled = true
         propietarioTerreno.querySelectorAll('option').forEach((opt) => {
           opt.selected = false
         })
         propietarioTerreno.querySelectorAll('option')[1].selected = true
-      } else{
+      } else {
         propietarioTerreno.querySelector('option').disabled = false
         propietarioTerreno.querySelectorAll('option').forEach((opt, i) => {
           opt.disabled = false
         })
       }
-    } else{
+    } else {
       seccionPropietarioTerreno.style.display = 'none'
     }
   }
-  function generarOpcionesTerreno(selectTerreno:HTMLElement, terrenosObjeto: Object){
+  function generarOpcionesTerreno (selectTerreno:HTMLElement, terrenosObjeto: object){
     let opcionesTerreno = ''
     Object.keys(terrenosObjeto).sort().forEach((keyTerreno, i) => {
-      if( keyTerreno != 'invalido' ){
-        if( i === 0 ){
+      if ( keyTerreno != 'invalido' ){
+        if ( i === 0 ){
           opcionesTerreno += `<option value="${keyTerreno}" selected="selected">${terrenosObjeto[keyTerreno].nombre}</option>`
-        } else{
+        } else {
           opcionesTerreno += `<option value="${keyTerreno}">${terrenosObjeto[keyTerreno].nombre}</option>`
         }
       }
     })
     selectTerreno.innerHTML = opcionesTerreno
   }
-  function generarOpcionesUnidad(selectUnidad:HTMLElement, unidadesObjeto: Object){
+  function generarOpcionesUnidad (selectUnidad:HTMLElement, unidadesObjeto: object){
     let opcionesUnidad = ''
     Object.keys(unidadesObjeto).forEach((keyUnidad, i) => {
-      if( i === 0 ){
+      if ( i === 0 ){
         opcionesUnidad += `<option value="${keyUnidad}" selected="selected">${unidadesObjeto[keyUnidad].nombre}</option>`
-      } else{
+      } else {
         opcionesUnidad += `<option value="${keyUnidad}">${unidadesObjeto[keyUnidad].nombre}</option>`
       }
     })
@@ -277,29 +276,29 @@ function configurarFormulario(){
   return analizarMapa
 }
 
-function AgregarEventosMapa(mapa: Mapa, analizarMapa: Function){
+function AgregarEventosMapa (mapa: Mapa, analizarMapa: Function){
   // mapa.konvaStage?.container().style.cursor = 'pointer'
   let mousePresionado = false
   habilitarBotonGuardar()
 
-  mapa.konvaStage?.on('click', ()=>{
+  mapa.konvaStage?.on('click', () => {
     const pos = mapa.konvaStage?.getPointerPosition()
     if (!pos) return
     const casillaX = Math.floor(pos.x / tamanoCasilla)
     const casillaY = Math.floor(pos.y / tamanoCasilla)
-    
-    switch(formularioMapa.brochaSeleccionada){
-      case 'Unidad':
-        switch(formularioMapa.brochaUnidad.accion){
-          case 'pintar':
-            pintarUnidad(formularioMapa.brochaUnidad, {x: casillaX, y: casillaY}, mapa)
-            break
-          case 'borrar':
-            break
-          case 'seleccionar':
-            break
-        }
-        break;
+
+    switch (formularioMapa.brochaSeleccionada){
+    case 'Unidad':
+      switch (formularioMapa.brochaUnidad.accion){
+      case 'pintar':
+        pintarUnidad(formularioMapa.brochaUnidad, { x: casillaX, y: casillaY }, mapa)
+        break
+      case 'borrar':
+        break
+      case 'seleccionar':
+        break
+      }
+      break
     }
   })
   mapa.konvaStage?.on('mousedown', () => {
@@ -309,24 +308,24 @@ function AgregarEventosMapa(mapa: Mapa, analizarMapa: Function){
     if (!pos) return
     const casillaX = Math.floor(pos.x / tamanoCasilla)
     const casillaY = Math.floor(pos.y / tamanoCasilla)
-    
-    switch(formularioMapa.brochaSeleccionada){
-      case 'Terreno':
-        pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, {x: casillaX, y: casillaY}, mapa, formularioMapa.brochaTerreno.espejo)
+
+    switch (formularioMapa.brochaSeleccionada){
+    case 'Terreno':
+      pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, { x: casillaX, y: casillaY }, mapa, formularioMapa.brochaTerreno.espejo)
+      break
+    case 'Unidad':
+      formularioMapa.brochaUnidad.accion = document.querySelector('[name="modo-brocha-unidad"]:checked')?.value
+      switch (formularioMapa.brochaUnidad.accion){
+      case 'pintar':
+        pintarUnidad(formularioMapa.brochaUnidad, { x: casillaX, y: casillaY }, mapa)
         break
-      case 'Unidad':
-        formularioMapa.brochaUnidad.accion = document.querySelector('[name="modo-brocha-unidad"]:checked')?.value
-        switch(formularioMapa.brochaUnidad.accion){
-          case 'pintar':
-            pintarUnidad(formularioMapa.brochaUnidad, {x: casillaX, y: casillaY}, mapa)
-            break
-          case 'borrar':
-            borrarUnidad({x: casillaX, y: casillaY}, mapa)
-            break
+      case 'borrar':
+        borrarUnidad({ x: casillaX, y: casillaY }, mapa)
+        break
           // case 'seleccionar':
           //   break
-        }
-        break;
+      }
+      break
     }
   })
   mapa.konvaStage?.on('mouseup', () => {
@@ -334,13 +333,13 @@ function AgregarEventosMapa(mapa: Mapa, analizarMapa: Function){
     analizarMapa(mapaGenerado)
     habilitarBotonGuardar()
   })
-  function habilitarBotonGuardar(){
+  function habilitarBotonGuardar (){
     // Falta validar que nombre tiene el archivo
 
     mapaGenerado?.obtenerComandantesJugables()
-    if( mapaGenerado != null && mapaGenerado.esMapaValido() ){
+    if ( mapaGenerado != null && mapaGenerado.esMapaValido() ){
       document.querySelector('#btn-guardar')?.removeAttribute('disabled')
-    } else{
+    } else {
       document.querySelector('#btn-guardar')?.setAttribute('disabled', 'true')
     }
   }
@@ -352,86 +351,84 @@ function AgregarEventosMapa(mapa: Mapa, analizarMapa: Function){
     const casillaX = Math.floor(pos.x / tamanoCasilla)
     const casillaY = Math.floor(pos.y / tamanoCasilla)
 
-    if( casillaTxt )  casillaTxt.textContent = `CASILLA: [${casillaX}, ${casillaY}]`
+    if ( casillaTxt ) casillaTxt.textContent = `CASILLA: [${casillaX}, ${casillaY}]`
 
-    if(mousePresionado){
-      switch(formularioMapa.brochaSeleccionada){
-        case 'Terreno':
-          pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, {x: casillaX, y: casillaY}, mapa, formularioMapa.brochaTerreno.espejo)
-          break
+    if (mousePresionado){
+      switch (formularioMapa.brochaSeleccionada){
+      case 'Terreno':
+        pintarTerrenoEspejo(formularioMapa.brochaTerreno.valor, { x: casillaX, y: casillaY }, mapa, formularioMapa.brochaTerreno.espejo)
+        break
       }
     }
   })
 }
 
-
 // FUNCIONES CASILLAS TERRENO
-async function pintarTerrenoEspejo(tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa, espejo: espejoOpcion){
+async function pintarTerrenoEspejo (tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa, espejo: espejoOpcion){
   pintarTerreno(tipoCasilla, coordenada, mapa)
 
-  switch(espejo){
-    case 'Horizontal':
-      {
-        // 5
-        // 0,4  1,3  2,2  3,1  4,0
-        // (0-5)=-5 (1-)
-        const coordenada2:coordenada = {
-          x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
-          y: coordenada.y 
-        }
-        pintarTerreno(tipoCasilla, coordenada2, mapa)
+  switch (espejo){
+  case 'Horizontal':
+    {
+      // 5
+      // 0,4  1,3  2,2  3,1  4,0
+      // (0-5)=-5 (1-)
+      const coordenada2:coordenada = {
+        x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
+        y: coordenada.y
       }
-      break;
-    case 'Vertical':
-      {
-        const coordenada2:coordenada = {
-          x: coordenada.x,
-          y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) ) 
-        }
-        pintarTerreno(tipoCasilla, coordenada2, mapa)
+      pintarTerreno(tipoCasilla, coordenada2, mapa)
+    }
+    break
+  case 'Vertical':
+    {
+      const coordenada2:coordenada = {
+        x: coordenada.x,
+        y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) )
       }
-      break;
-    case 'Diagonal':
-      {
-        const coordenada2:coordenada = {
-          x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
-          y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) ) 
-        }
-        pintarTerreno(tipoCasilla, coordenada2, mapa)
+      pintarTerreno(tipoCasilla, coordenada2, mapa)
+    }
+    break
+  case 'Diagonal':
+    {
+      const coordenada2:coordenada = {
+        x: Math.abs( coordenada.x - (mapa.dimensiones.columnas - 1) ),
+        y: Math.abs( coordenada.y - (mapa.dimensiones.filas - 1) )
       }
-      break;
+      pintarTerreno(tipoCasilla, coordenada2, mapa)
+    }
+    break
   }
 }
-async function pintarTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa){
-  if( !tipoCasilla && ListaTerrenos[tipoCasilla] ){
+async function pintarTerreno (tipoCasilla: nombreTerreno, coordenada: coordenada, mapa: Mapa){
+  if ( !tipoCasilla && ListaTerrenos[tipoCasilla] ){
     console.log('Terreno inválido')
     return
   }
 
   const casillaSeleccionada = mapa.obtenerCasilla(coordenada)
-  if( casillaSeleccionada == null){
+  if ( casillaSeleccionada == null){
     return
   }
-  
 
-  casillaSeleccionada.tipo = tipoCasilla
+  casillaSeleccionada.setTipo = tipoCasilla
 
-  if( ListaTerrenos[tipoCasilla].esPropiedad ){
-    casillaSeleccionada.propietario = formularioMapa.propietarioTerreno
-  } else{
-    casillaSeleccionada.propietario = null
+  if ( ListaTerrenos[tipoCasilla].esPropiedad ){
+    casillaSeleccionada.setPropietario(formularioMapa.propietarioTerreno)
+  } else {
+    casillaSeleccionada.setPropietario(null)
   }
-  
+
   const listaCoordenadas = []
-  listaCoordenadas.push({x: coordenada.x, y: (coordenada.y - 1)})
-  listaCoordenadas.push({x: (coordenada.x - 1), y: coordenada.y})
-  listaCoordenadas.push(coordenada) //original
-  listaCoordenadas.push({x: (coordenada.x + 1), y: coordenada.y})
-  listaCoordenadas.push({x: coordenada.x, y: (coordenada.y + 1)})
+  listaCoordenadas.push({ x: coordenada.x, y: (coordenada.y - 1) })
+  listaCoordenadas.push({ x: (coordenada.x - 1), y: coordenada.y })
+  listaCoordenadas.push(coordenada) // original
+  listaCoordenadas.push({ x: (coordenada.x + 1), y: coordenada.y })
+  listaCoordenadas.push({ x: coordenada.x, y: (coordenada.y + 1) })
 
   listaCoordenadas.forEach((coordenada) => {
     const casillaSeleccionada = mapa.obtenerCasilla(coordenada)
-    if(casillaSeleccionada instanceof Casilla){
+    if (casillaSeleccionada instanceof Casilla){
       const spriteAnterior = layerUnidad.findOne(`#casilla_${coordenada.x}_${coordenada.y}`)
       spriteAnterior?.destroy()
 
@@ -442,26 +439,26 @@ async function pintarTerreno(tipoCasilla: nombreTerreno, coordenada: coordenada,
 }
 
 // FUNCIONES CASILLAS UNIDAD
-async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, mapa: Mapa){
-  if( !brochaUnidad.unidad && ListaUnidades[brochaUnidad.unidad] ){
+async function pintarUnidad (brochaUnidad: brochaUnidad, coordenada: coordenada, mapa: Mapa){
+  if ( !brochaUnidad.unidad && ListaUnidades[brochaUnidad.unidad] ){
     console.log('Unidad inválida')
     return
   }
   // const casillaUnidad = mapa.casillas[( ( coordenada.y * mapa.dimensiones.columnas ) + coordenada.x )]
-  const casillaUnidad = mapa.obtenerCasilla({x: coordenada.x, y: coordenada.y})
-  if( casillaUnidad == null){
+  const casillaUnidad = mapa.obtenerCasilla({ x: coordenada.x, y: coordenada.y })
+  if ( casillaUnidad == null){
     return
   }
-  
+
   // const unidadCasilla = new UnidadCasilla(tipoUnidad, 0, 100, {principal: 6}, 10, null, 'normal')
   const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
   spriteAnterior?.destroy()
 
-  let municiones:object|null= {}
-  if( !brochaUnidad.munPrincipal && !brochaUnidad.munSecundaria ){
+  let municiones:object|null = {}
+  if ( !brochaUnidad.munPrincipal && !brochaUnidad.munSecundaria ){
     municiones = null
   }
-  
+
   if ( brochaUnidad.munPrincipal ){
     municiones.principal = brochaUnidad.munPrincipal
   }
@@ -474,24 +471,24 @@ async function pintarUnidad(brochaUnidad: brochaUnidad, coordenada: coordenada, 
   casillaUnidad.unidad.sprite = spriteUnidad
   layerUnidad.add(spriteUnidad)
 }
-async function borrarUnidad(coordenada: coordenada, mapa: Mapa){
+async function borrarUnidad (coordenada: coordenada, mapa: Mapa){
   const casillaUnidad = mapa.obtenerCasilla(coordenada)
-  if(casillaUnidad != 'inexistente'){
+  if (casillaUnidad != 'inexistente'){
     const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
     spriteAnterior?.destroy()
     casillaUnidad.unidad = null
   }
 }
 
-async function RegenerarMapa(analizarMapa: Function){
-  mapaGenerado = await generarMapaRelleno({dimensiones: {columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual}, idContenedor: 'mapa-konva', tipoCasilla: 'planicie'})
+async function RegenerarMapa (analizarMapa: Function){
+  mapaGenerado = await generarMapaRelleno({ dimensiones: { columnas: formularioMapa.dimensiones.anchoActual, filas: formularioMapa.dimensiones.altoActual }, idContenedor: 'mapa-konva', tipoCasilla: 'planicie' })
   layerUnidad = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES)
   layerTerreno = mapaGenerado?.konvaStage.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.TERRENO)
   analizarMapa(mapaGenerado)
   AgregarEventosMapa(mapaGenerado, analizarMapa)
 }
 
-window.addEventListener('load', async ()=> {
+window.addEventListener('load', async () => {
   const analizarMapa = configurarFormulario()
   generarShaderPropiedad()
   RegenerarMapa(analizarMapa)
