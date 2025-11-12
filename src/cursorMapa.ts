@@ -158,7 +158,7 @@ export class CursorMapaJuego {
             console.log('Camino: ', this.camino.getCamino())
             this.leftClick = true
             this.rightClick = true
-            unidadSeleccionada.gastarTurno()
+            // unidadSeleccionada.gastarTurno()
             this.camino.limpiarCoordenadasCamino()
             this.deseleccionarCasilla()
           })

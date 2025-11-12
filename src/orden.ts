@@ -1,10 +1,10 @@
-import { type Casilla, type coordenada, Mapa } from "./mapa/mapa";
+import { type Casilla, type coordenada, Mapa } from './mapa/mapa'
 // import type { Unidad } from "./unidades/unidades";
-import Konva from "konva";
-import type { Unidad, UnidadCasilla } from "./unidades/unidades";
-import { generarCoordenadaVector } from "./camino";
-import { type direccion } from "./camino";
-const durationMovement = .3
+import Konva from 'konva'
+import type { Unidad, UnidadCasilla } from './unidades/unidades'
+import { generarCoordenadaVector } from './camino'
+import { type direccion } from './camino'
+const durationMovement = .25
 
 type nombreAccion = 'esperar'|'atacar'|'combinar'|'capturar'|'abordar' |'soltar' |'construir'|'sumergir'|'subir' |'esconder'|'reaparecer' |'detonar'|'seleccionar unidad'|'seleccionar propiedad'|'unidad movida'
 type resultadoGenerico = { status: boolean, movimientos: direccion[] }
@@ -13,10 +13,10 @@ type resultado = resultadoGenerico | ataqueResultado
 
 export class Accion {
   tipo: nombreAccion
-  params: Object
+  params: object
   funcionEjecutar: Promise<resultado>
 
-  constructor(tipo:nombreAccion, params: Object, resultado:Promise<resultado>){
+  constructor (tipo:nombreAccion, params: object, resultado:Promise<resultado>){
     this.tipo = tipo
     this.params = params
     this.funcionEjecutar = resultado
@@ -48,39 +48,39 @@ export class Orden {
   private acciones: Accion[]
   private accionActual = 0
 
-  constructor(coordOrigen:coordenada, idComandanteJugable: number, acciones: Accion[]){
+  constructor (coordOrigen:coordenada, idComandanteJugable: number, acciones: Accion[]){
     this.coordOrigen = coordOrigen
     this.idComandanteJugable = idComandanteJugable
     this.acciones = acciones
   }
 
-  public getCoordOrigen(){
+  public getCoordOrigen (){
     return this.coordOrigen
   }
-  public setCoordOrigen(coordOrigen: coordenada){
+  public setCoordOrigen (coordOrigen: coordenada){
     this.coordOrigen = coordOrigen
   }
-  public getIdComandanteJugable(){
+  public getIdComandanteJugable (){
     return this.idComandanteJugable
   }
-  public setIdComandanteJugable(idComandanteJugable:number){
+  public setIdComandanteJugable (idComandanteJugable:number){
     this.idComandanteJugable = idComandanteJugable
   }
-  public getAcciones(){
+  public getAcciones (){
     return this.acciones
   }
-  public agregarAccion(accion:Accion){
+  public agregarAccion (accion:Accion){
     this.acciones.push(accion)
   }
-  public borrarUltimaAccion(){
+  public borrarUltimaAccion (){
     this.acciones.pop()
   }
-  public limpiarAcciones(){
+  public limpiarAcciones (){
     this.acciones = []
     this.accionActual = 0
   }
 
-  public ejecutarAcciones(){
+  public ejecutarAcciones (){
 
   }
 }
@@ -90,70 +90,70 @@ export class OrdenUnidad {
   coordOrigen: coordenada
   accion: Accion
 
-  constructor(coordOrigen:coordenada, direcciones: direccion[], accion: Accion){
+  constructor (coordOrigen:coordenada, direcciones: direccion[], accion: Accion){
     this.direcciones = direcciones
     this.coordOrigen = coordOrigen
     this.accion = accion
   }
 
-  public ejecutarOrden(mapa:Mapa, layerUnidad:Konva.Layer):Promise<resultado>{
+  public ejecutarOrden (mapa:Mapa, layerUnidad:Konva.Layer):Promise<resultado>{
     return new Promise(async (resolve, reject) => {
       const casillaSeleccionada = mapa.obtenerCasilla(this.coordOrigen) as Casilla
       this.moverUnidad(mapa, layerUnidad, casillaSeleccionada)
-      .then(async (res) => {
-        const result = await this.accion.funcionEjecutar()
-        if( result.status ){
-          resolve(result)
-        } else{
-          reject(result)
-        }
-      })
-      .catch((res) => {
-        reject(res)
-      })
+        .then(async (res) => {
+          const result = await this.accion.funcionEjecutar()
+          if ( result.status ){
+            resolve(result)
+          } else {
+            reject(result)
+          }
+        })
+        .catch((res) => {
+          reject(res)
+        })
     })
   }
 
-  private moverUnidad(mapa:Mapa, layerUnidad:Konva.Layer, casillaSeleccionada:Casilla):Promise<resultadoGenerico>{
+  private moverUnidad (mapa:Mapa, layerUnidad:Konva.Layer, casillaSeleccionada:Casilla):Promise<resultadoGenerico>{
     const spriteUnidad = layerUnidad.findOne(`#${casillaSeleccionada.getUnidad()?.id}`) as Konva.Sprite
 
     return new Promise(async (resolve, reject) => {
-    const coordDestino = { ...this.coordOrigen }
-    const listaMovimientos:direccion[] = []
+      const coordDestino = { ...this.coordOrigen }
+      const listaMovimientos:direccion[] = []
 
-    for (const direccion of this.direcciones) {
-      const translateCoord = generarCoordenadaVector(direccion)
-      if (translateCoord.x === 0 && translateCoord.y === 0) {
-        reject({status: false, movimientos: listaMovimientos})
-        return
+      for (const direccion of this.direcciones) {
+        const translateCoord = generarCoordenadaVector(direccion)
+        if (translateCoord.x === 0 && translateCoord.y === 0) {
+          reject({ status: false, movimientos: listaMovimientos })
+          return
+        }
+
+        const casillaOrigen = mapa.obtenerCasilla(coordDestino) as Casilla
+        coordDestino.x += translateCoord.x
+        coordDestino.y += translateCoord.y
+        const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
+
+        await new Promise((res) => {
+          new Konva.Tween({
+            node: spriteUnidad,
+            duration: durationMovement,
+            x: spriteUnidad.x() + mapa.tamanoCasilla * translateCoord.x,
+            y: spriteUnidad.y() + mapa.tamanoCasilla * translateCoord.y,
+            onFinish: () => {
+              listaMovimientos.push(direccion)
+              casillaDestino.setUnidad(casillaOrigen.getUnidad())
+              casillaOrigen.setUnidad(null)
+              res(true)
+            }
+          }).play()
+        })
       }
-
-      const casillaOrigen = mapa.obtenerCasilla(coordDestino) as Casilla
-      coordDestino.x += translateCoord.x
-      coordDestino.y += translateCoord.y
-      const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
-
-      await new Promise((res) => {
-        new Konva.Tween({
-          node: spriteUnidad,
-          duration: durationMovement,
-          x: spriteUnidad.x() + mapa.tamanoCasilla * translateCoord.x,
-          y: spriteUnidad.y() + mapa.tamanoCasilla * translateCoord.y,
-          onFinish: () => {
-            listaMovimientos.push(direccion)
-            casillaDestino.setUnidad(casillaOrigen.getUnidad())
-            casillaOrigen.setUnidad(null)
-            res(true)
-          }
-        }).play()
-      })
-    }
-    resolve({status: true, movimientos: listaMovimientos})
-  })
+      resolve({ status: true, movimientos: listaMovimientos })
+    })
   }
 }
 
-export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<any>{
+export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<any>{
   // Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
     const coordDestino = { ...coordOrigen }
@@ -171,11 +171,11 @@ export async function moverUnidad(coordOrigen:coordenada, spriteUnidad:Konva.Spr
       coordDestino.y += translateCoord.y
       const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
 
-      if( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
+      if ( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
         // Animación de fallo
         reject()
         return
-      } else{
+      } else {
         await new Promise((res) => {
           new Konva.Tween({
             node: spriteUnidad,

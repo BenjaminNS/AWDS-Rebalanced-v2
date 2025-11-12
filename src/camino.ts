@@ -108,7 +108,7 @@ export class Camino{
     // return false
     // }
     const caminoCoord = [coord]
-
+    let index
     for (let i = 0; i < this.maxCosto; i++) {
       const posiblesCaminos = []
 
@@ -118,23 +118,23 @@ export class Camino{
       // Talvez me está faltando contar el costo de la casilla anterior en la comparación
 
       // top
-      let index = this.getIndexCoordenadaDisponible({ x: coord.x, y: coord.y - 1 })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible - ( caminoCoord[0].movDisponible + caminoCoord[0].costo ) ) >= 0 ){
+      index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x, y: caminoCoord[0].y - 1 })
+      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       // left
-      index = this.getIndexCoordenadaDisponible({ x: coord.x - 1, y: coord.y })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible - ( caminoCoord[0].movDisponible + caminoCoord[0].costo ) ) >= 0 ){
+      index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x - 1, y: caminoCoord[0].y })
+      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       // right
-      index = this.getIndexCoordenadaDisponible({ x: coord.x + 1, y: coord.y })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible - ( caminoCoord[0].movDisponible + caminoCoord[0].costo ) ) >= 0 ){
+      index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x + 1, y: caminoCoord[0].y })
+      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       // bottom
-      index = this.getIndexCoordenadaDisponible({ x: coord.x, y: coord.y + 1 })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible - ( caminoCoord[0].movDisponible + caminoCoord[0].costo ) ) >= 0 ){
+      index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x, y: caminoCoord[0].y + 1 })
+      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
 
@@ -143,10 +143,11 @@ export class Camino{
       }
 
       const opcionAleatoria = posiblesCaminos[Math.round( (posiblesCaminos.length - 1 ) * Math.random() )]
+      // coord = { x: opcionAleatoria.x, y: opcionAleatoria.y }
       // se pone de adelante para atrás
       caminoCoord.unshift(opcionAleatoria)
 
-      if ( opcionAleatoria.movDisponible <= 0 ){
+      if ( opcionAleatoria.movDisponible >= this.maxCosto ){
         // Verificar si lo está haciendo bien aquí
         this.coordenadasCamino = caminoCoord
         return true
