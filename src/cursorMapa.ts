@@ -95,12 +95,12 @@ export class CursorMapaJuego {
         this.cursorImg.y(coordHover.y * tamanoCasilla)
 
         actualizarInfo({
-          gasolina: casillaHover.getUnidad()?.gasActual,
+          gasolina: casillaHover.getUnidad()?.getGasActual(),
           estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
-          hp: casillaHover.getUnidad()?.hp,
-          municionesPrincipales: casillaHover.getUnidad()?.municiones?.principal,
-          municionesSecundarias: casillaHover.getUnidad()?.municiones?.secundaria,
-          status: casillaHover.getUnidad()?.estado
+          hp: casillaHover.getUnidad()?.getHp(),
+          municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
+          municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
+          status: casillaHover.getUnidad()?.getEstado()
         },
         { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput }
         )

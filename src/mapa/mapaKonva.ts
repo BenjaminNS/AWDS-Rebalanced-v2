@@ -229,7 +229,7 @@ export function generarSpriteUnidad (casilla: Casilla, coordenada: coordenada):K
     id: casilla.getUnidad()?.id
   })
 
-  const unitSprite = casilla.getUnidad()?.obtenerTipo().sprite.clone()
+  const unitSprite = casilla.getUnidad()?.getSprite().clone()
   unitSprite.setAttrs({
     x: 0, y: 0,
     name: 'sprite-unidad'

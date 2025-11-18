@@ -48,7 +48,7 @@ export class UnidadCasilla {
     nombreUnidad: nombreUnidad,
     { propietario, hp, municiones, gasActual, estado, turnos }:
     { propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos?: number },
-    refComandante: ComandanteJugable
+    refComandante: ComandanteJugable|null
   ){
     const infoBasica = getInfoBasica(nombreUnidad)
     if (infoBasica === null) throw new Error('Tipo de unidad invalida')
@@ -126,6 +126,9 @@ export class UnidadCasilla {
   //   this.#propietario = propietarioId
   // }
 
+  public getHp (){
+    return this.#hp
+  }
   public restarTurno (turnos:number){
     this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
   }
@@ -227,7 +230,8 @@ export class UnidadCasilla {
     return this.#estado
   }
   getMovilidad (): number {
-    return this.#refComandante?.getMovilidadUnidad(this)
+    // return this.#refComandante?.getMovilidadUnidad(this)
+    return this.#movilidad
   }
   getNombreLargo (){
     return this.#nombreLargo
@@ -289,3 +293,31 @@ export class UnidadCasilla {
 
   // Mover funcion a Mapa
 }
+
+export type UnidadSimple = {
+  nombreUnidad: nombreUnidad,
+  id: string, // O debería ser el código del comandante jugable
+  propietario: number|null,
+  refComandante: ComandanteJugable|null, // ¿Cambiar nombre a solo comandante?
+  hp: number,
+  municiones: municiones|null,
+  gasActual: number,
+  estado: estado, // status
+  turnos: number
+}
+
+// export class UnidadSimple {
+//   nombreCorto: nombreUnidad
+//   id: string // O debería ser el código del comandante jugable
+//   propietario: number|null
+//   refComandante: ComandanteJugable|null // ¿Cambiar nombre a solo comandante?
+//   hp: number
+//   municiones: municiones|null
+//   gasActual: number
+//   estado: estado // status
+//   turnos: number
+
+//   constructor (){
+
+//   }
+// }

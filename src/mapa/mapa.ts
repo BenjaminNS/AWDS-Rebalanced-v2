@@ -1,9 +1,9 @@
 import { ListaTerrenos } from './terreno'
 import type { nombreTerreno, Terreno } from './terreno'
 import Konva from 'konva'
-import { UnidadCasilla, UnidadSimple } from '../unidades/unidades'
+import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
 import { tamanoCasilla } from './spriteTerrenos'
-import type { equipo } from '../jugador'
+// import type { equipo } from '../jugador'
 
 export type dimension = {
   filas: number,
@@ -252,8 +252,8 @@ export class Mapa{
     const _casillasCompletas:Casilla[] = []
     mapaSimple.casillas.forEach(casillaSimple => {
       const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
-        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, casillaSimple.unidad.propietario, casillaSimple.unidad.hp,
-          casillaSimple.unidad.municiones, casillaSimple.unidad.gasActual, casillaSimple.unidad.estado) : null
+        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario:casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
+          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado }, null) : null
       _casillasCompletas.push({
         sprite: null,
         propietario: casillaSimple.propietario,
@@ -289,12 +289,12 @@ export class Mapa{
     return setCoordTerrenos
   }
 
-  obtenerCoordenadasMovimiento (mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|UnidadSimple|undefined|null){
+  obtenerCoordenadasMovimiento (mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|undefined|null){
     const listaCoordMovimiento = [{ ...coordOriginal, movDisponible: 0, costo: 0 }]
     if ( unidad == null ){
       return listaCoordMovimiento
     }
-    const distanciaMax = Math.min(unidad.obtenerTipo()?.movilidad, unidad.gasActual)
+    const distanciaMax = Math.min(unidad.getMovilidad(), unidad.getGasActual())
     listaCoordMovimiento[0].movDisponible = distanciaMax
 
     // El paso puede ser de +0.5 para aceptar movimientos intermedios
@@ -414,14 +414,14 @@ export class MapaSimple{
 }
 
 function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa,
-  unidad: UnidadCasilla|UnidadSimple, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
+  unidad: UnidadCasilla, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
   const casillaValida = mapa.obtenerCasilla(coordDato)
   if ( casillaValida == null ) return null
 
   const objTerreno = casillaValida.getTerrenoObjeto()
   if ( objTerreno == null ) return null
 
-  const costoMovimiento = objTerreno.costosMovimientos[unidad.obtenerTipo().tipoMovimiento]
+  const costoMovimiento = objTerreno.costosMovimientos[unidad.getTipoMovimiento()]
   if ( costoMovimiento == null ) return null
 
   if ( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
