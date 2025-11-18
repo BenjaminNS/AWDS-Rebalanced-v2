@@ -3,7 +3,8 @@ import Konva from 'konva'
 import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad, generarShaderPropiedad } from './mapa/mapaKonva'
 import { Casilla, Mapa, type coordenada } from './mapa/mapa'
 import { ListaTerrenos, type nombreTerreno } from './mapa/terreno'
-import { ListaUnidades, Unidad, UnidadCasilla, type nombreUnidad } from './unidades/unidades'
+import { UnidadCasilla } from './unidades/unidades'
+import { ListaUnidades, type municiones, type nombreUnidad } from './unidades/unidadInfoBasica'
 let layerUnidad:Konva.Layer, layerTerreno:Konva.Layer
 
 let mapaGenerado:Mapa|null = null
@@ -264,9 +265,9 @@ function configurarFormulario (){
     let opcionesUnidad = ''
     Object.keys(unidadesObjeto).forEach((keyUnidad, i) => {
       if ( i === 0 ){
-        opcionesUnidad += `<option value="${keyUnidad}" selected="selected">${unidadesObjeto[keyUnidad].nombre}</option>`
+        opcionesUnidad += `<option value="${keyUnidad}" selected="selected">${unidadesObjeto[keyUnidad].nombreLargo}</option>`
       } else {
-        opcionesUnidad += `<option value="${keyUnidad}">${unidadesObjeto[keyUnidad].nombre}</option>`
+        opcionesUnidad += `<option value="${keyUnidad}">${unidadesObjeto[keyUnidad].nombreLargo}</option>`
       }
     })
 
@@ -411,7 +412,7 @@ async function pintarTerreno (tipoCasilla: nombreTerreno, coordenada: coordenada
     return
   }
 
-  casillaSeleccionada.setTipo = tipoCasilla
+  casillaSeleccionada.setTipo(tipoCasilla)
 
   if ( ListaTerrenos[tipoCasilla].esPropiedad ){
     casillaSeleccionada.setPropietario(formularioMapa.propietarioTerreno)
@@ -454,7 +455,7 @@ async function pintarUnidad (brochaUnidad: brochaUnidad, coordenada: coordenada,
   const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
   spriteAnterior?.destroy()
 
-  let municiones:object|null = {}
+  let municiones:municiones|null = {}
   if ( !brochaUnidad.munPrincipal && !brochaUnidad.munSecundaria ){
     municiones = null
   }
@@ -466,17 +467,18 @@ async function pintarUnidad (brochaUnidad: brochaUnidad, coordenada: coordenada,
     municiones.secundaria = brochaUnidad.munSecundaria
   }
 
-  casillaUnidad.unidad = new UnidadCasilla(brochaUnidad.unidad, brochaUnidad.propietario, brochaUnidad.hp, municiones, brochaUnidad.gas, null, 'normal')
-  const spriteUnidad = generarSpriteUnidad(casillaUnidad, coordenada) as Konva.Sprite
-  casillaUnidad.unidad.sprite = spriteUnidad
+  casillaUnidad.setUnidad(new UnidadCasilla(brochaUnidad.unidad, { propietario: brochaUnidad.propietario, hp: brochaUnidad.hp, municiones: municiones, gasActual: brochaUnidad.gas, turnos: 0, estado: 'normal' }, null))
+  const spriteUnidad = generarSpriteUnidad(casillaUnidad, coordenada) as Konva.Group
+  // casillaUnidad.unidad.sprite = spriteUnidad
+  casillaUnidad.getUnidad()?.setUnitKonvaGroup(spriteUnidad)
   layerUnidad.add(spriteUnidad)
 }
 async function borrarUnidad (coordenada: coordenada, mapa: Mapa){
   const casillaUnidad = mapa.obtenerCasilla(coordenada)
-  if (casillaUnidad != 'inexistente'){
-    const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.unidad?.id)
+  if ( casillaUnidad != null ){
+    const spriteAnterior = layerUnidad.findOne('#' + casillaUnidad.getUnidad()?.id)
     spriteAnterior?.destroy()
-    casillaUnidad.unidad = null
+    casillaUnidad?.setUnidad(null)
   }
 }
 

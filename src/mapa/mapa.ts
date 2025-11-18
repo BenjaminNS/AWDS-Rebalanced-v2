@@ -60,14 +60,15 @@ export class Casilla{
     this.sprite = null
   }
 
+  // Quitar esta función y hacer composición
   public getTerrenoObjeto = ():Terreno|null => {
     return ListaTerrenos[this.#tipo]
   }
   public getTipo = () => {
     return this.#tipo
   }
-  public setTipo = ():Terreno|null => {
-    return ListaTerrenos[this.#tipo]
+  public setTipo = (nombreTerreno:nombreTerreno) => {
+    this.#tipo = nombreTerreno
   }
   public getPropietario = () => this.#propietario
   public setPropietario (propietario:number|null){
@@ -166,10 +167,10 @@ export class Mapa{
     const setComandanteJugables = this.obtenerComandantesJugables()
 
     if ( setComandanteJugables.size == 0 ){
-      console.error('No existen jugadores para este mapa')
+      // console.error('No existen jugadores para este mapa')
       return false
     } else if ( setComandanteJugables.size < 2 ){
-      console.error('Deben haber al menos 2 jugador para que un mapa sea jugable')
+      // console.error('Deben haber al menos 2 jugador para que un mapa sea jugable')
       return false
     }
 
