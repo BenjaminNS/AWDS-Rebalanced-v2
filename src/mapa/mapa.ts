@@ -3,6 +3,7 @@ import type { nombreTerreno, Terreno } from './terreno'
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
 import { tamanoCasilla } from './spriteTerrenos'
+import type { Jugador } from '../jugador'
 // import type { equipo } from '../jugador'
 
 export type dimension = {
@@ -249,12 +250,21 @@ export class Mapa{
     return _mapaSimple
   }
 
-  static generarMapaCompleto (mapaSimple:MapaSimple):Mapa{
+  // ¿Mandar las referencias de los jugadores o comandantes jugables?
+  static generarMapaCompleto (mapaSimple:MapaSimple, listaJugadores: Jugador[]):Mapa{
+    // listaJugadores[0].getComandantesJugador()
     const _casillasCompletas:Casilla[] = []
     mapaSimple.casillas.forEach(casillaSimple => {
+
+      let refComandante = null
+      if ( casillaSimple.unidad?.propietario != null ){
+        refComandante = listaJugadores[casillaSimple.unidad.propietario].getComandantesJugador()[0]
+      }
       const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
-        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario:casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
-          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado }, null) : null
+        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario: casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
+          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado },
+        refComandante) : null
+
       _casillasCompletas.push({
         sprite: null,
         propietario: casillaSimple.propietario,
@@ -263,8 +273,7 @@ export class Mapa{
       })
     })
 
-    const _mapaCompleto = new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
-    return _mapaCompleto
+    return new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
   }
 
   static obtenerTerrenos1Tipo (mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
