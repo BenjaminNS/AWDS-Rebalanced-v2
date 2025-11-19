@@ -1,5 +1,7 @@
 // import PaisesJS from "./paises";
 // const { listaPaises } = PaisesJS()
+import type { UnidadCasilla } from '../unidades/unidades'
+import type { nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
 
 type nombreComandantes = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
@@ -52,6 +54,30 @@ export class ComandanteJugable{
     this.activo = false
     // destruir todas las unidades
     // perder todas las propiedades
+  }
+
+  // Se supone que lo que ocupo es el dato original más el tipo de unidad
+  // pero puede haber escenarios donde quiera ver la gas, municiones, casilla, etc.
+  // para determinar los resultados (especialmente importante en los resultados de ataque y defensa)
+  // Ocupo saber como generar la versión libre del objeto
+  public getMovilidadUnidad (movilidadBase: number, nombreUnidad: nombreUnidad){
+    // Aquí cada personaje tendría su propia implementación
+    // Aplicando cualquier operación aritmética, que pueda depender del
+    // tipo, estado actual de la unidad u otros parámetros
+    // O también el estado actual del personaje (con o sin poderes, efectos de clima, perks, etc.)
+
+    // Por defecto, los personajes regresan el valor tal cual sin modificaciones
+
+    return movilidadBase
+    // Temporal, esto se implementa dentro de la versión de cada personaje
+    // switch (nombreUnidad){
+    // case 'tanqueMediano':
+    //   return movilidadBase + 2
+    // case 'cohetes':
+    //   return Math.max(movilidadBase - 1, 1)
+    // default:
+    //   return movilidadBase
+    // }
   }
 }
 
