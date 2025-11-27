@@ -1,10 +1,12 @@
 import { Mapa, type coordenada, type Casilla } from './mapa/mapa'
 import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './mapa/mapaKonva.ts'
-import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
+// import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
+import { moverUnidad } from './orden.ts'
 import Konva from 'konva'
 import type { UnidadCasilla } from './unidades/unidades.ts'
 import { getInfoCasillaVariables, actualizarInfo } from './componentes/info_casilla.ts'
-import { Camino, type cordCosto } from './camino.ts'
+// import { Camino, type cordCosto } from './camino.ts'
+import { Camino } from './camino.ts'
 import { ocultarCaminos } from './mapa/konvaCamino.ts'
 
 // type coordVector = {x: 0, y:-1}|{x: -1, y:0}|{x: 1, y:0}|{x: 0, y:1}
@@ -14,7 +16,7 @@ import CursorSprite from './../public/img/huds/cursor_mapa.png'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
 
-const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info'))
+// const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info') as HTMLElement)
 
 // Interfaz para interactuar con el mapa
 export class CursorMapaJuego {
@@ -32,6 +34,8 @@ export class CursorMapaJuego {
   private layerCursor:Konva.Layer
 
   private cursorImg:Konva.Image
+  // #reactSetters:Function[]
+  #setInfoCasilla:({ info })=>void
   // private layerGUI:Konva.Layer
 
   // private ordenActual = new OrdenUnidad({x: 0, y: 0}, [], new Accion('abordar', {}, new Promise(( res, rej ) => {
@@ -43,7 +47,9 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa){
+  constructor (mapa: Mapa, fn:()=>void){
+    this.#setInfoCasilla = fn
+
     this.coordSeleccionada = null
     this.mapa = mapa
     this.layerUnidad = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES) as Konva.Layer
@@ -94,17 +100,16 @@ export class CursorMapaJuego {
         this.cursorImg.x(coordHover.x * tamanoCasilla)
         this.cursorImg.y(coordHover.y * tamanoCasilla)
 
-        actualizarInfo({
-          gasolina: casillaHover.getUnidad()?.getGasActual(),
+        this.#setInfoCasilla({
           estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
+          gasActual: casillaHover.getUnidad()?.getGasActual(),
+          gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
           hp: casillaHover.getUnidad()?.getHp(),
           municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
           municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
-          status: casillaHover.getUnidad()?.getEstado()
-        },
-        { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput }
-        )
-
+          status: casillaHover.getUnidad()?.getEstado(),
+          terreno: casillaHover.getTipo()
+        })
       }
 
     })
