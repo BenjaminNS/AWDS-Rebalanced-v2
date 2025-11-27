@@ -20,7 +20,7 @@ export type jugadorData = {
 
 export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] }){
   return (
-    <>
+    <div id="seccion-jugadores">
       {jugadoresData.map((jugador, i) => (
         <div key={i} className={ !jugador.activo ? 'elemento-jugador inactivo' : 'elemento-jugador' } >
           <div className="top" style={{ display: 'flex', alignItems: 'center' }}>
@@ -43,6 +43,6 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
           </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }
