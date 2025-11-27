@@ -3,7 +3,7 @@ import './jugador-div.css'
 const baseImgComandante = './img/comandantes/'
 
 // Esto talvez podría obtenerlo de otro archivo
-type jugadorData = {
+export type jugadorData = {
   id: string,
   nombre: string,
   activo: boolean,
@@ -14,7 +14,7 @@ type jugadorData = {
   numPropiedades: number,
   ingresosDiarios: number,
   dineroActual: number,
-  equipo: ['A'|'B'|'C'|'D'],
+  equipo: 'A'|'B'|'C'|'D',
   podereres: string[]
 }
 
