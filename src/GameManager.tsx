@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './style.css'
-import { DivJugadores } from './componentes/jugador-divs.tsx'
-// import Konva from 'konva'
+import { DivJugadores, type jugadorData } from './componentes/jugador-divs.tsx'
+import { CompraUnidadesMenu, type unidadCompra } from './componentes/compraUnidades.tsx'
+import { InfoCasilla, type InfoCasillaT } from './componentes/info_casilla.tsx'
 // Esta función solo debería usarlo en el creador de mapas.html
 // import { tamanoCasilla, MAPA_CAPAS } from './mapa/mapaKonva.ts'
 // import { ListaTerrenos } from './mapa/terreno.ts'
@@ -12,40 +14,6 @@ import { PartidaJuego } from './partida.ts'
 // import type { UnidadCasilla } from './unidades/unidades.ts'
 import { CursorMapaJuego } from './cursorMapa.ts'
 
-const jugadodsadsaresData = [
-  {
-    nombre: 'Juan Sabor',
-    id: 'pjhfdsoifjidsoifoamis',
-    activo: true,
-    comandanteImgUrl: 'andy.png',
-    cargaActual: 0,
-    cargaMaxima: 10000,
-    numUnidades: 1,
-    numPropiedades: 1,
-    ingresosDiarios: 1000,
-    dineroActual: 1000,
-    equipo: 'A',
-    podereres: ['Hyper Repair', 'Hyper Upgrade']
-  },
-  {
-    nombre: 'Starman',
-    id: 'ijlxnczqyu8721bdkdlafp',
-    activo: true,
-    comandanteImgUrl: 'max.png',
-    cargaActual: 0,
-    cargaMaxima: 10000,
-    numUnidades: 1,
-    numPropiedades: 1,
-    ingresosDiarios: 1000,
-    dineroActual: 1000,
-    equipo: 'A',
-    podereres: ['Max Force', 'Max Blast']
-  }
-]
-
-createRoot(document.getElementById('seccion-jugadores') as HTMLElement).render(
-  <DivJugadores jugadoresData={jugadodsadsaresData}></DivJugadores>
-)
 /*
 a. Seleccionar accion (activar poder o rendirse)
 
@@ -58,6 +26,36 @@ c. Seleccionar propiedad
     1 Mostrar opciones de propiedad (ej: comprar)
     2 (Opcional) Seleccionar casilla(s) destino, ej: comprar
 */
+
+function GameUI ({ jugadoresData, unidadesCompra, info }: {jugadoresData:jugadorData[], unidadesCompra: unidadCompra[], info: InfoCasillaT}){
+  // useState de variables tipo partida, jugadores, unidades, etc.
+  const [infoCasilla, setInfoCasilla] = useState(info)
+
+  useEffect(() => {
+    const Partida = new PartidaJuego(PartidaSnapshotMock, null)
+    // Object.freeze(Partida)
+    Partida.dibujarMapa('mapa-konva').then(() => {
+      // Pasarle los setState's a CursorMapaJuego
+      const cursorJuego = new CursorMapaJuego(Partida.getMapa(), setInfoCasilla)
+    })
+  }, [])
+
+  return (
+    <>
+      <div>
+        <div id="mapa-konva"></div>
+        <CompraUnidadesMenu listaUnidades={unidadesCompra} />
+        {/* <div id="menu-acciones"></div> */}
+      </div>
+      <div style={{ padding: '0 .75rem' }}>
+        {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
+
+        <InfoCasilla info={infoCasilla} />
+        <DivJugadores jugadoresData={jugadoresData} />
+      </div>
+    </>
+  )
+}
 
 async function iniciarJuego (partidaLiga:string){
   // Esto debería obtenerse con el método GET (o POST) y solicitando a una DB
@@ -83,12 +81,70 @@ window.addEventListener('load', async () => {
 
   await Partida.dibujarMapa('mapa-konva')
   // generarDivJugadores({ contenedor: document.querySelector('.seccion-jugadores'), listaJugadores: Partida['Jugadores'] })
-  Object.freeze(Partida)
-  try {
-    // ¿Es necesario guardar la variable?
-    const cursorJuego = new CursorMapaJuego(Partida.getMapa())
-  } catch (err){
-    console.error(err)
+  const jugadoresData:jugadorData[] = [
+    {
+      nombre: 'Juan Sabor',
+      id: 'pjhfdsoifjidsoifoamis',
+      activo: true,
+      comandanteImgUrl: 'andy.png',
+      cargaActual: 0,
+      cargaMaxima: 10000,
+      numUnidades: 1,
+      numPropiedades: 1,
+      ingresosDiarios: 1000,
+      dineroActual: 1000,
+      equipo: 'A',
+      podereres: ['Hyper Repair', 'Hyper Upgrade']
+    },
+    {
+      nombre: 'Starman',
+      id: 'ijlxnczqyu8721bdkdlafp',
+      activo: true,
+      comandanteImgUrl: 'max.png',
+      cargaActual: 0,
+      cargaMaxima: 10000,
+      numUnidades: 1,
+      numPropiedades: 1,
+      ingresosDiarios: 1000,
+      dineroActual: 1000,
+      equipo: 'B',
+      podereres: ['Max Force', 'Max Blast']
+    }
+  ]
+  const unidadesCompra:unidadCompra[] = [{
+    nombre: 'Infantería',
+    costo: 1000,
+    habilitado: true,
+    spriteUrl: 'odjs',
+    clickHandler: () => {}
+  }]
+  const infoCasilla:InfoCasillaT = {
+    estrellas: 0,
+    gasActual: 10,
+    gasMaxima: 20,
+    hp: 40,
+    munPrincipal: 2,
+    munSecundaria: null,
+    status: '',
+    terreno: 'dsadsa'
   }
+
+  createRoot(document.getElementById('app') as HTMLElement).render(
+    <GameUI jugadoresData={jugadoresData} unidadesCompra={unidadesCompra} info={infoCasilla}/>
+  )
+
+  // createRoot(document.getElementById('seccion-jugadores') as HTMLElement).render(
+  //   <DivJugadores jugadoresData={jugadoresData} />
+  // )
+  // createRoot(document.getElementById('menu-compras') as HTMLElement).render(
+  //   <CompraUnidadesMenu />
+  // )
+  // Object.freeze(Partida)
+  // try {
+  //   // ¿Es necesario guardar la variable?
+  //   const cursorJuego = new CursorMapaJuego(Partida.getMapa())
+  // } catch (err){
+  //   console.error(err)
+  // }
   // console.log('Partida Data', Partida)
 })
