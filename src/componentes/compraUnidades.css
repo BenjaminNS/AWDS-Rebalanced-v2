@@ -1,0 +1,24 @@
+.menu-compra-unidades{
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 90%;
+  width: 700px;
+  max-width: 90%;
+  z-index: 9;
+
+  .opcion-compra{
+    transition: all .3s;
+    .icon{
+      --ancho: 40px;
+      flex: 1 1 var(--ancho);
+      width: var(--ancho);
+      height: auto;
+    }
+    .nombre,
+    .costo{
+      flex: auto 1 1;
+    }
+    .costo{
+    }
+  }
+}
