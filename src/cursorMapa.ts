@@ -4,7 +4,6 @@ import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './m
 import { moverUnidad } from './orden.ts'
 import Konva from 'konva'
 import type { UnidadCasilla } from './unidades/unidades.ts'
-import { getInfoCasillaVariables, actualizarInfo } from './componentes/info_casilla.ts'
 // import { Camino, type cordCosto } from './camino.ts'
 import { Camino } from './camino.ts'
 import { ocultarCaminos } from './mapa/konvaCamino.ts'
