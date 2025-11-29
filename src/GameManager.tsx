@@ -61,7 +61,14 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
     // Object.freeze(Partida)
     Partida.dibujarMapa('mapa-konva').then(() => {
       // Pasarle los setState's a CursorMapaJuego
-      const cursorJuego = new CursorMapaJuego(Partida.getMapa(), setInfoCasilla)
+      const cursorJuego = new CursorMapaJuego(Partida.getMapa(), {
+        setInfoCasilla: setInfoCasilla,
+        setCasillaHover: setCasillaHover,
+        setCasillaSeleccionada: setCasillaSeleccionada,
+        setJugadorActual: setJugadorActual,
+        setPropiedadSeleccionada: setPropiedadSeleccionada,
+        setUnidadesCompra: setUnidadesCompra
+      })
     })
   }, [])
 

@@ -33,9 +33,9 @@ export class CursorMapaJuego {
   private layerCasillas:Konva.Layer
   private layerCursor:Konva.Layer
 
+  #fnReactSetters: any
   private cursorImg:Konva.Image
   // #reactSetters:Function[]
-  #setInfoCasilla:({ info })=>void
   // private layerGUI:Konva.Layer
 
   // private ordenActual = new OrdenUnidad({x: 0, y: 0}, [], new Accion('abordar', {}, new Promise(( res, rej ) => {
@@ -47,8 +47,8 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa, fn:()=>void){
-    this.#setInfoCasilla = fn
+  constructor (mapa: Mapa, fnSetters: any){
+    this.#fnReactSetters = fnSetters
 
     this.coordSeleccionada = null
     this.mapa = mapa
@@ -100,7 +100,7 @@ export class CursorMapaJuego {
         this.cursorImg.x(coordHover.x * tamanoCasilla)
         this.cursorImg.y(coordHover.y * tamanoCasilla)
 
-        this.#setInfoCasilla({
+        this.#fnReactSetters.setInfoCasilla({
           estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
           gasActual: casillaHover.getUnidad()?.getGasActual(),
           gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
@@ -131,14 +131,16 @@ export class CursorMapaJuego {
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
         mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
         return true
+
+        // tempCasilla.getTerrenoObjeto()?.esPropiedad ===
+      } else if ( tempCasilla.getTerrenoObjeto()?.esPropiedad != null && tempCasilla.getUnidad() == null ){
+        // Si es tu propiedad y no tiene unidad encima
+        console.log('Escogiste tu propiedad')
+        this.#fnReactSetters.setPropiedadSeleccionada(true)
+        // this.seleccionarPropiedad()
+        // mostrarOpcionesPropiedad
+        return true
       }
-      // else if( tempCasilla.getTerrenoObjeto()?.esPropiedad && tempCasilla.getUnidad() == null ){
-      //   // Si es tu propiedad y no tiene unidad encima
-      //   console.log('Escogiste tu propiedad')
-      //   // this.seleccionarPropiedad()
-      //     // mostrarOpcionesPropiedad
-      //   return true
-      // }
       else {
         return false
       }
