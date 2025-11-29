@@ -4,8 +4,6 @@ export type InfoCasillaT = {estrellas:number, terreno: string, hp:number, gasAct
   gasMaxima: number, munPrincipal: number|null, munSecundaria: number|null, status: string|null
 }
 export function InfoCasilla ({ info }:{info: InfoCasillaT}){
-  console.log('Dato actualizado', info)
-
   const { hp, gasActual, gasMaxima, munPrincipal, munSecundaria, estrellas } = info
   return (
     <section id="casilla-info" className="mb-2 p-2 bg-amber-100 grid grid-cols-3 grid-rows-2 justify-center align-top">
