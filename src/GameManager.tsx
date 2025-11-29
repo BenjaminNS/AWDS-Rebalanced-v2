@@ -27,9 +27,34 @@ c. Seleccionar propiedad
     2 (Opcional) Seleccionar casilla(s) destino, ej: comprar
 */
 
-function GameUI ({ jugadoresData, unidadesCompra, info }: {jugadoresData:jugadorData[], unidadesCompra: unidadCompra[], info: InfoCasillaT}){
+function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: InfoCasillaT}){
   // useState de variables tipo partida, jugadores, unidades, etc.
   const [infoCasilla, setInfoCasilla] = useState(info)
+  const [casillaHover, setCasillaHover] = useState()
+  // Pudiera ser la lista de casillas en vez de solo una
+  const [casillaSeleccionada, setCasillaSeleccionada] = useState()
+  const [jugadorActual, setJugadorActual] = useState(info)
+  // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
+  const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
+  const [unidadesCompra, setUnidadesCompra] = useState([{
+    nombre: 'Infantería',
+    costo: 1000,
+    habilitado: true,
+    spriteUrl: 'odjs',
+    clickHandler: () => {
+      console.log('Infantería comprada')
+      setPropiedadSeleccionada(null)
+    }
+  }, {
+    nombre: 'Mecha',
+    costo: 3000,
+    habilitado: true,
+    spriteUrl: 'odjs',
+    clickHandler: () => {
+      console.log('Mecha comprada')
+      setPropiedadSeleccionada(null)
+    }
+  }])
 
   useEffect(() => {
     const Partida = new PartidaJuego(PartidaSnapshotMock, null)
@@ -111,13 +136,6 @@ window.addEventListener('load', async () => {
       podereres: ['Max Force', 'Max Blast']
     }
   ]
-  const unidadesCompra:unidadCompra[] = [{
-    nombre: 'Infantería',
-    costo: 1000,
-    habilitado: true,
-    spriteUrl: 'odjs',
-    clickHandler: () => {}
-  }]
   const infoCasilla:InfoCasillaT = {
     estrellas: 0,
     gasActual: 10,
@@ -130,7 +148,7 @@ window.addEventListener('load', async () => {
   }
 
   createRoot(document.getElementById('app') as HTMLElement).render(
-    <GameUI jugadoresData={jugadoresData} unidadesCompra={unidadesCompra} info={infoCasilla}/>
+    <GameUI jugadoresData={jugadoresData} info={infoCasilla}/>
   )
 
   // createRoot(document.getElementById('seccion-jugadores') as HTMLElement).render(
