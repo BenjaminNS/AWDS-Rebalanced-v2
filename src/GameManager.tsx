@@ -74,16 +74,20 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
 
   return (
     <>
-      <div>
+      <div style={{ position: 'relative' }}>
         <div id="mapa-konva"></div>
-        <CompraUnidadesMenu listaUnidades={unidadesCompra} />
+        {React.useMemo(() => (
+          <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} />
+        ), [unidadesCompra, propiedadSeleccionada])}
         {/* <div id="menu-acciones"></div> */}
       </div>
       <div style={{ padding: '0 .75rem' }}>
         {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
 
         <InfoCasilla info={infoCasilla} />
-        <DivJugadores jugadoresData={jugadoresData} />
+        {React.useMemo(() => (
+          <DivJugadores jugadoresData={jugadoresData} />
+        ))}
       </div>
     </>
   )
