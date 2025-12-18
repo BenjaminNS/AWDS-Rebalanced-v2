@@ -1,0 +1,20 @@
+#menu-acciones{
+  position: absolute;
+  background-color: antiquewhite;
+  border-radius: 10px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+
+  .opcion-accion{
+    width: 100%;
+    background: rgb(212, 178, 132);
+    border-radius: 10px;
+
+    &:hover{
+      background: rgb(152, 125, 88);
+    }
+  }
+}
