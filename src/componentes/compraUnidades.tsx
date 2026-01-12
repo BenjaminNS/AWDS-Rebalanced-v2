@@ -19,7 +19,7 @@ export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada }:{li
             <div className='opcion-compra bg-amber-200 hover:bg-amber-400 flex p-2 gap-.5 cursor-pointer rounded-sm' onClick={UnidadCompra.clickHandler} key={UnidadCompra.nombre}>
               <img src='./img/unidades/explosion.gif' alt={UnidadCompra.nombre} className='icon'/>
               <div className='nombre flex flex-col justify-center'>{UnidadCompra.nombre}</div>
-              <div className='costo flex flex-col justify-center font-bold text-right'>{UnidadCompra.costo}</div>
+              <div className='costo flex flex-col justify-center font-bold text-right'>{UnidadCompra.costo.toString()}</div>
             </div>
           )})}
       </div>
