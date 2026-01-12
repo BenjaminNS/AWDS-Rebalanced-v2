@@ -12,7 +12,7 @@ import { generarCapaCaminos } from './konvaCamino.ts'
 export const tamanoCasilla = 32
 const standardSpriteSize = 16
 const fondoMapa = '#D5EF00' // 'black'
-const duracionConstruccion = 1000
+const duracionConstruccion = 500
 const maxDelayCasilla = 10
 
 export const obtenerColor = ({ numComandanteJugable }: {numComandanteJugable: number}) => {
