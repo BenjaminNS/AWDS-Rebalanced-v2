@@ -36,25 +36,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
   const [jugadorActual, setJugadorActual] = useState(info)
   // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
-  const [unidadesCompra, setUnidadesCompra] = useState([{
-    nombre: 'Infantería',
-    costo: 1000,
-    habilitado: true,
-    spriteUrl: 'odjs',
-    clickHandler: () => {
-      console.log('Infantería comprada')
-      setPropiedadSeleccionada(null)
-    }
-  }, {
-    nombre: 'Mecha',
-    costo: 3000,
-    habilitado: true,
-    spriteUrl: 'odjs',
-    clickHandler: () => {
-      console.log('Mecha comprada')
-      setPropiedadSeleccionada(null)
-    }
-  }])
+  const [unidadesCompra, setUnidadesCompra] = useState([])
 
   useEffect(() => {
     const Partida = new PartidaJuego(PartidaSnapshotMock, null)
@@ -77,7 +59,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
       <div style={{ position: 'relative' }}>
         <div id="mapa-konva"></div>
         {React.useMemo(() => (
-          <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} />
+          <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} />
         ), [unidadesCompra, propiedadSeleccionada])}
         {/* <div id="menu-acciones"></div> */}
       </div>
