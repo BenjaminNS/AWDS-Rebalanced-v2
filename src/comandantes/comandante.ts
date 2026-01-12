@@ -4,7 +4,7 @@ import type { UnidadCasilla } from '../unidades/unidades'
 import type { nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
 
-type nombreComandantes = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
+type nombreComandante = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
 type DayToDay = {
   descripcion: string,
   // efectos, reemplazaría las funciones por defecto del personaje
@@ -28,6 +28,10 @@ type records = {
 }
 // perks (Cambio a futuro): mejora las habilidades de un personaje
 // type perks = {}
+
+type statusEffect = 'no-power-charge'|'no-money-generation'
+// Será el nombre del poder en vez de solo cop o scop y así poder tener más opciones para más poderes (pienso que máximo 3)
+type estadoComandante = 'normal'|'cop'|'scop'|string
 
 export class ComandanteJugable{
   personaje: nombreComandantes
