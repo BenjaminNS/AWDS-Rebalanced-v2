@@ -21,7 +21,7 @@ export class PartidaSnapshot {
   ordenJugadores: number[] // Lista de id's de jugadores (o sus nombres) ordenados. Técnicamente se pueden sacar del orden del arreglo
   fechaEmpezado: Date
 
-  constructor(Mapa: MapaSimple, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date){
+  constructor (Mapa: MapaSimple, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date){
     this.Mapa = Mapa
     this.Jugadores = Jugadores
     this.Reglas = Reglas
@@ -39,94 +39,97 @@ export class PartidaGuardada extends PartidaSnapshot{
   fechaTerminado?: Date|null
   // listaAcciones: accion[]
 
-  constructor(Mapa: MapaSimple, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date, fechaTerminado?: Date|null){
+  constructor (Mapa: MapaSimple, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date, fechaTerminado?: Date|null){
     super(Mapa, Jugadores, Reglas, climaActual, diaActual, turnoActual, ordenJugadores, fechaEmpezado)
     this.fechaTerminado = fechaTerminado
   }
 }
 
-// Clase PartidaJuego: guarda todo, incluyendo jugadas. También contiene otras funciones para 
+// Clase PartidaJuego: guarda todo, incluyendo jugadas. También contiene otras funciones para
 // saber si un juego se declara terminado, obtener ganadores y perdedores, "reproducir" jugadas
 // y generar objetos de PartidaImagen. Incluye los sprites del juego
 export class PartidaJuego {
-  private Mapa: Mapa
-  private Jugadores: Jugador[]
-  private Reglas: Reglas
-  private climaActual: Clima
-  private diaActual: number
-  private turnoActual: number
-  private ordenJugadores: number[] // Lista de id's de jugadores (o sus nombres) ordenados
-  private fechaEmpezado: Date
-  private fechaTerminado?: Date|null
+  #mapa: Mapa
+  #jugadores: Jugador[]
+  #reglas: Reglas
+  #climaActual: Clima
+  #diaActual: number
+  #turnoActual: number
+  #ordenJugadores: number[] // Lista de id's de jugadores (o sus nombres) ordenados
+  #fechaEmpezado: Date
+  #fechaTerminado?: Date|null
   // listaAcciones: accion[]
 
-  public getMapa() {
-    return this.Mapa
+  public getMapa () {
+    return this.#mapa
   }
   public getReglas = () => {
-    return this.Reglas
+    return this.#reglas
   }
   public setClima = (clima: Clima) => {
-    if( !esClima(clima) ){
+    if ( !esClima(clima) ){
       console.error('Clima no existente: ', clima)
-      if( this.climaActual == undefined ){
-        this.climaActual = 'Soleado'
+      if ( this.#climaActual == undefined ){
+        this.#climaActual = 'Soleado'
       }
     } else {
-      this.climaActual = clima
+      this.#climaActual = clima
     }
 
-    return this.climaActual
+    return this.#climaActual
   }
   public getClima = () => {
-    return this.climaActual
+    return this.#climaActual
   }
   private setDiaActual = (dia: number) => {
-    if( dia < 1 ){
+    if ( dia < 1 ){
       console.error('Dia no puede ser menor a 1')
-      this.diaActual = 1
-    } else{
-      this.diaActual = Math.floor(dia)
+      this.#diaActual = 1
+    } else {
+      this.#diaActual = Math.floor(dia)
     }
 
-    return this.diaActual
+    return this.#diaActual
   }
   public siguienteDia = () => {
-    if( this.Reglas.limiteDias && this.Reglas.limiteDias < (this.diaActual + 1) ){
-      this.diaActual++
+    if ( this.#reglas.limiteDias && this.#reglas.limiteDias < (this.#diaActual + 1) ){
+      this.#diaActual++
     } else {
-       this.declararJuegoTerminado()
+      this.declararJuegoTerminado()
     }
 
-    return this.diaActual
+    return this.#diaActual
   }
   public getDiaActual = () => {
-    return this.diaActual
+    return this.#diaActual
   }
   // private diaAnterior = () => { return this.diaActual-- }
   public getOrdenJugadores = () => {
-    return this.ordenJugadores
+    return this.#ordenJugadores
   }
   public getFechaIniciado = () => {
-    return this.fechaEmpezado
+    return this.#fechaEmpezado
   }
   public getFechaTerminado = () => {
-    return this.fechaTerminado
+    return this.#fechaTerminado
   }
 
   private setTurnoActual = (turnoActual:number, numComandanteJugables:number) => {
-    if( turnoActual < 0 ){
+    if ( turnoActual < 0 ){
       // console.error('Turno no puede ser menor a 0')
-      this.turnoActual = 0
-    } else if( turnoActual >= numComandanteJugables ){
+      this.#turnoActual = 0
+    } else if ( turnoActual >= numComandanteJugables ){
       // console.error('Turno no puede ser mayor al número de jugadores')
       // Da la vuelta
-      this.turnoActual = 0
-    }else{
-      this.turnoActual = Math.floor(turnoActual)
+      this.#turnoActual = 0
+    } else {
+      this.#turnoActual = Math.floor(turnoActual)
     }
 
-    return this.turnoActual
+    return this.#turnoActual
+  }
+  public getJugadorActual (){
+    return this.#jugadores[this.#turnoActual]
   }
   // Talvez lo cambie a "terminarTurno"
   public siguienteJugador = () => {
@@ -134,59 +137,59 @@ export class PartidaJuego {
     // this.Jugadores[0].activo
 
     // habilitar el turno a todas las unidades del turno actual antes de pasar al siguiente jugador
-    return this.setTurnoActual((this.turnoActual + 1), this.Mapa.obtenerComandantesJugables().size)
+    return this.setTurnoActual((this.#turnoActual + 1), this.#mapa.obtenerComandantesJugables().size)
   }
   public getTurnoActual = () => {
-    return this.turnoActual
+    return this.#turnoActual
   }
 
-  constructor( partidaInfo: PartidaSnapshot|PartidaGuardada, fechaTerminado?: Date|null ) {
-    this.Mapa = new Mapa(partidaInfo.Mapa.nombre, partidaInfo.Mapa.dimensiones, partidaInfo.Mapa.casillas)
-    console.log('Mapa valido: ', this.Mapa.esMapaValido())
+  constructor ( partidaInfo: PartidaSnapshot|PartidaGuardada, fechaTerminado?: Date|null ) {
+    this.#mapa = new Mapa(partidaInfo.Mapa.nombre, partidaInfo.Mapa.dimensiones, partidaInfo.Mapa.casillas)
+    console.log('Mapa valido: ', this.#mapa.esMapaValido())
 
-    this.Jugadores = partidaInfo.Jugadores
-    this.Reglas = partidaInfo.Reglas
+    this.#jugadores = partidaInfo.Jugadores
+    this.#reglas = partidaInfo.Reglas
 
-    this.climaActual = this.setClima(partidaInfo.climaActual)
-    this.diaActual = this.setDiaActual(partidaInfo.diaActual)
+    this.#climaActual = this.setClima(partidaInfo.climaActual)
+    this.#diaActual = this.setDiaActual(partidaInfo.diaActual)
 
-    const comandantesJugables:Set<number|null> = this.Mapa.obtenerComandantesJugables()
+    const comandantesJugables:Set<number|null> = this.#mapa.obtenerComandantesJugables()
     console.log('Comandantes jugables: ', comandantesJugables )
-    this.turnoActual = this.setTurnoActual(partidaInfo.turnoActual, comandantesJugables.size)
+    this.#turnoActual = this.setTurnoActual(partidaInfo.turnoActual, comandantesJugables.size)
 
-    this.ordenJugadores = partidaInfo.ordenJugadores
-    this.fechaEmpezado = partidaInfo.fechaEmpezado
-    if( !fechaTerminado ){
-      this.fechaTerminado = fechaTerminado
-    } else{
-      this.fechaTerminado = null
+    this.#ordenJugadores = partidaInfo.ordenJugadores
+    this.#fechaEmpezado = partidaInfo.fechaEmpezado
+    if ( !fechaTerminado ){
+      this.#fechaTerminado = fechaTerminado
+    } else {
+      this.#fechaTerminado = null
     }
   }
   public obtenerEquipos = ():Set<string> => {
-      const setEquipos:Set<string> = new Set()
-      this.Jugadores.forEach(jugador => {
-          setEquipos.add(jugador.equipo)
-      });
+    const setEquipos:Set<string> = new Set()
+    this.#jugadores.forEach(jugador => {
+      setEquipos.add(jugador.getEquipo())
+    })
 
-      return setEquipos
+    return setEquipos
   }
   public obtenerFiltroHSVJugadores = () => {
-      const setFiltrosHSV = new Set()
-      return setFiltrosHSV
+    const setFiltrosHSV = new Set()
+    return setFiltrosHSV
   }
   public dibujarMapa = async (contenedor: string) => {
-    this.Mapa = await generarMapaKonva({ mapa: this.Mapa, idContenedor: contenedor })
+    this.#mapa = await generarMapaKonva({ mapa: this.#mapa, idContenedor: contenedor })
   }
 
-  private declararJuegoTerminado(){
-    this.fechaTerminado = new Date(Date.now())
+  private declararJuegoTerminado (){
+    this.#fechaTerminado = new Date(Date.now())
     this.declararGanadores()
     this.declararPerdedores()
     // actualizarInterfaces(ganadores, perdedores, dia, etc...)
     // deshabilitarInteraccciones
   }
-  private declararGanadores(){}
-  private declararPerdedores(){}
+  private declararGanadores (){}
+  private declararPerdedores (){}
 
   // guardarPartidaJSON = async (liga: string) => {
   //   console.log('Guardar JSON de partida')
@@ -202,7 +205,6 @@ export class PartidaJuego {
   // obtenerGanadores: Function
   // obtenerPerdedores: Function
 }
-
 
 // Funciones de cargado y guardado
 // export function cargarPartida({IDPartida}: {IDPartida: number}){

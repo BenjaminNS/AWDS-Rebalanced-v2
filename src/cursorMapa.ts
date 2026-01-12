@@ -1,20 +1,22 @@
 import { Mapa, type coordenada, type Casilla } from './mapa/mapa'
 import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './mapa/mapaKonva.ts'
-import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
+// import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
+import { moverUnidad } from './orden.ts'
 import Konva from 'konva'
 import type { UnidadCasilla } from './unidades/unidades.ts'
-import { getInfoCasillaVariables, actualizarInfo } from './componentes/info_casilla.ts'
-import { Camino, type cordCosto } from './camino.ts'
+// import { Camino, type cordCosto } from './camino.ts'
+import { Camino } from './camino.ts'
 import { ocultarCaminos } from './mapa/konvaCamino.ts'
 
 // type coordVector = {x: 0, y:-1}|{x: -1, y:0}|{x: 1, y:0}|{x: 0, y:1}
 
 // Cursor
 import CursorSprite from './../public/img/huds/cursor_mapa.png'
+import type { Jugador } from './jugador.ts'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
 
-const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info'))
+// const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info') as HTMLElement)
 
 // Interfaz para interactuar con el mapa
 export class CursorMapaJuego {
@@ -31,7 +33,12 @@ export class CursorMapaJuego {
   private layerCasillas:Konva.Layer
   private layerCursor:Konva.Layer
 
+  #fnReactSetters: any
+  #fnGetters: {
+    getJugadorActual: ()=>Jugador
+  }
   private cursorImg:Konva.Image
+  // #reactSetters:Function[]
   // private layerGUI:Konva.Layer
 
   // private ordenActual = new OrdenUnidad({x: 0, y: 0}, [], new Accion('abordar', {}, new Promise(( res, rej ) => {
@@ -43,7 +50,12 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa){
+  constructor (mapa: Mapa, fnSetters: any, fnGetters: {
+    getJugadorActual: ()=>Jugador
+  }){
+    this.#fnReactSetters = fnSetters
+    this.#fnGetters = fnGetters
+
     this.coordSeleccionada = null
     this.mapa = mapa
     this.layerUnidad = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES) as Konva.Layer
@@ -77,7 +89,7 @@ export class CursorMapaJuego {
       if ( this.rightClick ) this.cancelarUltimaAccion()
     })
     // hoverMouse/MouseMove
-    this.mapa.konvaStage?.on('mousemove', (ev) => {
+    this.mapa.konvaStage?.on('mousemove', () => {
       // if se tiene abierto un menú (los botones tienen el evento de mouseover) return
 
       const pos = this.mapa.konvaStage?.getPointerPosition()
@@ -94,17 +106,16 @@ export class CursorMapaJuego {
         this.cursorImg.x(coordHover.x * tamanoCasilla)
         this.cursorImg.y(coordHover.y * tamanoCasilla)
 
-        actualizarInfo({
-          gasolina: casillaHover.getUnidad()?.getGasActual(),
+        this.#fnReactSetters.setInfoCasilla({
           estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
+          gasActual: casillaHover.getUnidad()?.getGasActual(),
+          gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
           hp: casillaHover.getUnidad()?.getHp(),
           municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
           municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
-          status: casillaHover.getUnidad()?.getEstado()
-        },
-        { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput }
-        )
-
+          status: casillaHover.getUnidad()?.getEstado(),
+          terreno: casillaHover.getTipo()
+        })
       }
 
     })
@@ -126,14 +137,20 @@ export class CursorMapaJuego {
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
         mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
         return true
+
+        // tempCasilla.getTerrenoObjeto()?.esPropiedad ===
+      } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null ){
+        // Si es tu propiedad y no tiene unidad encima
+        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo())
+        if ( unidadesCompraDatos.length > 0 ){
+          console.log('Escogiste tu propiedad')
+          this.#fnReactSetters.setPropiedadSeleccionada(true)
+          this.#fnReactSetters.setUnidadesCompra(unidadesCompraDatos)
+          return true
+        } else {
+          return false
+        }
       }
-      // else if( tempCasilla.getTerrenoObjeto()?.esPropiedad && tempCasilla.getUnidad() == null ){
-      //   // Si es tu propiedad y no tiene unidad encima
-      //   console.log('Escogiste tu propiedad')
-      //   // this.seleccionarPropiedad()
-      //     // mostrarOpcionesPropiedad
-      //   return true
-      // }
       else {
         return false
       }

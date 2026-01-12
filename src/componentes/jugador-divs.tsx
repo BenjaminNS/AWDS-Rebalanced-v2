@@ -3,7 +3,7 @@ import './jugador-div.css'
 const baseImgComandante = './img/comandantes/'
 
 // Esto talvez podría obtenerlo de otro archivo
-type jugadorData = {
+export type jugadorData = {
   id: string,
   nombre: string,
   activo: boolean,
@@ -14,13 +14,13 @@ type jugadorData = {
   numPropiedades: number,
   ingresosDiarios: number,
   dineroActual: number,
-  equipo: ['A'|'B'|'C'|'D'],
+  equipo: 'A'|'B'|'C'|'D',
   podereres: string[]
 }
 
 export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] }){
   return (
-    <>
+    <div id="seccion-jugadores">
       {jugadoresData.map((jugador, i) => (
         <div key={i} className={ !jugador.activo ? 'elemento-jugador inactivo' : 'elemento-jugador' } >
           <div className="top" style={{ display: 'flex', alignItems: 'center' }}>
@@ -43,6 +43,6 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
           </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }

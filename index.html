@@ -12,43 +12,7 @@
   </head>
   <body>
     <!-- <main class="grid md:grid-cols-2 grid-cols-1 md:grid-rows-1 grid-rows-2"> -->
-    <main>
-      <div id="mapa-konva"></div>
-      <div style="padding: 0 .75rem;">
-				<!-- <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> -->
-
-        <section id="casilla-info" class="mb-2 p-2 bg-amber-100 grid grid-cols-3 grid-rows-2 justify-center align-top">
-          <output class="info-txt" id="estrella-txt">
-            <img src="./img/huds/star.png" alt="hp-txt" class="icon">
-            <span>Stars</span>
-          </output>
-          <output class="info-txt" id="hp-txt">
-            <img src="./img/huds/indicador_hp.png" alt="hp-txt" class="icon">
-            <span>HP</span>
-          </output>
-          <output class="info-txt" id="gas-txt">
-            <img src="./img/huds/indicador_gas.png" alt="gas-txt" class="icon">
-            <span>Gas</span>
-          </output>
-          <output class="info-txt" id="mun-principal-txt">
-            <img src="./img/huds/indicador_municion.png" alt="mun-principal-txt" class="icon">
-            <span>Mun prin?</span>
-          </output>
-          <output class="info-txt" id="mun-secundaria-txt">
-            <img src="./img/huds/indicador_municion.png" alt="mun-principal-txt" class="icon">
-            <span>Mun sec?</span>
-          </output>
-          <output class="info-txt" id="status-txt">
-            <img src="./img/huds/candado.png" alt="status-txt" class="icon">
-            <span>Status</span>
-          </output>
-        </section>
-
-				<div id="seccion-jugadores">
-					<!-- Auto generado -->
-				</div>
-			</div>
-    </main>
+    <main id="app"></main>
     <script type="module" src="/src/GameManager.tsx"></script>
     <script type="module" src="/src/componentes/header.ts"></script>
     <!-- <script type="module" src="src/componentes/jugador-div-test.jsx"></script> -->

@@ -234,7 +234,7 @@ export const ListaUnidades:listaUnidades = {
     costo: 4000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 1, maxGasolina: 99, consumoDiario: () => 0, maxMuniciones: null, contraataque: null, atacarYMoverse: true, sprite: spriteApc
   },
   'artilleria': {
-    nombreLargo: 'Artillería', nombreCorto: 'artilleria', descripcion: 'Vehículo indirecto efectivo contra unidades terrestres y navales.', categorias: ['Vehiculo', 'Terrestre', 'Indirecto'], costo: 1000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 7 }, contraataque: 0, atacarYMoverse: true, sprite: spriteArtilleria
+    nombreLargo: 'Artillería', nombreCorto: 'artilleria', descripcion: 'Vehículo indirecto efectivo contra unidades terrestres y navales.', categorias: ['Vehiculo', 'Terrestre', 'Indirecto'], costo: 6000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 7 }, contraataque: 0, atacarYMoverse: true, sprite: spriteArtilleria
   },
   'cohetes': {
     nombreLargo: 'Cohetes', nombreCorto: 'cohetes', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 15000, rango: { minimo: 2, extra: 3 }, movilidad: 5, tipoMovimiento: 'ruedas', vision: 3, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 0, atacarYMoverse: true, sprite: spriteCohetes
