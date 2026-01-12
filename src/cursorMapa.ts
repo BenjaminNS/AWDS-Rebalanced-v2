@@ -12,6 +12,7 @@ import { ocultarCaminos } from './mapa/konvaCamino.ts'
 
 // Cursor
 import CursorSprite from './../public/img/huds/cursor_mapa.png'
+import type { Jugador } from './jugador.ts'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
 
@@ -33,6 +34,9 @@ export class CursorMapaJuego {
   private layerCursor:Konva.Layer
 
   #fnReactSetters: any
+  #fnGetters: {
+    getJugadorActual: ()=>Jugador
+  }
   private cursorImg:Konva.Image
   // #reactSetters:Function[]
   // private layerGUI:Konva.Layer
@@ -46,8 +50,11 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa, fnSetters: any){
+  constructor (mapa: Mapa, fnSetters: any, fnGetters: {
+    getJugadorActual: ()=>Jugador
+  }){
     this.#fnReactSetters = fnSetters
+    this.#fnGetters = fnGetters
 
     this.coordSeleccionada = null
     this.mapa = mapa
@@ -82,7 +89,7 @@ export class CursorMapaJuego {
       if ( this.rightClick ) this.cancelarUltimaAccion()
     })
     // hoverMouse/MouseMove
-    this.mapa.konvaStage?.on('mousemove', (ev) => {
+    this.mapa.konvaStage?.on('mousemove', () => {
       // if se tiene abierto un menú (los botones tienen el evento de mouseover) return
 
       const pos = this.mapa.konvaStage?.getPointerPosition()
@@ -132,13 +139,17 @@ export class CursorMapaJuego {
         return true
 
         // tempCasilla.getTerrenoObjeto()?.esPropiedad ===
-      } else if ( tempCasilla.getTerrenoObjeto()?.esPropiedad != null && tempCasilla.getUnidad() == null ){
+      } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null ){
         // Si es tu propiedad y no tiene unidad encima
-        console.log('Escogiste tu propiedad')
-        this.#fnReactSetters.setPropiedadSeleccionada(true)
-        // this.seleccionarPropiedad()
-        // mostrarOpcionesPropiedad
-        return true
+        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo())
+        if ( unidadesCompraDatos.length > 0 ){
+          console.log('Escogiste tu propiedad')
+          this.#fnReactSetters.setPropiedadSeleccionada(true)
+          this.#fnReactSetters.setUnidadesCompra(unidadesCompraDatos)
+          return true
+        } else {
+          return false
+        }
       }
       else {
         return false
