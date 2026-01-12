@@ -1,9 +1,11 @@
 // import PaisesJS from "./paises";
 // const { listaPaises } = PaisesJS()
+import { type nombrePropiedad, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terreno'
 import { type UnidadCasilla } from '../unidades/unidades'
 import { getInfoBasica } from '../unidades/unidadInfoBasica'
 import type { estado, nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
+import type { unidadCompra } from '../componentes/compraUnidades'
 
 type nombreComandante = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
 type DayToDay = {
@@ -155,6 +157,44 @@ export class ComandanteJugable{
     // default:
     //   return movilidadBase
     // }
+  }
+
+  public getUnidadesCompraDatos (propiedad: nombrePropiedad):unidadCompra[]{
+    const unidadesCompraDatos:unidadCompra[] = []
+
+    let propiedadUnidades
+    switch (propiedad){
+    case 'fabrica':
+      propiedadUnidades = fabricaUnidades
+      break
+    case 'aeropuerto':
+      propiedadUnidades = aeropuertoUnidades
+      break
+    case 'puertoNaval':
+      propiedadUnidades = puertoNavalUnidades
+      break
+    }
+
+    propiedadUnidades.forEach((unidadNombre) => {
+      const tempInfoBasica = getInfoBasica(unidadNombre)
+      if ( tempInfoBasica !== null ){
+        unidadesCompraDatos.push({
+          costo: tempInfoBasica.costo * this.#multiplicadorCosto,
+          habilitado: this.#dineroActual >= tempInfoBasica.costo ? true : false,
+          nombre: tempInfoBasica.nombreLargo,
+          spriteUrl: tempInfoBasica.nombreCorto + '.png',
+          clickHandler: () => {
+            if (this.gastarDinero(tempInfoBasica.costo * this.#multiplicadorCosto)){
+              console.log(`Compraste ${tempInfoBasica.nombreLargo}. Tienes ${this.#dineroActual}G`)
+            } else {
+              console.log('Error en la compra. No tienes fondos suficientes')
+            }
+          }
+        })
+      }
+    })
+
+    return unidadesCompraDatos
   }
 }
 
