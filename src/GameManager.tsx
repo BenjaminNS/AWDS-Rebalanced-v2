@@ -13,6 +13,7 @@ import { PartidaJuego } from './partida.ts'
 // import { type coordenada } from './mapa/mapa.ts'
 // import type { UnidadCasilla } from './unidades/unidades.ts'
 import { CursorMapaJuego } from './cursorMapa.ts'
+import type { Jugador } from './jugador.ts'
 
 /*
 a. Seleccionar accion (activar poder o rendirse)
@@ -33,7 +34,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
   const [casillaHover, setCasillaHover] = useState()
   // Pudiera ser la lista de casillas en vez de solo una
   const [casillaSeleccionada, setCasillaSeleccionada] = useState()
-  const [jugadorActual, setJugadorActual] = useState(info)
+  const [jugadorActual, setJugadorActual] = useState(0)
   // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
   const [unidadesCompra, setUnidadesCompra] = useState([])
@@ -50,6 +51,10 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
         setJugadorActual: setJugadorActual,
         setPropiedadSeleccionada: setPropiedadSeleccionada,
         setUnidadesCompra: setUnidadesCompra
+      }, {
+        getJugadorActual: ():Jugador => {
+          return Partida.getJugadorActual()
+        }
       })
     })
   }, [])
