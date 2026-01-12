@@ -1,7 +1,8 @@
 // import PaisesJS from "./paises";
 // const { listaPaises } = PaisesJS()
-import type { UnidadCasilla } from '../unidades/unidades'
-import type { nombreUnidad } from '../unidades/unidadInfoBasica'
+import { type UnidadCasilla } from '../unidades/unidades'
+import { getInfoBasica } from '../unidades/unidadInfoBasica'
+import type { estado, nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
 
 type nombreComandante = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'
@@ -33,33 +34,105 @@ type statusEffect = 'no-power-charge'|'no-money-generation'
 // Será el nombre del poder en vez de solo cop o scop y así poder tener más opciones para más poderes (pienso que máximo 3)
 type estadoComandante = 'normal'|'cop'|'scop'|string
 
+// Cambiar a variables privadas
 export class ComandanteJugable{
-  personaje: nombreComandantes
-  idInstancia: string // crypto.randomUUID
-  dineroActual: number
-  cargaActual: number
-  usosPoder: number
-  activo: boolean
+  #personaje: nombreComandante
+  #idInstancia: string // crypto.randomUUID
+  #dineroActual: number
+  #cargaActual: number
+  // Carga maxima cambiaría su valor cada vez que se usa un poder
+  // Originalmente en el juego el aumento de costo es un +20% con cada uso
+  #cargaMaxima: number
+  #usosPoder: number
+  #activo: boolean
+  #multiplicadorCosto:number = 1
+  #statusEffects: statusEffect[] = []
   // records: records;
+  #estado: estadoComandante = 'normal'
+  // #unidades: UnidadCasilla[]
+  // #propiedades: propiedad[]
 
-  // Será el nombre del poder en vez de solo cop o scop y así poder tener más opciones para más poderes (pienso que máximo 3)
-  // estadoActual: 'normal'|'cop'|'scop';
-
-  constructor (personaje: nombreComandantes, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
-    this.personaje = personaje
-    this.idInstancia = idInstancia
-    this.dineroActual = dineroActual
-    this.cargaActual = cargaActual
-    this.usosPoder = usosPoder
-    this.activo = activo
+  // estadoActual: estadoComandante
+  constructor (personaje: nombreComandante, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
+    this.#personaje = personaje
+    this.#idInstancia = idInstancia
+    this.#dineroActual = dineroActual
+    this.#cargaActual = cargaActual
+    this.#cargaMaxima = 10000
+    this.#usosPoder = usosPoder
+    this.#activo = activo
   }
 
   rendirse (){
-    this.activo = false
+    this.#activo = false
     // destruir todas las unidades
     // perder todas las propiedades
   }
 
+  getpersonaje (){{
+    return this.#personaje
+  }}
+  getidInstancia (){{
+    return this.#idInstancia
+  }}
+  getdineroActual (){{
+    return this.#dineroActual
+  }}
+  gastarDinero (gasto:number){
+    if ( this.#dineroActual < gasto ){
+      return false
+    } else {
+      this.#dineroActual -= gasto
+      return true
+    }
+  }
+  // Por defecto, el límite es 99999G
+  sumarDinero (dineroExtra:number, limiteDinero: number = 999999){
+    //
+    this.#dineroActual = Math.min((this.#dineroActual + dineroExtra), limiteDinero)
+  }
+  getcargaActual (){{
+    return this.#cargaActual
+  }}
+  sumarCarga (puntosCarga:number){
+    this.#cargaActual = Math.min((this.#cargaActual + puntosCarga), this.#cargaMaxima)
+  }
+  // restarCarga (puntosCarga:number){
+  //   this.#cargaActual = Math.min((this.#cargaActual + puntosCarga), this.#cargaMaxima)
+  // }
+  getCargaMaxima (){
+    return this.#cargaMaxima
+  }
+  getusosPoder (){{
+    return this.#usosPoder
+  }}
+  getactivo (){{
+    return this.#activo
+  }}
+  getmultiplicadorCosto (){{
+    return this.#multiplicadorCosto
+  }}
+  getStatusEffects () {
+    return this.#statusEffects
+  }
+  agregarStatusEffects (statusEffects: statusEffect[]){
+    this.#statusEffects.push.apply(statusEffects)
+  }
+  // removerStatusEffects (statusEffects: statusEffect[]){
+  //   this.#statusEffects.remove(statusEffects)
+  // }
+  getEstado () {
+    return this.#estado
+  }
+  #setEstado (estado:estadoComandante){
+    this.#estado = estado
+  }
+  activarPoder (){
+    this.#setEstado('cop')
+  }
+  desactivarPoder (){
+    this.#setEstado('normal')
+  }
   // Se supone que lo que ocupo es el dato original más el tipo de unidad
   // pero puede haber escenarios donde quiera ver la gas, municiones, casilla, etc.
   // para determinar los resultados (especialmente importante en los resultados de ataque y defensa)
