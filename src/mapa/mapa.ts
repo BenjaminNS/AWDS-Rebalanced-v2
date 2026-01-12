@@ -32,7 +32,7 @@ export class CasillaSimple{
     this.unidad = unidad
   }
 }
-export class Casilla{
+export class Casilla {
   #tipo: nombreTerreno
   #propietario: number|null
   #unidad: UnidadCasilla|null
