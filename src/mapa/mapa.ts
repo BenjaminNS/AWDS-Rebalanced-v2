@@ -351,12 +351,13 @@ export class Mapa{
 
       if ( unidad !== null && unidad.getPropietario() === propietario ){
         const coordInicio = { x: index % this.dimensiones.columnas, y: Math.floor(index / this.dimensiones.columnas) }
-        this.marcarCasillasVision(coordInicio, unidad.obtenerTipo().vision)
+        this.marcarCasillasVision(coordInicio, unidad.getVision())
       }
     })
   }
 
   private marcarCasillasVision (coord:coordenada, vision:number){
+    console.log(coord, vision)
     // marcar todas las casillas en falso
     // marcar la casilla indicada
     // marcar casillas alrededor (basandose en la visión)
