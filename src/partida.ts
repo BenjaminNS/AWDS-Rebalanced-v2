@@ -128,6 +128,9 @@ export class PartidaJuego {
 
     return this.#turnoActual
   }
+  public getJugadorActual (){
+    return this.#jugadores[this.#turnoActual]
+  }
   // Talvez lo cambie a "terminarTurno"
   public siguienteJugador = () => {
     // cambia el turno al siguiente jugador activo
