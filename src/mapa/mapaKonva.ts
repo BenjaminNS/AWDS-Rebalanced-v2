@@ -108,18 +108,6 @@ function generarStage ({ idContenedor, dimensiones }: {idContenedor: string, dim
   return konvaStage
 }
 
-function generarCapaFondo ({ dimensiones }: {dimensiones: dimension}):Konva.Layer{
-  const capaFondo = new Konva.Layer({ name: MAPA_CAPAS.FONDO })
-  // Talvez convendría más poner de fondo las planices, en vez de un color sólido de fondo
-  // Se tendría que adaptar también al clima y al Fog of War
-  capaFondo.add(new Konva.Rect({
-    width: dimensiones.columnas * tamanoCasilla,
-    height: dimensiones.filas * tamanoCasilla,
-    fill: fondoMapa
-  }))
-
-  return capaFondo
-}
 function generarCapaCasillas ({ mapa }: {mapa: Mapa}):Konva.Layer{
   const capaCasillas = new Konva.Layer({ name: MAPA_CAPAS.CASILLAS })
   for (let y = 0; y < mapa.dimensiones.filas; y++) {
@@ -195,10 +183,14 @@ async function generarCapasMapa ({ mapa, idContenedor } : {mapa: Mapa, idContene
     idContenedor: idContenedor,
     dimensiones: mapa.dimensiones
   })
-  mapa.konvaStage.add(generarCapaFondo({ dimensiones: mapa.dimensiones }))
   // TODO: De preferencia, que generar los terrenos fuera en una sola instrucción
   // aunque ya no se animen los terrenos
   const capaTerreno = generarCapaTerreno({ mapa: mapa })
+  capaTerreno.add(new Konva.Rect({
+    width: mapa.dimensiones.columnas * tamanoCasilla,
+    height: mapa.dimensiones.filas * tamanoCasilla,
+    fill: fondoMapa
+  }))
   mapa.konvaStage.add(capaTerreno)
   generarListaTilesTerreno({ capaTerreno: capaTerreno, mapa: mapa })
   const capaCasillas = generarCapaCasillas({ mapa: mapa })
