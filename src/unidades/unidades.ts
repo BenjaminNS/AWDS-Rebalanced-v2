@@ -252,6 +252,15 @@ export class UnidadCasilla {
   getRango (){
     return this.#rango
   }
+  getRangoMinimo (){
+    return this.#rango?.minimo ? this.#rango?.minimo : null
+  }
+  getRangoExtra (){
+    return this.#rango?.extra ? this.#rango?.extra : null
+  }
+  getRangoMaximo (){
+    return this.#rango ? (this.#rango.minimo + this.#rango.extra) : null
+  }
   getTipoMovimiento (){
     return this.#tipoMovimiento
   }
