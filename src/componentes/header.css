@@ -15,6 +15,10 @@ header{
   top: 0; left: 0;
   z-index: 2;
 
+  border-bottom-style: solid;
+  border-bottom-color: #452828e3;
+  border-bottom-width: 3px;
+
   .icono-seccion{
     width: 35px;
   }
