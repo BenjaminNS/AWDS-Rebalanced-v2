@@ -7,7 +7,7 @@ type elementoHeader = {
   privada?: boolean
 }
 
-export const elementosHeader:elementoHeader[] = [
+export const ElementosHeader:elementoHeader[] = [
   // Si no encuentra la página, me regresa a la original
   // Públicas
   // { texto: 'Bienvenida', liga: 'bienvenida.html'}, //Esta ocupa el dato del jugador

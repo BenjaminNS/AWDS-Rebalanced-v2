@@ -4,6 +4,7 @@ import './style.css'
 import { DivJugadores, type jugadorData } from './componentes/jugador-divs.tsx'
 import { CompraUnidadesMenu, type unidadCompra } from './componentes/compraUnidades.tsx'
 import { InfoCasilla, type InfoCasillaT } from './componentes/info_casilla.tsx'
+import { Header, ElementosHeader } from './componentes/header.tsx'
 // Esta función solo debería usarlo en el creador de mapas.html
 // import { tamanoCasilla, MAPA_CAPAS } from './mapa/mapaKonva.ts'
 // import { ListaTerrenos } from './mapa/terreno.ts'
@@ -61,6 +62,9 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
 
   return (
     <>
+      {React.useMemo(() => (
+        <Header elementosHeader={ElementosHeader}/>
+      ), [])}
       <div style={{ position: 'relative' }}>
         <div id="mapa-konva"></div>
         {React.useMemo(() => (
@@ -74,7 +78,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
         <InfoCasilla info={infoCasilla} />
         {React.useMemo(() => (
           <DivJugadores jugadoresData={jugadoresData} />
-        ))}
+        ), [])}
       </div>
     </>
   )
