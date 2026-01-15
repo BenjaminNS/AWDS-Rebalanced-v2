@@ -8,14 +8,17 @@ export type jugadorData = {
   nombre: string,
   activo: boolean,
   comandanteImgUrl: string,
+  color: string,
+  // agregar efecto de cuando se haga clic
+  poderes: {nombre: string, costo: number }[],
   cargaActual: number,
   cargaMaxima: number,
   numUnidades: number,
   numPropiedades: number,
   ingresosDiarios: number,
   dineroActual: number,
+  estrellas: number,
   equipo: 'A'|'B'|'C'|'D',
-  podereres: string[]
 }
 
 export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] }){
