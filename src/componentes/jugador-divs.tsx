@@ -31,8 +31,12 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
             <img className="personaje-img" src={baseImgComandante + jugador.comandanteImgUrl} alt={jugador.comandanteImgUrl} />
           </div>
 
-          <div style={{ padding: '.5rem' }}>
-            <div className="carga-cop" title="35000"></div>
+          <div className='px-2 mb-2'>
+            <div className="carga-cop mb-2" title={jugador.cargaActual.toString()} style={{ '--porcentajeCarga': ( jugador.cargaActual / jugador.cargaMaxima * 100 ) + '%', width: (jugador.estrellas * 10) + '%' }}>
+              {Array.from({ length: Math.max(0, jugador.estrellas - 1) }).map((_, i) => (
+                <div key={i} className='separador'></div>
+              ))}
+            </div>
 
             {/* <!--<p>Unidades: <span data-text="unidades">?</span></p>
             <p>Dinero: <span data-text="dinero">?</span></p>
@@ -41,8 +45,6 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
 
             <section className="letra-equipo" data-text="equipo">{jugador.equipo}</section>
 
-            {/* <button>Poder</button>
-            <button>Super Poder</button> */}
           </div>
         </div>
       ))}
