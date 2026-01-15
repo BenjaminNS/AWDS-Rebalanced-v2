@@ -47,7 +47,26 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
             </div>
           </div>
 
+          <div className='px-2'>
+            <section id={jugador.nombre + '_info'} className='jugador-info grid grid-cols-2' style={{ background: '#BBBBBB88', border: '#44444488 solid 1px' }}>
+              <div className='dato flex items-center'>
+                <img src="./img/huds/contador_unidades.png" alt="" className='icono-info flex-col'/>
+                <p data-text={ 'numero-unidades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}</p>
+                <p data-text={ 'valor-unidades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}G</p>
+              </div>
 
+              <div className='dato flex items-center'>
+                <img src="./img/huds/dinero.png" alt="" className='icono-info flex-col'/>
+                <p data-text={ 'dinero-actual-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.dineroActual}G</p>
+                <p data-text={ 'ingresos-diarios-' + jugador.nombre } className='flex-1 px-2 text-center'>+{jugador.ingresosDiarios}G</p>
+              </div>
+
+              <div className='dato flex items-center col-span-2'>
+                <img src="./img/huds/propiedad.png" alt="" className='icono-info flex-col'/>
+                <p data-text={ 'numero-propiedades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}</p>
+                {/* Numero de propiedades desglosado por la cantidad de cada tipo (ciudades, fabricas, aeropuertos, puertos navales, com towers) y total */}
+              </div>
+            </section>
           </div>
         </div>
       ))}
