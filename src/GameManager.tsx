@@ -114,28 +114,33 @@ window.addEventListener('load', async () => {
       id: 'pjhfdsoifjidsoifoamis',
       activo: true,
       comandanteImgUrl: 'andy.png',
-      cargaActual: 0,
-      cargaMaxima: 10000,
-      numUnidades: 1,
-      numPropiedades: 1,
+      cargaActual: 15000,
+      cargaMaxima: 60000,
+      numUnidades: 5,
+      numPropiedades: 20,
       ingresosDiarios: 1000,
-      dineroActual: 1000,
+      dineroActual: 76400,
       equipo: 'A',
-      podereres: ['Hyper Repair', 'Hyper Upgrade']
+      // poderes: [{ costo: 30000, nombre: 'Hyper Repair' }, { costo: 60000, nombre: 'Hyper Upgrade' }],
+      poderes: [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }],
+      estrellas: 6,
+      color: '#b64f54'
     },
     {
       nombre: 'Starman',
       id: 'ijlxnczqyu8721bdkdlafp',
       activo: true,
       comandanteImgUrl: 'max.png',
-      cargaActual: 0,
-      cargaMaxima: 10000,
-      numUnidades: 1,
-      numPropiedades: 1,
-      ingresosDiarios: 1000,
-      dineroActual: 1000,
+      cargaActual: 30000,
+      cargaMaxima: 70000,
+      numUnidades: 10,
+      numPropiedades: 15,
+      ingresosDiarios: 3500,
+      dineroActual: 20143,
       equipo: 'B',
-      podereres: ['Max Force', 'Max Blast']
+      color: '#4f85b6',
+      estrellas: 7,
+      poderes: [{ costo: 30000, nombre: 'Max Force' }, { costo: 60000, nombre: 'Max Blast' }]
     }
   ]
   const infoCasilla:InfoCasillaT = {
