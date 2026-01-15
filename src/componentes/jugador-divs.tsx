@@ -38,6 +38,14 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
               ))}
             </div>
 
+            <div className='seccion-poderes flex mb-2' style={{ gap: '.25rem' }}>
+              {
+                jugador.poderes.map((poder, i) => (
+                  <button key={i} disabled={jugador.cargaActual < poder.costo} className='rounded-xl cursor-pointer py-1.5 px-3 bg-orange-200 hover:bg-orange-300 font-bold border-b-gray-500' style={{ flexGrow: '1', maxWidth: '50%', borderWidth: '1px' }}>{poder.nombre}</button>
+                ))
+              }
+            </div>
+          </div>
 
 
           </div>
