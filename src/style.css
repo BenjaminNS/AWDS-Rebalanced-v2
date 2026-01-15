@@ -126,3 +126,7 @@ form{
     gap: var(--gapSize);
   }
 }
+
+.konvajs-content{
+  margin: auto;
+}

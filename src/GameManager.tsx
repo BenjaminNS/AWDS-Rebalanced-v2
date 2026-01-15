@@ -62,18 +62,19 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
 
   return (
     <>
+      {/* Header debería ir en otra capa aparte */}
       {React.useMemo(() => (
         <Header elementosHeader={ElementosHeader}/>
       ), [])}
-      <div className='grid md:grid-cols-2 grid-cols-1'>
-        <div style={{ position: 'relative' }}>
+      <div className='grid md:grid-cols-2 grid-cols-1' style={{ gap: '.5rem' }}>
+        <div style={{ position: 'relative', alignSelf: 'flex-start' }}>
           <div id="mapa-konva"></div>
           {React.useMemo(() => (
             <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} />
           ), [unidadesCompra, propiedadSeleccionada])}
           {/* <div id="menu-acciones"></div> */}
         </div>
-        <div style={{ padding: '0 .75rem' }}>
+        <div>
           {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
 
           <InfoCasilla info={infoCasilla} />
