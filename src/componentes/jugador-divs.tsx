@@ -24,11 +24,11 @@ export type jugadorData = {
 export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] }){
   return (
     <div id="seccion-jugadores">
-      {jugadoresData.map((jugador, i) => (
-        <div key={i} className={ !jugador.activo ? 'elemento-jugador inactivo' : 'elemento-jugador' } >
-          <div className="top" style={{ display: 'flex', alignItems: 'center' }}>
-            <h3 data-text="nombre-jugador" style={{ flex: 'auto', padding: '.5rem' }}>{jugador.nombre}</h3>
-            <img className="personaje-img" src={baseImgComandante + jugador.comandanteImgUrl} alt="Comandante" />
+      {jugadoresData.map((jugador) => (
+        <div key={jugador.id} className={ !jugador.activo ? 'elemento-jugador pb-2 inactivo' : 'elemento-jugador pb-2' } style={{ backgroundColor: jugador.color }} >
+          <div className="mb-2" style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid black', backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
+            <h3 data-text="nombre-jugador" className='text-lg font-bold italic' style={{ flex: 'auto', padding: '.5rem' }}>{jugador.nombre}</h3>
+            <img className="personaje-img" src={baseImgComandante + jugador.comandanteImgUrl} alt={jugador.comandanteImgUrl} />
           </div>
 
           <div style={{ padding: '.5rem' }}>
