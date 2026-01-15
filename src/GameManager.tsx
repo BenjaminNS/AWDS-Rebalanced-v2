@@ -65,20 +65,22 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
       {React.useMemo(() => (
         <Header elementosHeader={ElementosHeader}/>
       ), [])}
-      <div style={{ position: 'relative' }}>
-        <div id="mapa-konva"></div>
-        {React.useMemo(() => (
-          <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} />
-        ), [unidadesCompra, propiedadSeleccionada])}
-        {/* <div id="menu-acciones"></div> */}
-      </div>
-      <div style={{ padding: '0 .75rem' }}>
-        {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
+      <div className='grid md:grid-cols-2 grid-cols-1'>
+        <div style={{ position: 'relative' }}>
+          <div id="mapa-konva"></div>
+          {React.useMemo(() => (
+            <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} />
+          ), [unidadesCompra, propiedadSeleccionada])}
+          {/* <div id="menu-acciones"></div> */}
+        </div>
+        <div style={{ padding: '0 .75rem' }}>
+          {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
 
-        <InfoCasilla info={infoCasilla} />
-        {React.useMemo(() => (
-          <DivJugadores jugadoresData={jugadoresData} />
-        ), [])}
+          <InfoCasilla info={infoCasilla} />
+          {React.useMemo(() => (
+            <DivJugadores jugadoresData={jugadoresData} />
+          ), [])}
+        </div>
       </div>
     </>
   )
