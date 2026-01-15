@@ -1,6 +1,6 @@
 import React from 'react'
 import './jugador-div.css'
-const baseImgComandante = './img/comandantes/'
+const baseImgComandante = `${import.meta.env.BASE_URL}img/comandantes/`
 
 // Esto talvez podría obtenerlo de otro archivo
 export type jugadorData = {
