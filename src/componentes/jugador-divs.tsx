@@ -38,12 +38,7 @@ export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] 
               ))}
             </div>
 
-            {/* <!--<p>Unidades: <span data-text="unidades">?</span></p>
-            <p>Dinero: <span data-text="dinero">?</span></p>
-            <p>Propiedades: <span data-text="propiedades">?</span></p>
-            <p>Ingresos diarios: <span data-text="ingresos-diarios">?</span></p>--> */}
 
-            <section className="letra-equipo" data-text="equipo">{jugador.equipo}</section>
 
           </div>
         </div>
