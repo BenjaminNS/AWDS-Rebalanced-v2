@@ -61,6 +61,16 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
     })
   }, [])
 
+  function siguienteJugador (jugadorActual:number, maximoJugadores:number){
+    jugadorActual++
+    if ( jugadorActual >= maximoJugadores ){
+      jugadorActual = 0
+      setDiaActual(diaActual + 1)
+    }
+
+    setJugadorActual(jugadorActual)
+  }
+
   return (
     <>
       {/* Header debería ir en otra capa aparte */}
@@ -78,6 +88,10 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
         <div>
           <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
           <InfoCasilla info={infoCasilla} />
+          <button onClick={() => {
+            siguienteJugador(jugadorActual, PartidaSnapshotMock.Jugadores.length)
+          }
+          } className='bg-gray-300 hover:bg-gray-400 transition-colors cursor-pointer px-3 py-2 mb-3 rounded-md' style={{ width: '100%', transitionDuration: '.3s' }}>Terminar turno</button>
           <DivJugadores jugadoresData={jugadoresData} turnoActual={jugadorActual} />
         </div>
       </div>
