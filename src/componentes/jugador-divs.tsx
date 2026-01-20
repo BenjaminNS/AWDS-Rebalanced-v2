@@ -21,11 +21,11 @@ export type jugadorData = {
   equipo: 'A'|'B'|'C'|'D',
 }
 
-export function DivJugadores ({ jugadoresData }: { jugadoresData: jugadorData[] }){
+export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: jugadorData[], turnoActual: number }){
   return (
     <div id="seccion-jugadores">
-      {jugadoresData.map((jugador) => (
-        <div key={jugador.id} className={ !jugador.activo ? 'elemento-jugador pb-2 inactivo' : 'elemento-jugador pb-2' } style={{ backgroundColor: jugador.color }} >
+      {jugadoresData.map((jugador, i) => (
+        <div key={jugador.id} className={ !jugador.activo ? 'elemento-jugador pb-2 inactivo' : 'elemento-jugador pb-2' + ( turnoActual === i ? ' seleccionado' : '' ) } style={{ backgroundColor: jugador.color }} >
           <div className="mb-2" style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid black', backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
             <h3 data-text="nombre-jugador" className='text-lg font-bold italic' style={{ flex: 'auto', padding: '.5rem' }}>{jugador.nombre}</h3>
             <img className="personaje-img" src={baseImgComandante + jugador.comandanteImgUrl} alt={jugador.comandanteImgUrl} />
