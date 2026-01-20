@@ -36,6 +36,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
   // Pudiera ser la lista de casillas en vez de solo una
   const [casillaSeleccionada, setCasillaSeleccionada] = useState()
   const [jugadorActual, setJugadorActual] = useState(PartidaSnapshotMock.turnoActual)
+  const [diaActual, setDiaActual] = useState(PartidaSnapshotMock.diaActual)
   // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
   const [unidadesCompra, setUnidadesCompra] = useState([])
@@ -75,8 +76,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
           {/* <div id="menu-acciones"></div> */}
         </div>
         <div>
-          {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
-
+          <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
           <InfoCasilla info={infoCasilla} />
           <DivJugadores jugadoresData={jugadoresData} turnoActual={jugadorActual} />
         </div>
