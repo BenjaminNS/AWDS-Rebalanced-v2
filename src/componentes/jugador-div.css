@@ -28,15 +28,19 @@
     }
 
     &.seleccionado{
-        transform: scale(1.04);
+        transform: scale(1.05);
+    }
+    &:not(.seleccionado){
+        filter: grayscale(.35);
     }
 
     &:after{
+        --tamano: 20px;
         content: '';
         opacity: 0;
         display: block;
-        width: 15px;
-        height: 15px;
+        width: var(--tamano);
+        height: var(--tamano);
         background: red;
         position: absolute;
         left: -2%;
