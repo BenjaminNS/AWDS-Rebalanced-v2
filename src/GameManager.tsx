@@ -35,7 +35,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
   const [casillaHover, setCasillaHover] = useState()
   // Pudiera ser la lista de casillas en vez de solo una
   const [casillaSeleccionada, setCasillaSeleccionada] = useState()
-  const [jugadorActual, setJugadorActual] = useState(0)
+  const [jugadorActual, setJugadorActual] = useState(PartidaSnapshotMock.turnoActual)
   // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
   const [unidadesCompra, setUnidadesCompra] = useState([])
@@ -81,6 +81,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
           {React.useMemo(() => (
             <DivJugadores jugadoresData={jugadoresData} />
           ), [])}
+          <DivJugadores jugadoresData={jugadoresData} turnoActual={jugadorActual} />
         </div>
       </div>
     </>
