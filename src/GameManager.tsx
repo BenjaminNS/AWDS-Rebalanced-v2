@@ -78,9 +78,6 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
           {/* <h2 style="text-align: center; margin-bottom: .5rem; color: black;">DÍA: <span data-text="dia-actual">1</span></h2> */}
 
           <InfoCasilla info={infoCasilla} />
-          {React.useMemo(() => (
-            <DivJugadores jugadoresData={jugadoresData} />
-          ), [])}
           <DivJugadores jugadoresData={jugadoresData} turnoActual={jugadorActual} />
         </div>
       </div>
