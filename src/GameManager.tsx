@@ -134,7 +134,7 @@ window.addEventListener('load', async () => {
     {
       nombre: 'Juan Sabor',
       id: 'pjhfdsoifjidsoifoamis',
-      activo: true,
+      activo: false,
       comandanteImgUrl: 'andy.png',
       cargaActual: 15000,
       cargaMaxima: 60000,
@@ -143,13 +143,12 @@ window.addEventListener('load', async () => {
       ingresosDiarios: 1000,
       dineroActual: 76400,
       equipo: 'A',
-      // poderes: [{ costo: 30000, nombre: 'Hyper Repair' }, { costo: 60000, nombre: 'Hyper Upgrade' }],
       poderes: [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }],
       estrellas: 6,
       color: '#b64f54'
     },
     {
-      nombre: 'Starman',
+      nombre: 'Startank',
       id: 'ijlxnczqyu8721bdkdlafp',
       activo: true,
       comandanteImgUrl: 'max.png',
@@ -163,6 +162,22 @@ window.addEventListener('load', async () => {
       color: '#4f85b6',
       estrellas: 7,
       poderes: [{ costo: 30000, nombre: 'Max Force' }, { costo: 60000, nombre: 'Max Blast' }]
+    },
+    {
+      nombre: 'Sergio Volador',
+      id: 'ondsa98712fdsnlsadsad',
+      activo: true,
+      comandanteImgUrl: 'eagle.png',
+      cargaActual: 30000,
+      cargaMaxima: 70000,
+      numUnidades: 10,
+      numPropiedades: 15,
+      ingresosDiarios: 3500,
+      dineroActual: 20143,
+      equipo: 'B',
+      color: '#66A068',
+      estrellas: 9,
+      poderes: [{ costo: 50000, nombre: 'Lightning Drive' }, { costo: 90000, nombre: 'Lightning Strike' }]
     }
   ]
   const infoCasilla:InfoCasillaT = {
