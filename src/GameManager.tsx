@@ -61,14 +61,21 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
     })
   }, [])
 
-  function siguienteJugador (jugadorActual:number, maximoJugadores:number){
-    jugadorActual++
-    if ( jugadorActual >= maximoJugadores ){
-      jugadorActual = 0
-      setDiaActual(diaActual + 1)
+  function siguienteJugador (jugadorActual:number, jugadores:Jugador[]){
+    for (let i = 0; i < jugadores.length; i++) {
+      jugadorActual++
+      if ( jugadorActual >= jugadores.length ){
+        jugadorActual = 0
+        setDiaActual(diaActual + 1)
+      }
+
+      if ( jugadores[jugadorActual].getStatus() ){
+        setJugadorActual(jugadorActual)
+        return
+      }
     }
 
-    setJugadorActual(jugadorActual)
+    console.log('No hay más jugadores disponibles. Juego terminado.')
   }
 
   return (
@@ -89,7 +96,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
           <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
           <InfoCasilla info={infoCasilla} />
           <button onClick={() => {
-            siguienteJugador(jugadorActual, PartidaSnapshotMock.Jugadores.length)
+            siguienteJugador(jugadorActual, PartidaSnapshotMock.Jugadores)
           }
           } className='bg-gray-300 hover:bg-gray-400 transition-colors cursor-pointer px-3 py-2 mb-3 rounded-md' style={{ width: '100%', transitionDuration: '.3s' }}>Terminar turno</button>
           <DivJugadores jugadoresData={jugadoresData} turnoActual={jugadorActual} />
