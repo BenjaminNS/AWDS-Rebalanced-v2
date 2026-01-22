@@ -23,15 +23,15 @@
     transition: transform .3s;
     position: relative;
 
-    &.inactivo{
-        filter: contrast(.8) grayscale(1);
-    }
-
     &.seleccionado{
         transform: scale(1.05);
     }
     &:not(.seleccionado){
-        filter: grayscale(.35);
+        filter: grayscale(.3) sepia(.2);
+    }
+
+    &.inactivo{
+        filter: contrast(.8) grayscale(1);
     }
 
     &:after{
