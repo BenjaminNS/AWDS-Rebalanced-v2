@@ -71,6 +71,31 @@ export class ComandanteJugable{
     const comandanteInstancia = await CargarComandante(personaje)
     return new ComandanteJugable(idInstancia, dineroActual, cargaActual, usosPoder, activo, estado, comandanteInstancia)
   }
+  getNombre (){
+    return this.#comandanteInstancia.getNombre()
+  }
+  getNombreCorto () {
+    return this.#comandanteInstancia.getNombreCorto()
+  }
+  getDescripcion (){
+    return this.#comandanteInstancia.getDescripcion()
+  }
+  getCancion (){
+    return this.#comandanteInstancia.getCancion()
+  }
+  getDayToDay (){
+    return this.#comandanteInstancia.getDayToDay()
+  }
+  getLimiteCarga (){
+    return this.#comandanteInstancia.getLimiteCarga()
+  }
+  getPowers (){
+    return this.#comandanteInstancia.getPowers()
+  }
+  getPower (nombre: string){
+    return this.#comandanteInstancia.getPowers()?.find(power => power.nombre === nombre)
+  }
+
   rendirse (){
     this.#activo = false
     // destruir todas las unidades
