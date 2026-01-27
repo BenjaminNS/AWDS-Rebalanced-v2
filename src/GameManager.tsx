@@ -129,57 +129,12 @@ window.addEventListener('load', async () => {
   const Partida = new PartidaJuego(PartidaSnapshotMock, null)
 
   await Partida.dibujarMapa('mapa-konva')
-  // generarDivJugadores({ contenedor: document.querySelector('.seccion-jugadores'), listaJugadores: Partida['Jugadores'] })
-  const jugadoresData:jugadorData[] = [
-    {
-      nombre: 'Juan Sabor',
-      id: 'pjhfdsoifjidsoifoamis',
-      activo: false,
-      comandanteImgUrl: 'andy.png',
-      cargaActual: 15000,
-      cargaMaxima: 60000,
-      numUnidades: 5,
-      numPropiedades: 20,
-      ingresosDiarios: 1000,
-      dineroActual: 76400,
-      equipo: 'A',
-      poderes: [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }],
-      estrellas: 6,
-      color: '#b64f54'
-    },
-    {
-      nombre: 'Startank',
-      id: 'ijlxnczqyu8721bdkdlafp',
-      activo: true,
-      comandanteImgUrl: 'max.png',
-      cargaActual: 30000,
-      cargaMaxima: 70000,
-      numUnidades: 10,
-      numPropiedades: 15,
-      ingresosDiarios: 3500,
-      dineroActual: 20143,
-      equipo: 'B',
-      color: '#4f85b6',
-      estrellas: 7,
-      poderes: [{ costo: 30000, nombre: 'Max Force' }, { costo: 60000, nombre: 'Max Blast' }]
-    },
-    {
-      nombre: 'Sergio Volador',
-      id: 'ondsa98712fdsnlsadsad',
-      activo: true,
-      comandanteImgUrl: 'eagle.png',
-      cargaActual: 30000,
-      cargaMaxima: 70000,
-      numUnidades: 10,
-      numPropiedades: 15,
-      ingresosDiarios: 3500,
-      dineroActual: 20143,
-      equipo: 'B',
-      color: '#66A068',
-      estrellas: 9,
-      poderes: [{ costo: 50000, nombre: 'Lightning Drive' }, { costo: 90000, nombre: 'Lightning Strike' }]
-    }
-  ]
+  const listaJugadores = Partida.getListaJugadores()
+
+  const jugadoresData:jugadorData[] = []
+  listaJugadores.forEach(jugador => {
+    jugadoresData.push(jugador.getJugadorData())
+  })
   const infoCasilla:InfoCasillaT = {
     estrellas: 0,
     gasActual: 10,
