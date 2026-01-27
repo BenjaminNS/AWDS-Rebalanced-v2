@@ -14,6 +14,7 @@ export type jugadorData = {
   cargaActual: number,
   cargaMaxima: number,
   numUnidades: number,
+  unidadesValor: number,
   numPropiedades: number,
   ingresosDiarios: number,
   dineroActual: number,
