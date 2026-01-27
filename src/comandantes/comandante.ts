@@ -34,8 +34,7 @@ type records = {
 // type perks = {}
 
 type statusEffect = 'no-power-charge'|'no-money-generation'
-// Será el nombre del poder en vez de solo cop o scop y así poder tener más opciones para más poderes (pienso que máximo 3)
-type estadoComandante = 'normal'|'cop'|'scop'|string
+type estadoComandante = 'normal'|string
 
 // Cambiar a variables privadas
 export class ComandanteJugable{
