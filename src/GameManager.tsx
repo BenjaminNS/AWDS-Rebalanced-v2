@@ -7,27 +7,10 @@ import { InfoCasilla, type InfoCasillaT } from './componentes/info_casilla.tsx'
 import { Header, ElementosHeader } from './componentes/header.tsx'
 // Esta función solo debería usarlo en el creador de mapas.html
 // import { tamanoCasilla, MAPA_CAPAS } from './mapa/mapaKonva.ts'
-// import { ListaTerrenos } from './mapa/terreno.ts'
-// import { generarDivJugadores } from './componentes/jugador-div.ts'
 import { PartidaSnapshotMock } from './mocks/PartidaSnapshotMock.ts'
 import { PartidaJuego } from './partida.ts'
-// import { type coordenada } from './mapa/mapa.ts'
-// import type { UnidadCasilla } from './unidades/unidades.ts'
 import { CursorMapaJuego } from './cursorMapa.ts'
 import type { Jugador } from './jugador.ts'
-
-/*
-a. Seleccionar accion (activar poder o rendirse)
-
-b. Seleccionar unidad
-    1 Escoger casilla destino
-    2 Escoger accion
-    3 (Opcional) Seleccionar casilla(s) afectadas, ej: ataque
-
-c. Seleccionar propiedad
-    1 Mostrar opciones de propiedad (ej: comprar)
-    2 (Opcional) Seleccionar casilla(s) destino, ej: comprar
-*/
 
 function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: InfoCasillaT}){
   // useState de variables tipo partida, jugadores, unidades, etc.
@@ -45,7 +28,6 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
     const Partida = new PartidaJuego(PartidaSnapshotMock, null)
     // Object.freeze(Partida)
     Partida.dibujarMapa('mapa-konva').then(() => {
-      // Pasarle los setState's a CursorMapaJuego
       const cursorJuego = new CursorMapaJuego(Partida.getMapa(), {
         setInfoCasilla: setInfoCasilla,
         setCasillaHover: setCasillaHover,
@@ -92,6 +74,7 @@ function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: In
           ), [unidadesCompra, propiedadSeleccionada])}
           {/* <div id="menu-acciones"></div> */}
         </div>
+        {/* Talvez esta sección debería estar con altura maxima de 100vh y sticky (tentativamente solo en escritorio) */}
         <div>
           <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
           <InfoCasilla info={infoCasilla} />
@@ -150,18 +133,5 @@ window.addEventListener('load', async () => {
     <GameUI jugadoresData={jugadoresData} info={infoCasilla}/>
   )
 
-  // createRoot(document.getElementById('seccion-jugadores') as HTMLElement).render(
-  //   <DivJugadores jugadoresData={jugadoresData} />
-  // )
-  // createRoot(document.getElementById('menu-compras') as HTMLElement).render(
-  //   <CompraUnidadesMenu />
-  // )
   // Object.freeze(Partida)
-  // try {
-  //   // ¿Es necesario guardar la variable?
-  //   const cursorJuego = new CursorMapaJuego(Partida.getMapa())
-  // } catch (err){
-  //   console.error(err)
-  // }
-  // console.log('Partida Data', Partida)
 })
