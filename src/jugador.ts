@@ -1,5 +1,6 @@
 import { ComandanteJugable } from './comandantes/comandante'
-export type equipo = 'A'|'B'|'C'|'D';
+export type equipo = 'A'|'B'|'C'|'D'
+import type { jugadorData } from './componentes/jugador-divs'
 
 export class Jugador {
   // Cada jugador debería existir en la base de datos y ser obtenido por medio de su ID
@@ -81,4 +82,27 @@ export class Jugador {
   }
 
   public terminarTurno (){}
+  public getJugadorData ():jugadorData{
+    return {
+      nombre: this.#nombre,
+      id: this.#id,
+      activo: this.#activo,
+      // Este dato debería ser de un arreglo
+      comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}.png`,
+      cargaActual: this.#comandantes[0].getcargaActual(),
+      cargaMaxima: this.#comandantes[0].getCargaMaxima(),
+      // Calcular numero de unidades, ciudades, ingresos diarios y dinero actual
+      numUnidades: Math.floor(Math.random() * 30),
+      unidadesValor: Math.floor(Math.random() * 150000),
+      numPropiedades: Math.floor(Math.random() * 30),
+      ingresosDiarios: Math.floor(Math.random() * 30) * 1000,
+      dineroActual: Math.floor(Math.random() * 50000),
+      equipo: this.#equipo,
+      poderes: [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }],
+      // Falta meter el dato de las estrellas al comandante
+      estrellas: 6,
+      // Falta meter el dato del color al jugador y/o al comandante
+      color: this.#color
+    }
+  }
 }
