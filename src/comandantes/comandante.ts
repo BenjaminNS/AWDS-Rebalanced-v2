@@ -1,9 +1,7 @@
-// import PaisesJS from "./paises";
-// const { listaPaises } = PaisesJS()
 import { type nombrePropiedad, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terreno'
 import { type UnidadCasilla } from '../unidades/unidades'
 import { getInfoBasica } from '../unidades/unidadInfoBasica'
-import type { estado, nombreUnidad } from '../unidades/unidadInfoBasica'
+import type { nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
 import type { unidadCompra } from '../componentes/compraUnidades'
 import { CargarComandante } from './registroComandantes'
@@ -37,7 +35,10 @@ type records = {
 type statusEffect = 'no-power-charge'|'no-money-generation'
 type estadoComandante = 'normal'|string
 
-// Cambiar a variables privadas
+// NOTA: Se debería hacerse un fetch con los datos del comandante correspondiente
+// Solo no sé exactamente como se traería ese dato (si cada instancia de jugador
+// copia los datos del script original o si se importan los scripts completos)
+
 export class ComandanteJugable{
   #idInstancia: string // crypto.randomUUID
   #dineroActual: number
@@ -52,10 +53,11 @@ export class ComandanteJugable{
   #statusEffects: statusEffect[] = []
   // records: records;
   #estado: estadoComandante = 'normal'
+
+  // Listas bidireccionales
   // #unidades: UnidadCasilla[]
   // #propiedades: propiedad[]
 
-  // estadoActual: estadoComandante
   constructor (idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean, estado: estadoComandante, comandanteInstancia: Comandante){
     this.#idInstancia = idInstancia
     this.#dineroActual = dineroActual
