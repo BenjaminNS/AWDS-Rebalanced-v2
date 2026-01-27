@@ -7,17 +7,20 @@ export class Jugador {
   #tiempoSegundos?: any
   #nombre: string
   #activo: boolean
-  // idJugador: string; //crypto.randomUUID()}
   #equipo: equipo
   #tiempoDisponible?: number|null
   #comandantes: ComandanteJugable[]
+  #id: string // crypto.randomUUID
+  #color: string
 
-  constructor (nombre: string, equipo: equipo, activo: boolean, tiempoDisponible: number|null, comandantes: ComandanteJugable[]){
+  constructor (nombre: string, equipo: equipo, activo: boolean, tiempoDisponible: number|null, comandantes: ComandanteJugable[], color: string){
     this.#nombre = nombre
     this.#equipo = equipo
     this.#activo = activo
     this.#tiempoDisponible = tiempoDisponible
     this.#comandantes = comandantes
+    this.#id = crypto.randomUUID()
+    this.#color = color
   }
 
   public getNombre (){
