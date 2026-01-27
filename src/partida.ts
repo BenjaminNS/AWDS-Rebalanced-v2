@@ -128,6 +128,9 @@ export class PartidaJuego {
 
     return this.#turnoActual
   }
+  public getListaJugadores (){
+    return this.#jugadores
+  }
   public getJugadorActual (){
     return this.#jugadores[this.#turnoActual]
   }
