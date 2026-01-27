@@ -17,7 +17,7 @@ type DayToDay = {
 type ComandantePoder = {
   nombre: string,
   costoEstrellas: number,
-  efectoActivacion: (unidades: string, adversarios: string)=>{}
+  efectoActivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>void
 }
 type spritesComandante = {
   normal: any,
