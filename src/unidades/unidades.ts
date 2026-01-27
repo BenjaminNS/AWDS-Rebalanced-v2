@@ -129,6 +129,10 @@ export class UnidadCasilla {
   public getHp (){
     return this.#hp
   }
+  // costoReparacion: number, maxHp: number
+  public repararUnidad (hp:number){
+    this.#hp = Math.min((this.#hp + hp), 100)
+  }
   public restarTurno (turnos:number){
     this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
   }
