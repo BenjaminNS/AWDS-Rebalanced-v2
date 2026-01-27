@@ -77,9 +77,6 @@ export class ComandanteJugable{
     // perder todas las propiedades
   }
 
-  getpersonaje (){{
-    return this.#personaje
-  }}
   getidInstancia (){{
     return this.#idInstancia
   }}
