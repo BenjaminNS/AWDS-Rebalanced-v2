@@ -53,7 +53,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
               <div className='dato flex items-center'>
                 <img src="./img/huds/contador_unidades.png" alt="" className='icono-info flex-col'/>
                 <p data-text={ 'numero-unidades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}</p>
-                <p data-text={ 'valor-unidades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}G</p>
+                <p data-text={ 'valor-unidades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.unidadesValor}G</p>
               </div>
 
               <div className='dato flex items-center'>
