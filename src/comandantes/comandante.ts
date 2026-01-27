@@ -6,6 +6,7 @@ import { getInfoBasica } from '../unidades/unidadInfoBasica'
 import type { estado, nombreUnidad } from '../unidades/unidadInfoBasica'
 import type { nombresPaises } from './paises'
 import type { unidadCompra } from '../componentes/compraUnidades'
+import { CargarComandante } from './registroComandantes'
 
 export type nombreComandante = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'|'Generico'
 type DayToDay = {
@@ -66,6 +67,10 @@ export class ComandanteJugable{
     this.#comandanteInstancia = comandanteInstancia
   }
 
+  static async crear (personaje: nombreComandante, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean, estado: estadoComandante): Promise<ComandanteJugable> {
+    const comandanteInstancia = await CargarComandante(personaje)
+    return new ComandanteJugable(idInstancia, dineroActual, cargaActual, usosPoder, activo, estado, comandanteInstancia)
+  }
   rendirse (){
     this.#activo = false
     // destruir todas las unidades
