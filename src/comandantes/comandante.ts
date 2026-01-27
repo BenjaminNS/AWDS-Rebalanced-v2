@@ -38,10 +38,10 @@ type estadoComandante = 'normal'|string
 
 // Cambiar a variables privadas
 export class ComandanteJugable{
-  #personaje: nombreComandante
   #idInstancia: string // crypto.randomUUID
   #dineroActual: number
   #cargaActual: number
+  #comandanteInstancia: Comandante
   // Carga maxima cambiaría su valor cada vez que se usa un poder
   // Originalmente en el juego el aumento de costo es un +20% con cada uso
   #cargaMaxima: number
@@ -55,14 +55,15 @@ export class ComandanteJugable{
   // #propiedades: propiedad[]
 
   // estadoActual: estadoComandante
-  constructor (personaje: nombreComandante, idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean){
-    this.#personaje = personaje
+  constructor (idInstancia: string, dineroActual: number, cargaActual: number, usosPoder: number, activo: boolean, estado: estadoComandante, comandanteInstancia: Comandante){
     this.#idInstancia = idInstancia
     this.#dineroActual = dineroActual
     this.#cargaActual = cargaActual
     this.#cargaMaxima = 10000
     this.#usosPoder = usosPoder
     this.#activo = activo
+    this.#estado = estado
+    this.#comandanteInstancia = comandanteInstancia
   }
 
   rendirse (){
