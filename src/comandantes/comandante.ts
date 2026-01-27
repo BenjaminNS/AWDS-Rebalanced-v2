@@ -10,6 +10,7 @@ import type { unidadCompra } from '../componentes/compraUnidades'
 export type nombreComandante = 'Andy'|'Max'|'Sami'|'Nell'|'Hachi'|'Rachel'|'Jake'|'Olaf'|'Grit'|'Colin'|'Sasha'|'Kanbei'|'Sonja'|'Sensei'|'Grimm'|'Eagle'|'Drake'|'Jess'|'Javier'|'Flak'|'Lash'|'Adder'|'Hawke'|'Sturm'|'Jugger'|'Koal'|'Kindle'|'Von Bolt'|'Generico'
 type DayToDay = {
   descripcion: string,
+  variables: object
   // efectos, reemplazaría las funciones por defecto del personaje
 }
 type ComandantePoder = {
