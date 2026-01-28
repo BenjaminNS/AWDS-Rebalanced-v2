@@ -1,7 +1,11 @@
 #seccion-jugadores{
   display: flex;
-  flex-direction: column;
-  row-gap: 10px;
+  align-items: center;
+  max-width: 100vw;
+  overflow: auto clip;
+  flex-direction: row;
+  column-gap: .75rem;
+  padding: .5rem .7rem .5rem 1rem;
 }
 
 .icono-info{
@@ -11,20 +15,40 @@
 .seccion-jugadores{
     display: flex;
     flex-direction: column;
-    row-gap: .5rem;
     color: black;
+}
+
+@media (width >= 48rem) {
+  #seccion-jugadores{
+    max-height: calc(100vh - 220px);
+    overflow: clip auto;
+    flex-direction: column;
+    padding: .5rem .9rem 1.2rem 1.2rem;
+    gap: .5rem;
+  }
+
+  .elemento-jugador{
+    width: 100%;
+    max-width: 500px;
+    width: 95%;
+    max-width: unset;
+    &.seleccionado{
+        transform: scale(1.05);
+    }
+  }
 }
 .elemento-jugador{
     background-color: #e4e2d8;
     border-radius: 10px;
     border: 2px solid black;
-    width: 350px;
-    max-width: 100%;
+    width: 95%;
+    flex-shrink: 0;
+    max-width: unset;
     transition: transform .3s;
     position: relative;
 
     &.seleccionado{
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
     &:not(.seleccionado){
         filter: grayscale(.3) sepia(.2);
