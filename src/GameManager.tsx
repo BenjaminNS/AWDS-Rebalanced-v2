@@ -10,6 +10,7 @@ import { Header, ElementosHeader } from './componentes/header.tsx'
 import { PartidaSnapshotMock } from './mocks/PartidaSnapshotMock.ts'
 import { PartidaJuego } from './partida.ts'
 import { CursorMapaJuego } from './cursorMapa.ts'
+import { PrecargarTodosComandantes } from './comandantes/registroComandantes.ts'
 import type { Jugador } from './jugador.ts'
 
 function GameUI ({ jugadoresData, info }: {jugadoresData:jugadorData[], info: InfoCasillaT}){
@@ -108,6 +109,8 @@ async function iniciarJuego (partidaLiga:string){
 }
 
 window.addEventListener('load', async () => {
+  await PrecargarTodosComandantes()
+
   // iniciarJuego({mapaLiga: './mapas/test.json'})
   const Partida = new PartidaJuego(PartidaSnapshotMock, null)
 
