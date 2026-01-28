@@ -21,6 +21,7 @@ header{
 
   .icono-seccion{
     width: 35px;
+    flex-shrink: 0.2;
   }
   .nombre-pagina{
     color: white;
