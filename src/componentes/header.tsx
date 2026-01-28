@@ -29,19 +29,17 @@ export const ElementosHeader:elementoHeader[] = [
 export function Header ({ elementosHeader }: { elementosHeader: elementoHeader[] }){
   return (
     <header>
-      <div className="icono-seccion">
-        <a href="./index.html">
+      <a href="" className='flex items-center' style={{ columnGap: '8px' }}>
+        <div className="icono-seccion">
           <img src="./awds_rebalanced.ico" />
-        </a>
-      </div>
-      <div className="nombre-pagina">AW Rebalanced!</div>
+        </div>
+        <div className="nombre-pagina">AW Rebalanced!</div>
+      </a>
       <ul className="lista-paginas">
         {elementosHeader.map((elemHeader, i) => {
           if ( !elemHeader.privada ){
             return (
-              <li key={i}>
-                <a href={elemHeader.liga}>{elemHeader.texto}</a>
-              </li>
+              <a key={i} href={elemHeader.liga}>{elemHeader.texto}</a>
             )
           }
         })}
