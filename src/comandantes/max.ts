@@ -33,7 +33,7 @@ export const ComandanteMax = new Comandante('Max', 'max', 'Especialista en comba
       penRangoVehiculoIndirecto: 1,
       penDefensaContraVehiculoIndirectoPorc: 10
     }
-  }, 60000, [{
+  }, 60000, 9, [{
     nombre: 'Max Force',
     costoEstrellas: 3,
     efectoActivacion: maxForceActivacion

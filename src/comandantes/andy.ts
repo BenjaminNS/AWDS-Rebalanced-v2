@@ -38,7 +38,7 @@ export const ComandanteAndy = new Comandante('Andy', 'andy', 'Niño genio expert
     variables: {
       descuentoReparacionesPorc: 25
     }
-  }, 60000, [{
+  }, 60000, 6, [{
     nombre: 'Hyper Repair',
     costoEstrellas: 3,
     efectoActivacion: hyperRepairActivacion
