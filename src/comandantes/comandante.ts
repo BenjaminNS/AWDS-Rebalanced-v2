@@ -192,6 +192,32 @@ export class ComandanteJugable{
     // }
   }
 
+  // Hacer conteo con referencia al mapa y multiplicadores del comandante
+  // numUnidades: Math.floor(Math.random() * 30),
+  //     unidadesValor: Math.floor(Math.random() * 150000),
+  //     numPropiedades: Math.floor(Math.random() * 30),
+  //     ingresosDiarios: Math.floor(Math.random() * 30) * 1000,
+  public getNumeroUnidades ():number{
+    return Math.floor(Math.random() * 30)
+  }
+  public getUnidadesValor ():number{
+    return Math.floor(Math.random() * 150000)
+  }
+  public getNumeroPropiedades ():number{
+    return Math.floor(Math.random() * 30)
+  }
+  public getIngresosDiarios ():number{
+    return Math.floor(Math.random() * 30) * 1000
+  }
+  public getPoderesData (){
+    // return [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }]
+    const poderesData:{nombre: string, costo: number }[] = []
+    this.#comandanteInstancia.getPowers()?.forEach(poder => {
+      poderesData.push({ nombre: poder.nombre, costo: (poder.costoEstrellas * 10000) })
+    })
+    return poderesData
+  }
+
   public getUnidadesCompraDatos (propiedad: nombrePropiedad):unidadCompra[]{
     const unidadesCompraDatos:unidadCompra[] = []
 
