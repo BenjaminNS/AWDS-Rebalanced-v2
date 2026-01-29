@@ -1,19 +1,19 @@
-import type { Clima } from "./clima";
-export type tipoPartida  =  'Normal'|'Dual Strike';
+import type { Clima } from './clima'
+export type tipoPartida = 'Normal'|'Dual Strike';
 
 export class Reglas{
-  dineroPorPropiedad: number; //Por defecto, 1,000
-  maximoDinero: number;
-  limiteDias: number|null;
-  limiteCaptura: number|null;
-  climaDefecto: Clima;
-  habilidadesComandantes: boolean;
-  minutoPorTurnos: number|null;
+  dineroPorPropiedad: number // Por defecto, 1,000
+  maximoDinero: number
+  limiteDias: number|null
+  limiteCaptura: number|null
+  climaDefecto: Clima
+  habilidadesComandantes: boolean
+  minutoPorTurnos: number|null
   // unidadesBaneadas: TipoUnidades[]
-  tipoPartida: tipoPartida;
-  fogOfWar: boolean;
+  tipoPartida: tipoPartida
+  fogOfWar: boolean
 
-  constructor(dineroPorPropiedad: number, maximoDinero: number, limiteDias: number|null, limiteCaptura: number|null, climaDefecto: Clima, habilidadesComandantes: boolean, minutoPorTurnos: number|null, tipoPartida: tipoPartida, fogOfWar: boolean){
+  constructor (dineroPorPropiedad: number, maximoDinero: number, limiteDias: number|null, limiteCaptura: number|null, climaDefecto: Clima, habilidadesComandantes: boolean, minutoPorTurnos: number|null, tipoPartida: tipoPartida, fogOfWar: boolean){
     this.dineroPorPropiedad = dineroPorPropiedad
     this.maximoDinero = maximoDinero
     this.limiteDias = limiteDias
