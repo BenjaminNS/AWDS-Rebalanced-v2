@@ -87,20 +87,20 @@ export class Jugador {
       nombre: this.#nombre,
       id: this.#id,
       activo: this.#activo,
-      // Este dato debería ser de un arreglo
+      // Este dato debería ser de un arreglo si pienso hacer que un
+      // solo jugador controle a más de 1 comandante
       comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}.png`,
       cargaActual: this.#comandantes[0].getcargaActual(),
       cargaMaxima: this.#comandantes[0].getCargaMaxima(),
-      // Calcular numero de unidades, ciudades, ingresos diarios y dinero actual
-      numUnidades: Math.floor(Math.random() * 30),
-      unidadesValor: Math.floor(Math.random() * 150000),
-      numPropiedades: Math.floor(Math.random() * 30),
-      ingresosDiarios: Math.floor(Math.random() * 30) * 1000,
-      dineroActual: Math.floor(Math.random() * 50000),
+      numUnidades: this.#comandantes[0].getNumeroUnidades(),
+      unidadesValor: this.#comandantes[0].getUnidadesValor(),
+      numPropiedades: this.#comandantes[0].getNumeroPropiedades(),
+      ingresosDiarios: this.#comandantes[0].getIngresosDiarios(),
+      dineroActual: this.#comandantes[0].getDineroActual(),
       equipo: this.#equipo,
-      poderes: [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }],
+      poderes: this.#comandantes[0].getPoderesData(),
       // Falta meter el dato de las estrellas al comandante
-      estrellas: 6,
+      estrellas: this.#comandantes[0].getMaximoEstrellas(),
       // Falta meter el dato del color al jugador y/o al comandante
       color: this.#color
     }
