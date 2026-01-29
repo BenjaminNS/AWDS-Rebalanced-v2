@@ -135,6 +135,9 @@ export class ComandanteJugable{
   getCargaMaxima (){
     return this.#cargaMaxima
   }
+  getMaximoEstrellas (){
+    return this.#comandanteInstancia.getEstrellasMaximas()
+  }
   getusosPoder (){{
     return this.#usosPoder
   }}
@@ -248,16 +251,18 @@ export class Comandante{
 
   // #estrellas: number
   #limiteCarga: number|null
+  #estrellasMaximas: number|null
   #poderes: ComandantePoder[]|null
 
   // Funciones de daño, ataque, defensa, costo, movimiento, rango, etc.
-  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null){
+  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, estrellasMaximas: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null){
     this.#nombre = nombre
     this.#nombreCorto = nombreCorto
     this.#descripcion = descripcion
     this.#pais = pais
     this.#d2d = d2d
     this.#limiteCarga = limiteCarga
+    this.#estrellasMaximas = estrellasMaximas
     this.#poderes = poderes
     this.#cancion = cancion
   }
@@ -282,6 +287,9 @@ export class Comandante{
   }
   getLimiteCarga (){
     return this.#limiteCarga
+  }
+  getEstrellasMaximas (){
+    return this.#estrellasMaximas
   }
   getPowers (){
     return this.#poderes
