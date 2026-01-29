@@ -107,7 +107,7 @@ export class ComandanteJugable{
   getidInstancia (){{
     return this.#idInstancia
   }}
-  getdineroActual (){{
+  getDineroActual (){{
     return this.#dineroActual
   }}
   gastarDinero (gasto:number){
