@@ -29,8 +29,9 @@ window.addEventListener('load', async () => {
   const listaJugadores = Partida.getListaJugadores()
 
   const jugadoresData:jugadorData[] = []
-  listaJugadores.forEach(jugador => {
-    jugadoresData.push(jugador.getJugadorData())
+  listaJugadores.forEach((jugador, i) => {
+    jugadoresData.push(
+      jugador.getJugadorData(Partida.getMapa().getListaUnidadesDe1Comandante(i), Partida.getMapa().getListaPropiedades(i)))
   })
 
   const partidaData:PartidaState = {
