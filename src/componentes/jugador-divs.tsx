@@ -66,7 +66,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
 
               <div className='dato flex items-center col-span-2'>
                 <img src="./img/huds/propiedad.png" alt="" className='icono-info flex-col'/>
-                <p data-text={ 'numero-propiedades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numUnidades}</p>
+                <p data-text={ 'numero-propiedades-' + jugador.nombre } className='flex-1 px-2 text-center'>{jugador.numPropiedades}</p>
                 {/* Numero de propiedades desglosado por la cantidad de cada tipo (ciudades, fabricas, aeropuertos, puertos navales, com towers) y total */}
               </div>
             </section>
