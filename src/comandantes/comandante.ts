@@ -46,7 +46,6 @@ export class ComandanteJugable{
   #comandanteInstancia: Comandante
   // Carga maxima cambiaría su valor cada vez que se usa un poder
   // Originalmente en el juego el aumento de costo es un +20% con cada uso
-  #cargaMaxima: number
   #usosPoder: number
   #activo: boolean
   #multiplicadorCosto:number = 1
@@ -127,13 +126,13 @@ export class ComandanteJugable{
     return this.#cargaActual
   }}
   sumarCarga (puntosCarga:number){
-    this.#cargaActual = Math.min((this.#cargaActual + puntosCarga), this.#cargaMaxima)
+    this.#cargaActual = Math.min((this.#cargaActual + puntosCarga), this.#comandanteInstancia.getLimiteCarga())
   }
   // restarCarga (puntosCarga:number){
   //   this.#cargaActual = Math.min((this.#cargaActual + puntosCarga), this.#cargaMaxima)
   // }
   getCargaMaxima (){
-    return this.#cargaMaxima
+    return this.#comandanteInstancia.getLimiteCarga()
   }
   getMaximoEstrellas (){
     return this.#comandanteInstancia.getEstrellasMaximas()
