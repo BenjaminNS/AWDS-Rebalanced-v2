@@ -61,7 +61,6 @@ export class ComandanteJugable{
     this.#idInstancia = idInstancia
     this.#dineroActual = dineroActual
     this.#cargaActual = cargaActual
-    this.#cargaMaxima = 10000
     this.#usosPoder = usosPoder
     this.#activo = activo
     this.#estado = estado
