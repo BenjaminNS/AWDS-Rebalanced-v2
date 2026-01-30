@@ -82,7 +82,22 @@ export class Jugador {
   }
 
   public terminarTurno (){}
-  public getJugadorData ():jugadorData{
+  public getJugadorData (listaUnidades:UnidadCasilla[], listaPropiedades:nombreTerreno[]):jugadorData{
+    let valorTotalUnidades = 0
+    listaUnidades.forEach(unidad => {
+      // Multiplicar por el valor del comandante
+      valorTotalUnidades += unidad.getCosto()
+    })
+
+    let ingresosDiarios = 0
+    listaPropiedades.forEach(propiedad => {
+      if ( propiedad === 'ciudad' || propiedad === 'cuartelGeneral' || propiedad === 'fabrica' || propiedad === 'aeropuerto' || propiedad === 'puertoNaval' ){
+        // cada personaje debería tener su propia implementación
+        // Viendo que puede ver algunos que generen más ingresos o que otro de propiedades le genere ingresos
+        ingresosDiarios += 1000
+      }
+    })
+
     return {
       nombre: this.#nombre,
       id: this.#id,
@@ -92,10 +107,10 @@ export class Jugador {
       comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}.png`,
       cargaActual: this.#comandantes[0].getcargaActual(),
       cargaMaxima: this.#comandantes[0].getCargaMaxima(),
-      numUnidades: this.#comandantes[0].getNumeroUnidades(),
-      unidadesValor: this.#comandantes[0].getUnidadesValor(),
-      numPropiedades: this.#comandantes[0].getNumeroPropiedades(),
-      ingresosDiarios: this.#comandantes[0].getIngresosDiarios(),
+      numUnidades: listaUnidades.length,
+      unidadesValor: valorTotalUnidades,
+      numPropiedades: listaPropiedades.length,
+      ingresosDiarios: ingresosDiarios,
       dineroActual: this.#comandantes[0].getDineroActual(),
       equipo: this.#equipo,
       poderes: this.#comandantes[0].getPoderesData(),
