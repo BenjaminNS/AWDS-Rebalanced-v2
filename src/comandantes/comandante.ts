@@ -160,8 +160,8 @@ export class ComandanteJugable{
   #setEstado (estado:estadoComandante){
     this.#estado = estado
   }
-  activarPoder (){
-    this.#setEstado('cop')
+  activarPoder (nombrePoder: string){
+    this.#setEstado(nombrePoder)
   }
   desactivarPoder (){
     this.#setEstado('normal')
