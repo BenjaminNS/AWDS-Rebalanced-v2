@@ -386,6 +386,31 @@ export class Mapa{
       return ( ( coord.y * this.dimensiones.columnas ) + coord.x )
     }
   }
+
+  public getListaUnidadesDe1Comandante (numeroComandante: number){
+    const listaUnidades:UnidadCasilla[] = []
+
+    this.casillas.forEach(casilla => {
+      const unidadTemp = casilla.getUnidad()
+      if ( unidadTemp != null && unidadTemp.getPropietario() === numeroComandante ){
+        listaUnidades.push(unidadTemp)
+      }
+    })
+
+    return listaUnidades
+  }
+
+  public getListaPropiedades (numeroComandante: number):nombreTerreno[]{
+    const listaPropiedades:nombreTerreno[] = []
+
+    this.casillas.forEach(casilla => {
+      if ( casilla.getPropietario() === numeroComandante ){
+        listaPropiedades.push(casilla.getTipo())
+      }
+    })
+
+    return listaPropiedades
+  }
 }
 
 const casAdyacentes:{ top: any|null, left: any|null, right: any|null, bottom: any|null } = { top: null, left: null, right: null, bottom: null }
