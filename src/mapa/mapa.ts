@@ -46,9 +46,9 @@ export class Casilla {
     } else {
       this.#tipo = tipo
 
-      if ( ListaTerrenos[tipo].esPropiedad ){
+      if ( ListaTerrenos[tipo].propiedad != null ){
         this.#propietario = propietario
-      } else if ( !ListaTerrenos[tipo].esPropiedad && propietario != null ) {
+      } else if ( !ListaTerrenos[tipo].propiedad && propietario != null ) {
         console.error(`No se puede ser dueño de las casillas tipo "${tipo}"`)
         this.#propietario = null
       } else {
