@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import './jugador-div.css'
 const baseImgComandante = `${import.meta.env.BASE_URL}img/comandantes/`
 
@@ -23,8 +23,23 @@ export type jugadorData = {
 }
 
 export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: jugadorData[], turnoActual: number }){
+  // Scroll al jugador actual
+  const listaJugadoresRef = useRef(null)
+  function scrollToPlayer (index: number) {
+    const listNode = listaJugadoresRef.current
+    const jugadorDivNode = listNode.querySelectorAll('.elemento-jugador')[index]
+    jugadorDivNode.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center'
+    })
+  }
+  useEffect(() => {
+    scrollToPlayer(turnoActual)
+  }, [turnoActual])
+
   return (
-    <div id="seccion-jugadores">
+    <div ref={listaJugadoresRef} id="seccion-jugadores">
       {jugadoresData.map((jugador, i) => (
         <div key={jugador.id} className={ !jugador.activo ? 'elemento-jugador pb-2 inactivo' : 'elemento-jugador pb-2' + ( turnoActual === i ? ' seleccionado' : '' ) } style={{ backgroundColor: jugador.color }} >
           <div className="mb-2" style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid black', backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
