@@ -18,6 +18,11 @@ CursorKonva.src = CursorSprite
 
 // const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info') as HTMLElement)
 
+type fnGetter = {
+  getJugadorActual: ()=>Jugador,
+  getTurnoActual: ()=>number
+}
+
 // Interfaz para interactuar con el mapa
 export class CursorMapaJuego {
   private coordSeleccionada: null|coordenada
@@ -34,9 +39,7 @@ export class CursorMapaJuego {
   private layerCursor:Konva.Layer
 
   #fnReactSetters: any
-  #fnGetters: {
-    getJugadorActual: ()=>Jugador
-  }
+  #fnGetters: fnGetter
   private cursorImg:Konva.Image
   // #reactSetters:Function[]
   // private layerGUI:Konva.Layer
@@ -50,9 +53,7 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa, fnSetters: any, fnGetters: {
-    getJugadorActual: ()=>Jugador
-  }){
+  constructor (mapa: Mapa, fnSetters: any, fnGetters: fnGetter){
     this.#fnReactSetters = fnSetters
     this.#fnGetters = fnGetters
 

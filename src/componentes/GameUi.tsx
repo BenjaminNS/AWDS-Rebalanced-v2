@@ -48,6 +48,9 @@ export function GameUI (){
       }, {
         getJugadorActual: ():Jugador => {
           return partidaJuego.getJugadorActual()
+        },
+        getTurnoActual: () => {
+          return partidaJuego.getTurnoActual()
         }
       })
     })
