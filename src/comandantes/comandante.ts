@@ -209,9 +209,9 @@ export class ComandanteJugable{
   }
   public getPoderesData (){
     // return [{ costo: 30000, nombre: 'Hyper Repair' },{ costo: 30000, nombre: 'Hyper Repair' }]
-    const poderesData:{nombre: string, costo: number }[] = []
+    const poderesData:{nombre: string, costo: number, efectoActivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>void }[] = []
     this.#comandanteInstancia.getPowers()?.forEach(poder => {
-      poderesData.push({ nombre: poder.nombre, costo: (poder.costoEstrellas * 10000) })
+      poderesData.push({ nombre: poder.nombre, costo: (poder.costoEstrellas * 10000), efectoActivacion: poder.efectoActivacion })
     })
     return poderesData
   }
