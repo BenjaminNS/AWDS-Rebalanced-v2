@@ -184,7 +184,7 @@ export class PartidaJuego {
     this.#mapa = await generarMapaKonva({ mapa: this.#mapa, idContenedor: contenedor })
   }
 
-  private declararJuegoTerminado (){
+  #declararJuegoTerminado (){
     this.#fechaTerminado = new Date(Date.now())
     this.declararGanadores()
     this.declararPerdedores()
