@@ -139,9 +139,9 @@ export class CursorMapaJuego {
         mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
         return true
 
-        // tempCasilla.getTerrenoObjeto()?.esPropiedad ===
-      } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null ){
-        // Si es tu propiedad y no tiene unidad encima
+      // Si es tu propiedad y no tiene unidad encima
+      } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
+      && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
         const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo())
         if ( unidadesCompraDatos.length > 0 ){
           console.log('Escogiste tu propiedad')
