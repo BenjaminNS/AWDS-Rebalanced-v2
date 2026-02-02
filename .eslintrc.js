@@ -15,7 +15,7 @@ export default [
       semi: ['error', 'never'],
       quotes: ['error', 'single'],
       indent: ['error', 2],
-      'no-unused-vars': ['error', { args: 'none', ignoreRestSiblings: true }],
+      'no-unused-vars': 'off',
       'space-before-function-paren': ['error', 'always'],
       'keyword-spacing': ['error', { before: true, after: true }],
       'comma-dangle': ['error', 'never'],
@@ -32,7 +32,8 @@ export default [
       'space-infix-ops': 'error',
       'spaced-comment': ['error', 'always', { markers: ['/'] }],
       'no-multiple-empty-lines': ['error', { max: 1 }],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
+      '@typescript-eslint/no-unused-vars':
+        ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
     }
   }
 ]
