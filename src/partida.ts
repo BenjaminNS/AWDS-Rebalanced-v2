@@ -136,11 +136,21 @@ export class PartidaJuego {
   }
   // Talvez lo cambie a "terminarTurno"
   public siguienteJugador = () => {
-    // cambia el turno al siguiente jugador activo
-    // this.Jugadores[0].activo
-
     // habilitar el turno a todas las unidades del turno actual antes de pasar al siguiente jugador
-    return this.setTurnoActual((this.#turnoActual + 1), this.#mapa.obtenerComandantesJugables().size)
+    for (let i = 0; i < this.#jugadores.length; i++) {
+      this.#turnoActual++
+      if ( this.#turnoActual >= this.#jugadores.length ){
+        this.#turnoActual = 0
+        this.setDiaActual(this.#diaActual + 1)
+      }
+      if ( this.#jugadores[this.#turnoActual].getStatus() ){
+        return
+      }
+    }
+
+    console.log('No hay más jugadores disponibles. Juego terminado.')
+    this.#declararJuegoTerminado()
+    // return this.setTurnoActual((this.#turnoActual + 1), this.#mapa.obtenerComandantesJugables().size)
   }
   public getTurnoActual = () => {
     return this.#turnoActual
