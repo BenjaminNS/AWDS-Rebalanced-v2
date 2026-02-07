@@ -41,6 +41,7 @@ export class KonvaMapa{
 
   // Escoger el modo de generación de mapa (datos, aleatorio, relleno)
   constructor (tamanoCasilla: number, mapa: Mapa, idContenedor: string){
+    console.log('Konva Mapa en construcción...')
     this.#tamanoCasilla = tamanoCasilla
     const { filas, columnas } = mapa.dimensiones
 
