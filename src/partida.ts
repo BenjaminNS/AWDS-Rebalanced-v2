@@ -95,7 +95,7 @@ export class PartidaJuego {
     if ( this.#reglas.limiteDias && this.#reglas.limiteDias < (this.#diaActual + 1) ){
       this.#diaActual++
     } else {
-      this.declararJuegoTerminado()
+      this.#declararJuegoTerminado()
     }
 
     return this.#diaActual
