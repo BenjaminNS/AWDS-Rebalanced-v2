@@ -96,7 +96,7 @@ export class CursorMapaJuego {
       const pos = this.mapa.konvaStage?.getPointerPosition()
       if (!pos) return
       const coordHover = { x: Math.floor(pos.x / tamanoCasilla), y: Math.floor(pos.y / tamanoCasilla) }
-      const casillaHover = this.mapa.obtenerCasilla(coordHover)
+      const casillaHover = this.mapa.getCasilla(coordHover)
       if ( casillaHover == null ) return
 
       // if hay unidad seleccionada en proceso de escoger camino y casillaHover es nueva en la ruta
@@ -127,12 +127,12 @@ export class CursorMapaJuego {
   // Quitar parte asíncrona, va donde se ejecute la orden
   private async seleccionarCasilla (coord: coordenada):boolean{
     if ( !this.coordSeleccionada ){
-      const tempCasilla = this.mapa.obtenerCasilla(coord)
+      const tempCasilla = this.mapa.getCasilla(coord)
       if ( tempCasilla == null ) return false
 
       if ( tempCasilla.getUnidad() != null && tempCasilla.getUnidad()?.getTurnos() ){
         this.coordSeleccionada = coord
-        this.casillaSeleccionada = this.mapa.obtenerCasilla(coord) as Casilla
+        this.casillaSeleccionada = this.mapa.getCasilla(coord) as Casilla
         this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, this.casillaSeleccionada?.getUnidad()))
         this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento() ?? 0)
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada

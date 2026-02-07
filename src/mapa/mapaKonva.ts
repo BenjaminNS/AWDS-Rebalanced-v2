@@ -280,10 +280,10 @@ export function generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, 
   const terreno = casilla.getTerrenoObjeto()
   const { x,y } = coordenada
   const casillasAdyacentes = {
-    top: mapa.obtenerCasilla({ x: (x), y:(y - 1) })?.getTipo(),
-    left: mapa.obtenerCasilla({ x: (x - 1), y:(y) })?.getTipo(),
-    right: mapa.obtenerCasilla({ x: (x + 1), y:(y) })?.getTipo(),
-    bottom: mapa.obtenerCasilla({ x: (x), y:(y + 1) })?.getTipo()
+    top: mapa.getCasilla({ x: (x), y:(y - 1) })?.getTipo(),
+    left: mapa.getCasilla({ x: (x - 1), y:(y) })?.getTipo(),
+    right: mapa.getCasilla({ x: (x + 1), y:(y) })?.getTipo(),
+    bottom: mapa.getCasilla({ x: (x), y:(y + 1) })?.getTipo()
   }
   // Objeto terreno
   const objTerreno = terreno.obtenerSprite(casillasAdyacentes)

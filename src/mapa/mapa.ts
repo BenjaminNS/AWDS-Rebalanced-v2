@@ -138,7 +138,7 @@ export class Mapa{
     this.konvaStage = null
   }
 
-  obtenerCasilla = (coord: coordenada):(Casilla|null) => {
+  getCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
     if ( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
       || coord.x >= this.dimensiones.columnas || coord.y >= this.dimensiones.filas ){
@@ -455,7 +455,7 @@ export class MapaSimple{
 
 function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa,
   unidad: UnidadCasilla, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
-  const casillaValida = mapa.obtenerCasilla(coordDato)
+  const casillaValida = mapa.getCasilla(coordDato)
   if ( casillaValida == null ) return null
 
   const objTerreno = casillaValida.getTerrenoObjeto()
