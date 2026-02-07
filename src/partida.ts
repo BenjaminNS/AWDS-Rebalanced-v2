@@ -5,7 +5,7 @@ import { Reglas } from './reglas.ts'
 import { esClima } from './clima.ts'
 import type { Clima } from './clima.ts'
 // import { accion } from './accion.ts'
-import { generarMapaKonva } from './mapa/mapaKonva.ts'
+import { KonvaMapa } from './mapa/KonvaMapa.ts'
 // Se debería cargar una partida con un id único de partida solicitando a una DB
 
 // Clase PartidaSnapshot: una captura del estatus de una partida.
@@ -50,6 +50,7 @@ export class PartidaGuardada extends PartidaSnapshot{
 // y generar objetos de PartidaImagen. Incluye los sprites del juego
 export class PartidaJuego {
   #mapa: Mapa
+  #konvaMapa: KonvaMapa
   #jugadores: Jugador[]
   #reglas: Reglas
   #climaActual: Clima
@@ -60,8 +61,34 @@ export class PartidaJuego {
   #fechaTerminado?: Date|null
   // listaAcciones: accion[]
 
+  constructor ( partidaInfo: PartidaSnapshot|PartidaGuardada, fechaTerminado?: Date|null ) {
+    this.#mapa = new Mapa(partidaInfo.Mapa.nombre, partidaInfo.Mapa.dimensiones, partidaInfo.Mapa.casillas)
+    console.log('Mapa valido: ', this.#mapa.esMapaValido())
+    this.#konvaMapa = new KonvaMapa(32, this.#mapa, 'mapa-konva')
+
+    this.#jugadores = partidaInfo.Jugadores
+    this.#reglas = partidaInfo.Reglas
+
+    this.#climaActual = this.setClima(partidaInfo.climaActual)
+    this.#diaActual = this.setDiaActual(partidaInfo.diaActual)
+
+    const comandantesJugables:Set<number|null> = this.#mapa.obtenerComandantesJugables()
+    console.log('Comandantes jugables: ', comandantesJugables )
+    this.#turnoActual = this.setTurnoActual(partidaInfo.turnoActual, comandantesJugables.size)
+
+    this.#ordenJugadores = partidaInfo.ordenJugadores
+    this.#fechaEmpezado = partidaInfo.fechaEmpezado
+    if ( !fechaTerminado ){
+      this.#fechaTerminado = fechaTerminado
+    } else {
+      this.#fechaTerminado = null
+    }
+  }
   public getMapa () {
     return this.#mapa
+  }
+  public getKonvaMapa (){
+    return this.#konvaMapa
   }
   public getReglas = () => {
     return this.#reglas
@@ -156,28 +183,6 @@ export class PartidaJuego {
     return this.#turnoActual
   }
 
-  constructor ( partidaInfo: PartidaSnapshot|PartidaGuardada, fechaTerminado?: Date|null ) {
-    this.#mapa = new Mapa(partidaInfo.Mapa.nombre, partidaInfo.Mapa.dimensiones, partidaInfo.Mapa.casillas)
-    console.log('Mapa valido: ', this.#mapa.esMapaValido())
-
-    this.#jugadores = partidaInfo.Jugadores
-    this.#reglas = partidaInfo.Reglas
-
-    this.#climaActual = this.setClima(partidaInfo.climaActual)
-    this.#diaActual = this.setDiaActual(partidaInfo.diaActual)
-
-    const comandantesJugables:Set<number|null> = this.#mapa.obtenerComandantesJugables()
-    console.log('Comandantes jugables: ', comandantesJugables )
-    this.#turnoActual = this.setTurnoActual(partidaInfo.turnoActual, comandantesJugables.size)
-
-    this.#ordenJugadores = partidaInfo.ordenJugadores
-    this.#fechaEmpezado = partidaInfo.fechaEmpezado
-    if ( !fechaTerminado ){
-      this.#fechaTerminado = fechaTerminado
-    } else {
-      this.#fechaTerminado = null
-    }
-  }
   public obtenerEquipos = ():Set<string> => {
     const setEquipos:Set<string> = new Set()
     this.#jugadores.forEach(jugador => {
@@ -189,9 +194,6 @@ export class PartidaJuego {
   public obtenerFiltroHSVJugadores = () => {
     const setFiltrosHSV = new Set()
     return setFiltrosHSV
-  }
-  public dibujarMapa = async (contenedor: string) => {
-    this.#mapa = await generarMapaKonva({ mapa: this.#mapa, idContenedor: contenedor })
   }
 
   #declararJuegoTerminado (){
