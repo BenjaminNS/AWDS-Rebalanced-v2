@@ -26,7 +26,7 @@ export default [
       'eol-last': ['error', 'always'],
       'no-var': 'error',
       'prefer-const': 'error',
-      'eqeqeq': ['error', 'always'],
+      'eqeqeq': ['error', 'smart'],
       'no-extra-semi': 'error',
       'arrow-spacing': ['error', { before: true, after: true }],
       'space-infix-ops': 'error',
