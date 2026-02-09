@@ -283,11 +283,11 @@ export class KonvaMapa{
   }
 
   // CUADROS DE CASILLA
-  mostrarCasillasCuadros (layerCasillas: Konva.Layer, coordCasillas: coordenada[]){
-    layerCasillas.show()
+  mostrarCasillasCuadros (coordCasillas: coordenada[]){
+    this.#capas.layerCasillas?.show()
 
     for (const coordCasilla of coordCasillas){
-      layerCasillas.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
+      this.#capas.layerCasillas?.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
     // animar cada cuadro creciendo (de 0 a 100% al final)
     }
   }
