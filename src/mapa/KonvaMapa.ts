@@ -136,7 +136,7 @@ export class KonvaMapa{
     this.#capas.layerCasillas.hide()
   }
   #crearCapaCaminos (filas: number, columnas: number){
-    this.#capas.layerCasillas = new Konva.Layer({ name: MAPA_CAPAS.CAMINO })
+    this.#capas.layerCamino = new Konva.Layer({ name: MAPA_CAPAS.CAMINO })
     for (let y = 0; y < filas; y++) {
       for (let x = 0; x < columnas; x++) {
         const spriteTerreno = new Konva.Image({
@@ -162,7 +162,7 @@ export class KonvaMapa{
     for (let y = 0; y < filas; y++) {
       for (let x = 0; x < columnas; x++) {
         if ( mapa.casillas[( ( y * columnas ) + x )].getUnidad() != null ){
-          const spriteUnidad = generarSpriteUnidad(
+          const spriteUnidad = this.generarSpriteUnidad(
             mapa.casillas[( ( y * columnas ) + x )],
             { x: x, y: y }
           )
@@ -216,7 +216,7 @@ export class KonvaMapa{
     }
     unitKonvaGroup.add(unitSprite)
 
-    const hpActual = Math.ceil( casilla.getUnidad().hp / 10 )
+    const hpActual = Math.ceil( casilla.getUnidad()?.getHp() / 10 )
     const hpTextConfBase:TextConfig = {
       name: 'hp-texto',
       fontSize: Math.ceil(this.#tamanoCasilla / 2),
