@@ -1,22 +1,16 @@
 import { Mapa, type coordenada, type Casilla } from './mapa/mapa'
-import { tamanoCasilla, MAPA_CAPAS, mostrarCasillas, ocultarCasillas } from './mapa/mapaKonva.ts'
 // import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
 import { moverUnidad } from './orden.ts'
 import Konva from 'konva'
-import type { UnidadCasilla } from './unidades/unidades.ts'
-// import { Camino, type cordCosto } from './camino.ts'
+import { UnidadCasilla } from './unidades/unidades.ts'
 import { Camino } from './camino.ts'
-import { ocultarCaminos } from './mapa/konvaCamino.ts'
-
-// type coordVector = {x: 0, y:-1}|{x: -1, y:0}|{x: 1, y:0}|{x: 0, y:1}
+import type { KonvaMapa } from './mapa/KonvaMapa.ts'
 
 // Cursor
 import CursorSprite from './../public/img/huds/cursor_mapa.png'
 import type { Jugador } from './jugador.ts'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
-
-// const { estrellaOutput, hpOutput, gasOutput, munPrincipalOutput, munSecundariaOutput, statusOutput } = getInfoCasillaVariables(document.querySelector('#casilla-info') as HTMLElement)
 
 type fnSetters = {
   setInfoCasilla: Function,
@@ -40,10 +34,7 @@ export class CursorMapaJuego {
   private camino = new Camino()
 
   private mapa:Mapa
-  private layerTerreno:Konva.Layer
-  private layerCamino:Konva.Layer
-  private layerUnidad:Konva.Layer
-  private layerCasillas:Konva.Layer
+  #konvaMapa:KonvaMapa
   private layerCursor:Konva.Layer
 
   #fnReactSetters: fnSetters
@@ -61,49 +52,46 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa, fnSetters: fnSetters, fnGetters: fnGetter){
+  constructor (mapa: Mapa, konvaMapa: KonvaMapa, fnSetters: fnSetters, fnGetters: fnGetter){
+
     this.#fnReactSetters = fnSetters
     this.#fnGetters = fnGetters
+    this.#konvaMapa = konvaMapa
 
     this.coordSeleccionada = null
     this.mapa = mapa
-    this.layerUnidad = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.UNIDADES) as Konva.Layer
-    this.layerTerreno = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.TERRENO) as Konva.Layer
-    this.layerCamino = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.CAMINO) as Konva.Layer
-    this.layerCasillas = mapa.konvaStage?.getLayers().find((layer) => layer.getName() === MAPA_CAPAS.CASILLAS) as Konva.Layer
-    ocultarCasillas(this.layerCasillas)
+    this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
 
-    this.camino.setLayerCamino(this.layerCamino)
+    this.camino.setLayerCamino(this.#konvaMapa.getCapaCamino())
 
     this.layerCursor = new Konva.Layer({ name: 'cursor' })
     this.cursorImg = new Konva.Image({
       name: 'cursor_mapa',
       x: 0, y: 0,
-      width: tamanoCasilla * 1.33, height: tamanoCasilla * 1.33,
+      width: this.#konvaMapa.getTamanoCasilla() * 1.33, height: this.#konvaMapa.getTamanoCasilla() * 1.33,
       image: CursorKonva
     })
     this.cursorImg.listening(false)
     this.layerCursor.add(this.cursorImg)
-    this.mapa.konvaStage?.add(this.layerCursor)
+    this.#konvaMapa.getKonvaStage().add(this.layerCursor)
 
     // leftClickHandler
-    this.mapa.agregarEventoClick((coord:coordenada) => {
+    this.#konvaMapa.agregarEventoClick((coord:coordenada) => {
       if ( !this.leftClick ) return
       this.seleccionarCasilla(coord)
-    }, tamanoCasilla)
+    }, this.#konvaMapa.getTamanoCasilla())
     // rightClickHandler
-    this.mapa.konvaStage?.on('contextmenu', (ev) => {
+    this.#konvaMapa.getKonvaStage()?.on('contextmenu', (ev) => {
       ev.evt.preventDefault()
       if ( !this.rightClick ) return
       if ( this.rightClick ) this.cancelarUltimaAccion()
     })
     // hoverMouse/MouseMove
-    this.mapa.konvaStage?.on('mousemove', () => {
+    this.#konvaMapa.getKonvaStage()?.on('mousemove', () => {
       // if se tiene abierto un menú (los botones tienen el evento de mouseover) return
-
-      const pos = this.mapa.konvaStage?.getPointerPosition()
+      const pos = this.#konvaMapa.getKonvaStage()?.getPointerPosition()
       if (!pos) return
-      const coordHover = { x: Math.floor(pos.x / tamanoCasilla), y: Math.floor(pos.y / tamanoCasilla) }
+      const coordHover = { x: Math.floor(pos.x / this.#konvaMapa.getTamanoCasilla()), y: Math.floor(pos.y / this.#konvaMapa.getTamanoCasilla()) }
       const casillaHover = this.mapa.getCasilla(coordHover)
       if ( casillaHover == null ) return
 
@@ -112,8 +100,8 @@ export class CursorMapaJuego {
         this.camino.agregarCoordenada(coordHover)
       } else {
         // Solo debería acomodar la imagen del cursor cuando no hay algún menú abierto en el canva
-        this.cursorImg.x(coordHover.x * tamanoCasilla)
-        this.cursorImg.y(coordHover.y * tamanoCasilla)
+        this.cursorImg.x(coordHover.x * this.#konvaMapa.getTamanoCasilla())
+        this.cursorImg.y(coordHover.y * this.#konvaMapa.getTamanoCasilla())
 
         this.#fnReactSetters.setInfoCasilla({
           estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
@@ -144,13 +132,14 @@ export class CursorMapaJuego {
         this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, this.casillaSeleccionada?.getUnidad()))
         this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento() ?? 0)
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
-        mostrarCasillas(this.layerCasillas, this.camino.getCoordenadasDisponibles())
+
+        this.#konvaMapa.mostrarCasillasCuadros(this.camino.getCoordenadasDisponibles())
         return true
 
       // Si es tu propiedad y no tiene unidad encima
       } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
-        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo())
+        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo(), this.mapa.generarUnidadCasilla(new UnidadCasilla('infanteria', { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, null)))
         if ( unidadesCompraDatos.length > 0 ){
           console.log('Escogiste tu propiedad')
           this.#fnReactSetters.setPropiedadSeleccionada(true)
@@ -165,13 +154,15 @@ export class CursorMapaJuego {
       }
     } else {
       const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
-      const spriteUnidad = this.layerUnidad.findOne(`#${unidadSeleccionada?.id}`) as Konva.Sprite
+      const spriteUnidad = this.#konvaMapa.getCapaUnidad().findOne(`#${unidadSeleccionada?.id}`) as Konva.Sprite
+
       if ( spriteUnidad ){
-        ocultarCasillas(this.layerCasillas)
+        this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
+
         this.leftClick = false
         this.rightClick = false
 
-        moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), tamanoCasilla, this.mapa).then(res => {
+        moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), this.#konvaMapa.getTamanoCasilla(), this.mapa).then(res => {
           console.log('Response: ', res)
           return true
         })
@@ -190,16 +181,18 @@ export class CursorMapaJuego {
           })
       }
     }
+
+    return true
   }
 
   private deseleccionarCasilla (){
+    // Si se seleccionó una propiedad
+    // ocultarMenuOpciones()
     // Si se seleccionó una unidad
     this.coordSeleccionada = null
     this.casillaSeleccionada = null
-    ocultarCasillas(this.layerCasillas)
-    ocultarCaminos(this.layerCamino)
-    // Si se seleccionó una propiedad
-    // ocultarMenuOpciones()
+    this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
+    this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCamino())
   }
 
   private cancelarUltimaAccion (){
