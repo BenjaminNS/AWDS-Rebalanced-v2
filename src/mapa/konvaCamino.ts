@@ -6,7 +6,8 @@ import { type direccion, generarDireccion } from '../camino.ts'
 import caminoInicio from '/img/huds/caminos_tilesheet.png'
 const CaminoSprite = new window.Image()
 CaminoSprite.src = caminoInicio
-const tamanoTile = 100
+export { CaminoSprite }
+export const tamanoTile = 100
 
 // Aquí debería cambiar de imagen (o de UV) dependiendo la dirección de la coordenada anterior y de la siguiente
 
