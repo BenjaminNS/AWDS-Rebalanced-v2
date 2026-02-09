@@ -61,6 +61,32 @@ export class KonvaMapa{
     })
   }
 
+  // GETTERS
+  public getTamanoCasilla (){
+    return this.#tamanoCasilla
+  }
+  public getStandardSpriteSize (){
+    return this.#standardSpriteSize
+  }
+  public getKonvaStage (){
+    return this.#konvaStage
+  }
+  public getColorFondoMapa (){
+    return this.#colorFondoMapa
+  }
+  public getCapaCamino (){
+    return this.#capas.layerCamino as Konva.Layer
+  }
+  public getCapaCasillas (){
+    return this.#capas.layerCasillas as Konva.Layer
+  }
+  public getCapaTerreno (){
+    return this.#capas.layerTerreno as Konva.Layer
+  }
+  public getCapaUnidad (){
+    return this.#capas.layerUnidad as Konva.Layer
+  }
+
   // CAPAS
   #crearCapaTerreno (filas: number, columnas: number, mapa: Mapa){
     this.#capas.layerTerreno = new Konva.Layer({ name: MAPA_CAPAS.TERRENO })
