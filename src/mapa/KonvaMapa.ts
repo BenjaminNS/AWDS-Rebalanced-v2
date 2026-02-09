@@ -303,4 +303,28 @@ export class KonvaMapa{
 
   pintarCamino = pintarCamino
   ocultarCaminos = ocultarCaminos
+
+  // EVENTOS
+  public agregarEventoClick (fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
+    if ( this.#konvaStage && tamanoCasilla > 0){
+      const manejarClick = (evt: any) => {
+        // Si no es click izquierdo (solo aplica a eventos mouse)
+        if ( evt.evt?.button != null && evt.evt.button != 0 ) return
+
+        const pos = this.#konvaStage?.getPointerPosition()
+        if (!pos) return
+        const casillaX = Math.floor(pos.x / tamanoCasilla)
+        const casillaY = Math.floor(pos.y / tamanoCasilla)
+
+        fnClick({ x: casillaX, y: casillaY })
+      }
+
+      this.#konvaStage?.on('tap', manejarClick)
+      this.#konvaStage?.on('click', manejarClick)
+    }
+  }
+  public quitarEventoClick (){
+    this.#konvaStage?.off('tap')
+    this.#konvaStage?.off('click')
+  }
 }
