@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, type SetStateAction } from 'react'
 
 import { DivJugadores, type jugadorData } from './jugador-divs.tsx'
 import { CompraUnidadesMenu } from './compraUnidades.tsx'
@@ -9,51 +9,46 @@ import type { Jugador } from './../jugador.ts'
 import { PartidaSnapshotMock } from '../mocks/PartidaSnapshotMock.ts'
 
 export function GameUI (){
-  const partidaJuego = React.useMemo(() => {
-    return new PartidaJuego(PartidaSnapshotMock, null)
-  }, [])
+  const partidaJuego:React.RefObject<PartidaJuego> = useRef(null)
   const [infoCasilla, setInfoCasilla] = useState({
-    estrellas: 0, gasActual: 10,
-    gasMaxima: 20, hp: 40,
-    munPrincipal: 2, munSecundaria: null,
-    status: '', terreno: 'dsadsa'
+    estrellas: 0, gasActual: 10, gasMaxima: 20, hp: 100,
+    munPrincipal: 2, munSecundaria: null, status: '', terreno: ''
   })
 
-  const jugadoresDataTemp:jugadorData[] = []
-  partidaJuego.getListaJugadores().forEach((jugador, i) => {
-    jugadoresDataTemp.push(
-      jugador.getJugadorData(partidaJuego.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.getMapa().getListaPropiedades(i)))
-  })
-  const [jugadoresData, setJugadoresData] = useState(jugadoresDataTemp)
+  const [jugadoresData, setJugadoresData]:SetStateAction<jugadorData> = useState([])
   const [casillaHover, setCasillaHover] = useState()
   // Pudiera ser la lista de casillas en vez de solo una
   const [casillaSeleccionada, setCasillaSeleccionada] = useState()
-  const [jugadorActual, setJugadorActual] = useState(partidaJuego.getTurnoActual())
-  const [diaActual, setDiaActual] = useState(partidaJuego.getDiaActual())
+  const [jugadorActual, setJugadorActual] = useState(0)
+  const [diaActual, setDiaActual] = useState(0)
   // const [unidadSeleccionada, setUnidadSeleccionada] = useState(info)
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
   const [unidadesCompra, setUnidadesCompra] = useState([])
+  const [turnoActual, setTurnoActual] = useState(0)
 
   useEffect(() => {
-    setJugadoresData(jugadoresData)
-    // Object.freeze(Partida)
-    partidaJuego.dibujarMapa('mapa-konva').then(() => {
-      new CursorMapaJuego(partidaJuego.getMapa(), {
-        setInfoCasilla: setInfoCasilla,
-        setCasillaHover: setCasillaHover,
-        setCasillaSeleccionada: setCasillaSeleccionada,
-        setJugadorActual: setJugadorActual,
-        setPropiedadSeleccionada: setPropiedadSeleccionada,
-        setUnidadesCompra: setUnidadesCompra
-      }, {
-        getJugadorActual: ():Jugador => {
-          return partidaJuego.getJugadorActual()
-        },
-        getTurnoActual: () => {
-          return partidaJuego.getTurnoActual()
-        }
-      })
+    partidaJuego.current = new PartidaJuego(PartidaSnapshotMock, null)
+    const jugadoresDataTemp:jugadorData[] = []
+    partidaJuego.current.getListaJugadores().forEach((jugador, i) => {
+      jugadoresDataTemp.push(
+        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades(i)))
     })
+    setJugadoresData(jugadoresDataTemp)
+    setDiaActual(partidaJuego.current.getDiaActual())
+    setTurnoActual(partidaJuego.current.getTurnoActual())
+
+    new CursorMapaJuego(partidaJuego.current.getMapa(), partidaJuego.current.getKonvaMapa(), {
+      setInfoCasilla: setInfoCasilla, setCasillaHover: setCasillaHover,
+      setCasillaSeleccionada: setCasillaSeleccionada, setJugadorActual: setJugadorActual,
+      setPropiedadSeleccionada: setPropiedadSeleccionada, setUnidadesCompra: setUnidadesCompra
+    }, {
+      getJugadorActual: ():Jugador => {
+        return partidaJuego.current.getJugadorActual()
+      }, getTurnoActual: () => {
+        return partidaJuego.current.getTurnoActual()
+      }
+    })
+    // })
   }, [])
 
   return (
@@ -70,12 +65,13 @@ export function GameUI (){
           <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
           <InfoCasilla info={infoCasilla} />
           <button id="siguiente-turno" onClick={() => {
-            partidaJuego.siguienteJugador()
-            setJugadorActual(partidaJuego.getTurnoActual())
-            setDiaActual(partidaJuego.getDiaActual())
+            partidaJuego.current.siguienteJugador()
+            setTurnoActual(partidaJuego.current.getTurnoActual())
+            setJugadorActual(partidaJuego.current.getTurnoActual())
+            setDiaActual(partidaJuego.current.getDiaActual())
           }
           } className='bg-gray-300 hover:bg-gray-400 transition-colors cursor-pointer px-3 py-2 mb-3 rounded-md' style={{ width: '100%', transitionDuration: '.3s' }}>Terminar turno</button>
-          <DivJugadores jugadoresData={jugadoresData} turnoActual={partidaJuego.getTurnoActual()} />
+          <DivJugadores jugadoresData={jugadoresData} turnoActual={turnoActual} />
         </div>
       </div>
     </>
