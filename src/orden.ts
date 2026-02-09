@@ -25,13 +25,13 @@ export class Accion {
   // static getSiguientesAcciones(mapa:Mapa, coordDestino:coordenada, ultimaAccion:nombreAccion){
   //   switch(ultimaAccion){
   //     case 'unidad movida':{
-  //         const unidad = mapa.obtenerCasilla(coordDestino)?.getUnidad()
+  //         const unidad = mapa.getCasilla(coordDestino)?.getUnidad()
   //         const opcionesMenu = obtenerOpcionesMenu(unidad, coordDestino, ultimaAccion)
   //         mostrarMenu(opcionesMenu)
   //         return opcionesMenu
   //       }
   //     case 'seleccionar unidad':{
-  //         const unidad = mapa.obtenerCasilla(coordDestino)?.getUnidad()
+  //         const unidad = mapa.getCasilla(coordDestino)?.getUnidad()
   //         const coordSeleccionadas = mapa.obtenerCoordenadasMovimiento(mapa, coordDestino, unidad)
   //         mostrarCasillas(this.layerCasillas, coordSeleccionadas)
   //       }
@@ -98,7 +98,7 @@ export class OrdenUnidad {
 
   public ejecutarOrden (mapa:Mapa, layerUnidad:Konva.Layer):Promise<resultado>{
     return new Promise(async (resolve, reject) => {
-      const casillaSeleccionada = mapa.obtenerCasilla(this.coordOrigen) as Casilla
+      const casillaSeleccionada = mapa.getCasilla(this.coordOrigen) as Casilla
       this.moverUnidad(mapa, layerUnidad, casillaSeleccionada)
         .then(async (res) => {
           const result = await this.accion.funcionEjecutar()
@@ -128,10 +128,10 @@ export class OrdenUnidad {
           return
         }
 
-        const casillaOrigen = mapa.obtenerCasilla(coordDestino) as Casilla
+        const casillaOrigen = mapa.getCasilla(coordDestino) as Casilla
         coordDestino.x += translateCoord.x
         coordDestino.y += translateCoord.y
-        const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
+        const casillaDestino = mapa.getCasilla(coordDestino) as Casilla
 
         await new Promise((res) => {
           new Konva.Tween({
@@ -157,7 +157,7 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
   // Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
     const coordDestino = { ...coordOrigen }
-    const unidadSeleccionada = mapa.obtenerCasilla(coordDestino)?.getUnidad() as UnidadCasilla
+    const unidadSeleccionada = mapa.getCasilla(coordDestino)?.getUnidad() as UnidadCasilla
 
     for (const direccion of direcciones) {
       const translateCoord = generarCoordenadaVector(direccion)
@@ -166,10 +166,10 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
         return
       }
 
-      const casillaOrigen = mapa.obtenerCasilla(coordDestino) as Casilla
+      const casillaOrigen = mapa.getCasilla(coordDestino) as Casilla
       coordDestino.x += translateCoord.x
       coordDestino.y += translateCoord.y
-      const casillaDestino = mapa.obtenerCasilla(coordDestino) as Casilla
+      const casillaDestino = mapa.getCasilla(coordDestino) as Casilla
 
       if ( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
         // Animación de fallo
