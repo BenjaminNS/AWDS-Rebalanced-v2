@@ -28,7 +28,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
   function scrollToPlayer (index: number) {
     const listNode = listaJugadoresRef.current
     const jugadorDivNode = listNode.querySelectorAll('.elemento-jugador')[index]
-    jugadorDivNode.scrollIntoView({
+    jugadorDivNode?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
       inline: 'center'
