@@ -5,6 +5,7 @@ TerrainTilesheets.src = terrainTilesheets
 import caminoInicio from '/img/huds/caminos_tilesheet.png'
 const CaminoSprite = new window.Image()
 CaminoSprite.src = caminoInicio
+import { pintarCamino, ocultarCaminos } from './konvaCamino.ts'
 import { listaPaises } from '../comandantes/paises.ts'
 import type { coordenada, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -299,4 +300,7 @@ export class KonvaMapa{
 
     layerCasillas.hide()
   }
+
+  pintarCamino = pintarCamino
+  ocultarCaminos = ocultarCaminos
 }
