@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, type SetStateAction } from 'react'
 
-import { DivJugadores, type jugadorData } from './jugador-divs.tsx'
+import { DivJugadores, type jugadorData } from './JugadorDiv.tsx'
 import { CompraUnidadesMenu } from './compraUnidades.tsx'
 import { InfoCasilla } from './info_casilla.tsx'
 import { PartidaJuego } from './../partida.ts'

@@ -94,6 +94,11 @@
             width: 1px;
             background-color: black;
             z-index: 9999;
+
+            &.poder{
+              width: 4px;
+              background-color: red;
+            }
         }
 
         &:after{

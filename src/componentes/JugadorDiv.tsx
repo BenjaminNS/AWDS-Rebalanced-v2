@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import './jugador-div.css'
+import './JugadorDiv.css'
 const baseImgComandante = `${import.meta.env.BASE_URL}img/comandantes/`
 
-// Esto talvez podría obtenerlo de otro archivo
 export type jugadorData = {
   id: string,
   nombre: string,
