@@ -154,6 +154,9 @@ export class CursorMapaJuego {
       }
     } else {
       const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
+      if ( unidadSeleccionada.getPropietario() !== this.#fnGetters.getTurnoActual() ){
+        return false
+      }
       const spriteUnidad = this.#konvaMapa.getCapaUnidad().findOne(`#${unidadSeleccionada?.id}`) as Konva.Sprite
 
       if ( spriteUnidad ){
