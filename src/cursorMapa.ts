@@ -7,7 +7,7 @@ import { Camino } from './camino.ts'
 import type { KonvaMapa } from './mapa/KonvaMapa.ts'
 
 // Cursor
-import CursorSprite from './../public/img/huds/cursor_mapa.png'
+import CursorSprite from '/img/huds/cursor_mapa.png'
 import type { Jugador } from './jugador.ts'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
