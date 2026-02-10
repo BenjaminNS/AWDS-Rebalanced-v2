@@ -104,7 +104,7 @@ export class Jugador {
       activo: this.#activo,
       // Este dato debería ser de un arreglo si pienso hacer que un
       // solo jugador controle a más de 1 comandante
-      comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}.png`,
+      comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}`,
       cargaActual: this.#comandantes[0].getcargaActual(),
       cargaMaxima: this.#comandantes[0].getCargaMaxima(),
       numUnidades: listaUnidades.length,
