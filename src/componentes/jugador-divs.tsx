@@ -10,7 +10,7 @@ export type jugadorData = {
   comandanteImgUrl: string,
   color: string,
   // agregar efecto de cuando se haga clic
-  poderes: {nombre: string, costo: number }[],
+  poderes: {nombre: string, costo: number, estrellas: number }[],
   cargaActual: number,
   cargaMaxima: number,
   numUnidades: number,
@@ -50,9 +50,11 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
           <div className='px-2 mb-2'>
             { jugador.estrellas > 0 && (
               <div className="carga-cop mb-2" title={jugador.cargaActual.toString()} style={{ '--porcentajeCarga': ( jugador.cargaActual / jugador.cargaMaxima * 100 ) + '%', width: (jugador.estrellas * 10) + '%' }}>
-                {Array.from({ length: Math.max(0, jugador.estrellas - 1) }).map((_, i) => (
-                  <div key={i} className='separador'></div>
-                ))}
+                {Array.from({ length: Math.max(0, jugador.estrellas - 1) }).map((_, j) => {
+                  const index = jugador.poderes.findIndex(poder => (poder.estrellas - 1) === j)
+                  return <div className={ index !== -1 ? 'separador poder' : 'separador'}></div>
+                }
+                )}
               </div>
             ) }
 
