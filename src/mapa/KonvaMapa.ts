@@ -195,16 +195,26 @@ export class KonvaMapa{
       unitSprite.offsetX( this.#tamanoCasilla / 2 )
       unitSprite.scale({ x: (escala * -1), y: escala })
     }
-    // Filtro sprite unidad
+    // Filtro sprite unidad: esperar a que la imagen esté cargada antes de cachear y aplicar filtros
     if ( listaPaises[unidad.getPropietario()] != null ){
       unitSprite.width(this.#tamanoCasilla)
       unitSprite.height(this.#tamanoCasilla)
-      unitSprite.cache({
-        pixelRatio: 1,
-        imageSmoothingEnabled: false
-      })
-      unitSprite.filters([Konva.Filters.HSV])
-      aplicarTinteUnidad({ unidadSprite: unitSprite, hsv: listaPaises[unidad.getPropietario()].hsv })
+      const unidadImg = unitSprite.image()
+      const aplicarFiltroUnidad = () => {
+        unitSprite.cache({
+          pixelRatio: 1,
+          imageSmoothingEnabled: false
+        })
+        unitSprite.filters([Konva.Filters.HSV])
+        aplicarTinteUnidad({ unidadSprite: unitSprite, hsv: listaPaises[unidad.getPropietario()].hsv })
+        try { unitSprite.start && unitSprite.start() } catch (e) {}
+        this.#capas.layerUnidad?.batchDraw()
+      }
+      if (unidadImg && (unidadImg as HTMLImageElement).complete) {
+        aplicarFiltroUnidad()
+      } else if (unidadImg) {
+        unidadImg.onload = () => aplicarFiltroUnidad()
+      }
     } else {
       console.error('No existe este pais', unidad.getPropietario())
     }
@@ -264,12 +274,20 @@ export class KonvaMapa{
 
     if ( ( casilla.getTipo() === 'ciudad' || casilla.getTipo() === 'fabrica' || casilla.getTipo() === 'aeropuerto' ||
     casilla.getTipo() === 'puertoNaval' ) && propietario != null ){
-      spriteTerreno.cache({
-        pixelRatio: 1,
-        imageSmoothingEnabled: false
-      })
-      spriteTerreno.filters([Konva.Filters.Tint])
-      spriteTerreno.tintColor = obtenerColorTerreno({ numComandanteJugable: propietario })
+      const aplicarTintado = () => {
+        spriteTerreno.cache({
+          pixelRatio: 1,
+          imageSmoothingEnabled: false
+        })
+        spriteTerreno.filters([Konva.Filters.Tint])
+        spriteTerreno.tintColor = obtenerColorTerreno({ numComandanteJugable: propietario })
+        this.#capas.layerTerreno?.batchDraw()
+      }
+      if (TerrainTilesheets && (TerrainTilesheets as HTMLImageElement).complete) {
+        aplicarTintado()
+      } else if (TerrainTilesheets) {
+        TerrainTilesheets.onload = () => aplicarTintado()
+      }
     }
 
     this.#capas.layerTerreno.add(spriteTerreno)
