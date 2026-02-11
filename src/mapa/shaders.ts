@@ -60,4 +60,7 @@ export function aplicarTinteUnidad ({ unidadSprite, hsv } : {unidadSprite: Konva
   }
 }
 
-// function unidadSinTurno
+export function unidadTurnoShader ({ unidadSprite, turnos } : {unidadSprite: Konva.Sprite, turnos: number}): void{
+  if (turnos >= 1) unidadSprite.value(0)
+  else unidadSprite.value(-.5)
+}

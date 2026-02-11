@@ -9,7 +9,7 @@ import { pintarCamino, ocultarCaminos } from './konvaCamino.ts'
 import { listaPaises } from '../comandantes/paises.ts'
 import type { coordenada, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
-import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad } from './shaders.ts'
+import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad, unidadTurnoShader } from './shaders.ts'
 import type { UnidadCasilla } from '../unidades/unidades.ts'
 
 export const COLORES_INTERACCION = {
@@ -218,6 +218,8 @@ export class KonvaMapa{
     } else {
       console.error('No existe este pais', unidad.getPropietario())
     }
+
+    unidadTurnoShader({ unidadSprite: unitSprite, turnos: unidad.getTurnos() })
     unitKonvaGroup.add(unitSprite)
 
     const hpActual = Math.ceil( unidad.getHp() / 10 )
