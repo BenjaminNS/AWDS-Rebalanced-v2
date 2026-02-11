@@ -138,6 +138,13 @@ export class Mapa{
     this.konvaStage = null
   }
 
+  generarUnidadCasilla (unidad:UnidadCasilla, coordenada: coordenada){
+    const casillaSeleccionada = this.getCasilla(coordenada)
+    if ( casillaSeleccionada != null ){
+      casillaSeleccionada.setUnidad(unidad)
+    }
+  }
+
   getCasilla = (coord: coordenada):(Casilla|null) => {
     // Fuera del mapa
     if ( coord.x < 0 || coord.y < 0 || (coord.y * this.dimensiones.columnas + coord.x) >= this.casillas.length
