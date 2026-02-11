@@ -33,6 +33,15 @@ export function GameUI (){
     setDiaActual(partidaJuego.current.getDiaActual())
   }, [])
 
+  const actualizarInfoJugadores = () => {
+    const jugadoresDataTemp:jugadorData[] = []
+    partidaJuego.current.getListaJugadores().forEach((jugador, i) => {
+      jugadoresDataTemp.push(
+        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades(i)))
+    })
+    setJugadoresData(jugadoresDataTemp)
+  }
+
   useEffect(() => {
     // Debería usar try/catch
     partidaJuego.current = new PartidaJuego(PartidaSnapshotMock, null)
@@ -65,7 +74,7 @@ export function GameUI (){
         <div style={{ position: 'relative', alignSelf: 'flex-start' }}>
           <div id="mapa-konva"></div>
           {React.useMemo(() => (
-            <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} />
+            <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} actualizarInfo={actualizarInfoJugadores}/>
           ), [unidadesCompra, propiedadSeleccionada])}
           {/* <div id="menu-acciones"></div> */}
         </div>

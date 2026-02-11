@@ -9,8 +9,10 @@ export type unidadCompra = {
   clickHandler: ()=>void
 }
 
-export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, setPropiedadSeleccionada }:{listaUnidades:unidadCompra[], propiedadSeleccionada: boolean,
-  setPropiedadSeleccionada: (value:null) => void
+export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, actualizarInfo, setPropiedadSeleccionada }:{
+  listaUnidades:unidadCompra[], propiedadSeleccionada: boolean,
+  setPropiedadSeleccionada: (value:null) => void,
+  actualizarInfo: ()=>void
 }){
   return (
     <div className={propiedadSeleccionada ? 'absolute left-0 top-0' : 'hidden' } style={{ background: '#33333355', width: '100%', height: '100%' }}>
@@ -26,6 +28,7 @@ export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, setP
               + ( UnidadCompra.habilitado ? '' : ' deshabilitado' )} onClick={() => {
               if (UnidadCompra.habilitado){
                 UnidadCompra.clickHandler()
+                actualizarInfo()
                 setPropiedadSeleccionada(null)
               } else {
                 console.log('Botón inhabilitado')
