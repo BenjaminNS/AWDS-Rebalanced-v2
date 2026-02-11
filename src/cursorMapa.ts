@@ -5,6 +5,9 @@ import Konva from 'konva'
 import { UnidadCasilla } from './unidades/unidades.ts'
 import { Camino } from './camino.ts'
 import type { KonvaMapa } from './mapa/KonvaMapa.ts'
+import accionInvalidaSFX from '/audio/sfx/accion_invalida.wav'
+const accionInvalidaSFX_player = new window.Audio()
+accionInvalidaSFX_player.src = accionInvalidaSFX
 
 // Cursor
 import CursorSprite from '/img/huds/cursor_mapa.png'
@@ -155,6 +158,7 @@ export class CursorMapaJuego {
     } else {
       const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
       if ( unidadSeleccionada.getPropietario() !== this.#fnGetters.getTurnoActual() ){
+        accionInvalidaSFX_player.play()
         return false
       }
       const spriteUnidad = this.#konvaMapa.getCapaUnidad().findOne(`#${unidadSeleccionada?.id}`) as Konva.Sprite
