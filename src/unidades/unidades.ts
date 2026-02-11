@@ -47,7 +47,7 @@ export class UnidadCasilla {
   constructor (
     nombreUnidad: nombreUnidad,
     { propietario, hp, municiones, gasActual, estado, turnos }:
-    { propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos?: number },
+    { propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos: number },
     refComandante: ComandanteJugable|null
   ){
     const infoBasica = getInfoBasica(nombreUnidad)
@@ -114,8 +114,11 @@ export class UnidadCasilla {
       this.#estado = estado
     }
 
-    if (turnos) this.#turnos = turnos
-    else this.#turnos = 1
+    if (turnos != null){
+      this.#turnos = Math.max(turnos, 0)
+    } else {
+      this.#turnos = 1
+    }
   }
 
   public getPropietario (){
