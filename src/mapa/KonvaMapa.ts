@@ -10,6 +10,7 @@ import { listaPaises } from '../comandantes/paises.ts'
 import type { coordenada, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad } from './shaders.ts'
+import type { UnidadCasilla } from '../unidades/unidades.ts'
 
 export const COLORES_INTERACCION = {
   MOVIMIENTO: '#345bc788',
@@ -161,11 +162,10 @@ export class KonvaMapa{
     for (let y = 0; y < filas; y++) {
       for (let x = 0; x < columnas; x++) {
         if ( mapa.casillas[( ( y * columnas ) + x )].getUnidad() != null ){
-          const spriteUnidad = this.generarSpriteUnidad(
-            mapa.casillas[( ( y * columnas ) + x )],
+          this.generarSpriteUnidad(
+            mapa.casillas[( ( y * columnas ) + x )].getUnidad(),
             { x: x, y: y }
           )
-          this.#capas.layerUnidad.add(spriteUnidad)
         }
       }
     }
@@ -174,34 +174,29 @@ export class KonvaMapa{
   }
 
   // GENERAR SPRITES TERRENO/UNIDADES
-  generarSpriteUnidad (casilla: Casilla, coordenada: coordenada):Konva.Group|null{
-    if (casilla.getUnidad() == null){
-      console.error('Esta casilla no tiene una unidad', casilla)
-      return null
-    }
-
+  generarSpriteUnidad (unidad: UnidadCasilla, coordenada: coordenada):void{
     const { x, y } = coordenada
     const unitKonvaGroup = new Konva.Group({
       x: (x * this.#tamanoCasilla),
       y: y * this.#tamanoCasilla,
-      name: casilla.getUnidad()?.id,
-      id: casilla.getUnidad()?.id
+      name: unidad.id,
+      id: unidad.id
     })
 
-    const unitSprite = casilla.getUnidad()?.getSprite().clone()
+    const unitSprite = unidad.getSprite().clone()
     unitSprite.setAttrs({
       x: 0, y: 0,
       name: 'sprite-unidad'
     })
     const escala = this.#tamanoCasilla / 16
-    if (casilla.getUnidad()?.getPropietario() % 2 === 0){
+    if (unidad.getPropietario() != null && unidad.getPropietario() % 2 === 0){
       unitSprite.scale({ x: escala, y: escala })
     } else {
       unitSprite.offsetX( this.#tamanoCasilla / 2 )
       unitSprite.scale({ x: (escala * -1), y: escala })
     }
     // Filtro sprite unidad
-    if ( listaPaises[casilla.getUnidad()?.getPropietario()] != null ){
+    if ( listaPaises[unidad.getPropietario()] != null ){
       unitSprite.width(this.#tamanoCasilla)
       unitSprite.height(this.#tamanoCasilla)
       unitSprite.cache({
@@ -209,13 +204,13 @@ export class KonvaMapa{
         imageSmoothingEnabled: false
       })
       unitSprite.filters([Konva.Filters.HSV])
-      aplicarTinteUnidad({ unidadSprite: unitSprite, hsv: listaPaises[casilla.getUnidad()?.getPropietario()].hsv })
+      aplicarTinteUnidad({ unidadSprite: unitSprite, hsv: listaPaises[unidad.getPropietario()].hsv })
     } else {
-      console.error('No existe este pais', casilla.getUnidad()?.getPropietario())
+      console.error('No existe este pais', unidad.getPropietario())
     }
     unitKonvaGroup.add(unitSprite)
 
-    const hpActual = Math.ceil( casilla.getUnidad()?.getHp() / 10 )
+    const hpActual = Math.ceil( unidad.getHp() / 10 )
     const hpTextConfBase:TextConfig = {
       name: 'hp-texto',
       fontSize: Math.ceil(this.#tamanoCasilla / 2),
@@ -239,9 +234,8 @@ export class KonvaMapa{
       unitKonvaGroup.add(hpText)
     }
 
-    casilla.getUnidad()?.setUnitKonvaGroup(unitKonvaGroup)
-    return unitKonvaGroup
-  // return unitSprite
+    unidad.setUnitKonvaGroup(unitKonvaGroup)
+    this.#capas.layerUnidad.add(unitKonvaGroup)
   }
   generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, mapa: Mapa):void{
     const terreno = casilla.getTerrenoObjeto()
