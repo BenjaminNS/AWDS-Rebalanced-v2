@@ -10,7 +10,6 @@ import { listaPaises } from '../comandantes/paises.ts'
 import type { coordenada, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad } from './shaders.ts'
-import { unitSpritesLoaded } from '../unidades/spriteUnidades.ts'
 import type { UnidadCasilla } from '../unidades/unidades.ts'
 
 export const COLORES_INTERACCION = {
@@ -62,26 +61,6 @@ export class KonvaMapa{
 
     this.#konvaStage.getLayers().forEach(l => {
       l.getContext()._context.imageSmoothingEnabled = false
-    })
-
-    // Asegurar que las capas se redibujen cuando las imágenes externas terminen de cargar.
-    const ensureRedraw = (img: HTMLImageElement, layer: Konva.Layer|null) => {
-      if (!layer) return
-      if ((img as any).complete) {
-        layer.batchDraw()
-      } else {
-        img.onload = () => {
-          layer.batchDraw()
-        }
-      }
-    }
-
-    ensureRedraw(TerrainTilesheets, this.#capas.layerTerreno)
-    ensureRedraw(CaminoSprite, this.#capas.layerCamino)
-
-    // Cuando el spritesheet de unidades esté listo, redibujar la capa de unidades
-    unitSpritesLoaded.then(() => {
-      this.#capas.layerUnidad?.batchDraw()
     })
   }
 
