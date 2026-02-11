@@ -273,7 +273,7 @@ export class Mapa{
       }
       const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
         new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario: casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
-          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado },
+          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado, turnos: casillaSimple.unidad.turnos },
         refComandante) : null
 
       _casillasCompletas.push({
