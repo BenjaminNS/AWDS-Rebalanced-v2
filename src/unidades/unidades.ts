@@ -72,7 +72,7 @@ export class UnidadCasilla {
 
     this.id = crypto.randomUUID()
 
-    if ( propietario && propietario < 0 ){
+    if ( propietario != null && propietario < 0 ){
       console.error('La unidad no puede tener este propietario: ', propietario )
       this.#propietario = null
       // Ignora el comandante indicado si el propietario es inválido
