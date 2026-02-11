@@ -1,11 +1,12 @@
 import './style.css'
-import { Mapa, MapaSimple } from './mapa/mapa.ts'
+import { Mapa, MapaSimple, type coordenada } from './mapa/mapa.ts'
 import { Jugador } from './jugador.ts'
 import { Reglas } from './reglas.ts'
 import { esClima } from './clima.ts'
 import type { Clima } from './clima.ts'
 // import { accion } from './accion.ts'
 import { KonvaMapa } from './mapa/KonvaMapa.ts'
+import type { UnidadCasilla } from './unidades/unidades.ts'
 // Se debería cargar una partida con un id único de partida solicitando a una DB
 
 // Clase PartidaSnapshot: una captura del estatus de una partida.
@@ -181,6 +182,11 @@ export class PartidaJuego {
   }
   public getTurnoActual = () => {
     return this.#turnoActual
+  }
+
+  public generarUnidadMapaPartida (unidad:UnidadCasilla, coordenada: coordenada){
+    this.#mapa.generarUnidadCasilla(unidad, coordenada)
+    this.#konvaMapa.generarSpriteUnidad(unidad, coordenada)
   }
 
   public obtenerEquipos = ():Set<string> => {
