@@ -9,7 +9,7 @@ import { pintarCamino, ocultarCaminos } from './konvaCamino.ts'
 import { listaPaises } from '../comandantes/paises.ts'
 import type { coordenada, Casilla, Mapa } from './mapa.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
-import { obtenerColorTerreno, aplicarTinteUnidad } from './shaders.ts'
+import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad } from './shaders.ts'
 
 export const COLORES_INTERACCION = {
   MOVIMIENTO: '#345bc788',
@@ -52,6 +52,7 @@ export class KonvaMapa{
       height: filas * tamanoCasilla
     })
 
+    generarShaderPropiedad()
     this.#crearCapaTerreno(filas, columnas, mapa)
     this.#crearCapaCasillas(filas, columnas)
     this.#crearCapaCaminos(filas, columnas)
