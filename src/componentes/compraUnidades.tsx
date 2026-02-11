@@ -1,12 +1,14 @@
 import React from 'react'
 import './compraUnidades.css'
+import type { nombreUnidad } from '../unidades/unidadInfoBasica'
 export type unidadCompra = {
   spriteUrl: string
   nombre: string,
   costo: number,
+  nombreCorto: nombreUnidad,
   // Talvez cambiar el nombre a visible
   habilitado: boolean,
-  clickHandler: ()=>void
+  clickHandler: (nombreUnidad: nombreUnidad)=>void
 }
 
 export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, actualizarInfo, setPropiedadSeleccionada }:{
@@ -27,7 +29,7 @@ export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, actu
             <div className={'opcion-compra bg-amber-200 hover:bg-amber-400 flex p-2 gap-.5 cursor-pointer rounded-sm'
               + ( UnidadCompra.habilitado ? '' : ' deshabilitado' )} onClick={() => {
               if (UnidadCompra.habilitado){
-                UnidadCompra.clickHandler()
+                UnidadCompra.clickHandler(UnidadCompra.nombreCorto)
                 actualizarInfo()
                 setPropiedadSeleccionada(null)
               } else {

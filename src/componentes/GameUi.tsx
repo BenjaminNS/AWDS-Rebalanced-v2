@@ -10,6 +10,7 @@ import { PartidaSnapshotMock } from '../mocks/PartidaSnapshotMock.ts'
 
 export function GameUI (){
   const partidaJuego:React.RefObject<PartidaJuego> = useRef(null)
+  // Revisar si tengo que poner info
   const [infoCasilla, setInfoCasilla] = useState({
     estrellas: 0, gasActual: 10, gasMaxima: 20, hp: 100,
     munPrincipal: 2, munSecundaria: null, status: '', terreno: ''
@@ -62,9 +63,7 @@ export function GameUI (){
       getJugadorActual: ():Jugador => {
         return partidaJuego.current.getJugadorActual()
       }, getTurnoActual: () => {
-        return partidaJuego.current.getTurnoActual()
-      }
-    })
+        return partidaJuego.current.getTurnoActual()} }, { partidaJuego: partidaJuego.current })
     // })
   }, [])
 

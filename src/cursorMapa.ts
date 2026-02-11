@@ -12,6 +12,7 @@ accionInvalidaSFX_player.src = accionInvalidaSFX
 // Cursor
 import CursorSprite from '/img/huds/cursor_mapa.png'
 import type { Jugador } from './jugador.ts'
+import type { nombreUnidad } from './unidades/unidadInfoBasica.ts'
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
 
@@ -43,6 +44,7 @@ export class CursorMapaJuego {
   #fnReactSetters: fnSetters
   #fnGetters: fnGetter
   private cursorImg:Konva.Image
+  #otros: any
   // #reactSetters:Function[]
   // private layerGUI:Konva.Layer
 
@@ -55,7 +57,7 @@ export class CursorMapaJuego {
   //   }
   // })))
 
-  constructor (mapa: Mapa, konvaMapa: KonvaMapa, fnSetters: fnSetters, fnGetters: fnGetter){
+  constructor (mapa: Mapa, konvaMapa: KonvaMapa, fnSetters: fnSetters, fnGetters: fnGetter, otros: object){
 
     this.#fnReactSetters = fnSetters
     this.#fnGetters = fnGetters
@@ -63,6 +65,7 @@ export class CursorMapaJuego {
 
     this.coordSeleccionada = null
     this.mapa = mapa
+    this.#otros = otros
     this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
 
     this.camino.setLayerCamino(this.#konvaMapa.getCapaCamino())
@@ -142,7 +145,10 @@ export class CursorMapaJuego {
       // Si es tu propiedad y no tiene unidad encima
       } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
-        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo(), this.mapa.generarUnidadCasilla(new UnidadCasilla('infanteria', { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, null)))
+        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo(),
+          (unidadNombre: nombreUnidad) => {
+            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, null), coord)
+          })
         if ( unidadesCompraDatos.length > 0 ){
           console.log('Escogiste tu propiedad')
           this.#fnReactSetters.setPropiedadSeleccionada(true)
