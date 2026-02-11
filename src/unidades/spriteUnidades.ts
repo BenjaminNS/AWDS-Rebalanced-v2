@@ -283,3 +283,26 @@ export const spriteBattleship = new Konva.Sprite({
 //   },
 //   animation: 'idle', frameRate: 3, frameIndex: 0
 // })
+
+const _allUnitSprites = [
+  spriteInfanteria, spriteMecha, spriteRecon, spriteTanqueLigero, spriteTanqueMediano,
+  spriteNeotanque, spriteApc, spriteArtilleria, spriteCohetes, spriteTanqueAntiaereo,
+  spriteMisiles, spriteBCopter, spriteTCopter, spriteFighter, spriteBomber,
+  spriteLander, spriteCruiser, spriteSubmarino, spriteBattleship
+]
+
+export function startAllUnitSprites (){
+  _allUnitSprites.forEach(s => {
+    try {
+      // Asegurar que la imagen está asignada y arrancar la animación
+      s.image(UnitSpritesheet)
+      s.start()
+    } catch (e) {
+      // Silenciar errores en caso de sprites no válidos
+      // console.warn('No se pudo iniciar sprite', e)
+    }
+  })
+}
+
+// Iniciar automáticamente cuando el spritesheet esté listo
+unitSpritesLoaded.then(() => startAllUnitSprites())
