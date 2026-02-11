@@ -216,7 +216,7 @@ export class ComandanteJugable{
     return poderesData
   }
 
-  public getUnidadesCompraDatos (propiedad: nombrePropiedad):unidadCompra[]{
+  public getUnidadesCompraDatos (propiedad: nombrePropiedad, comprarUnidad: (unidad: nombreUnidad)=>void):unidadCompra[]{
     const unidadesCompraDatos:unidadCompra[] = []
 
     let propiedadUnidades
@@ -239,12 +239,14 @@ export class ComandanteJugable{
           costo: tempInfoBasica.costo * this.#multiplicadorCosto,
           habilitado: this.#dineroActual >= tempInfoBasica.costo ? true : false,
           nombre: tempInfoBasica.nombreLargo,
+          nombreCorto: tempInfoBasica.nombreCorto,
           spriteUrl: tempInfoBasica.nombreCorto + '.png',
           clickHandler: () => {
             if (this.gastarDinero(tempInfoBasica.costo * this.#multiplicadorCosto)){
+              comprarUnidad(unidadNombre)
               console.log(`Compraste ${tempInfoBasica.nombreLargo}. Tienes ${this.#dineroActual}G`)
             } else {
-              console.log('Error en la compra. No tienes fondos suficientes')
+              console.log('No tienes fondos suficientes')
             }
           }
         })
