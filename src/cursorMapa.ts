@@ -32,8 +32,8 @@ type fnGetter = {
 export class CursorMapaJuego {
   private coordSeleccionada: null|coordenada
   private casillaSeleccionada: null|Casilla
-  private leftClick = true
-  private rightClick = true
+  #leftClick = true
+  #rightClick = true
   private camino = new Camino()
 
   private mapa:Mapa
@@ -80,14 +80,14 @@ export class CursorMapaJuego {
 
     // leftClickHandler
     this.#konvaMapa.agregarEventoClick((coord:coordenada) => {
-      if ( !this.leftClick ) return
+      if ( !this.#leftClick ) return
       this.seleccionarCasilla(coord)
     }, this.#konvaMapa.getTamanoCasilla())
     // rightClickHandler
     this.#konvaMapa.getKonvaStage()?.on('contextmenu', (ev) => {
       ev.evt.preventDefault()
-      if ( !this.rightClick ) return
-      if ( this.rightClick ) this.cancelarUltimaAccion()
+      if ( !this.#rightClick ) return
+      if ( this.#rightClick ) this.cancelarUltimaAccion()
     })
     // hoverMouse/MouseMove
     this.#konvaMapa.getKonvaStage()?.on('mousemove', () => {
@@ -166,8 +166,8 @@ export class CursorMapaJuego {
       if ( spriteUnidad ){
         this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
 
-        this.leftClick = false
-        this.rightClick = false
+        this.#leftClick = false
+        this.#rightClick = false
 
         moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), this.#konvaMapa.getTamanoCasilla(), this.mapa).then(res => {
           console.log('Response: ', res)
@@ -180,8 +180,8 @@ export class CursorMapaJuego {
           })
           .finally(() => {
             console.log('Camino: ', this.camino.getCamino())
-            this.leftClick = true
-            this.rightClick = true
+            this.#leftClick = true
+            this.#rightClick = true
             unidadSeleccionada.gastarTurno()
             this.camino.limpiarCoordenadasCamino()
             this.deseleccionarCasilla()
