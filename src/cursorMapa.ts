@@ -168,7 +168,13 @@ export class CursorMapaJuego {
       }
     } else {
       const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
+      // Si no es tu unidad...
       if ( unidadSeleccionada.getPropietario() !== this.#fnGetters.getTurnoActual() ){
+        accionInvalidaSFX_player.play()
+        return false
+      }
+      // Si la casilla que estas seleccionando tiene otra unidad ocupando el espacio
+      if ( this.mapa.getCasilla(coord)?.getUnidad() != null ){
         accionInvalidaSFX_player.play()
         return false
       }
