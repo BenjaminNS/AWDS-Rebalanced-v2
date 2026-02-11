@@ -4,6 +4,18 @@ const UnitSpritesheet = new window.Image()
 UnitSpritesheet.src = spritesheet
 const tamanoSprite = 16
 
+// Promesa que se resuelve cuando el spritesheet de unidades termina de cargar
+export const unitSpritesLoaded: Promise<void> = new Promise((resolve) => {
+  if (UnitSpritesheet.complete) {
+    resolve()
+  } else {
+    UnitSpritesheet.onload = () => resolve()
+  }
+})
+
+// También exportamos la imagen en caso de que otros módulos quieran escuchar directamente
+export { UnitSpritesheet }
+
 type spriteAnimations = {
   'idle': number[],
   'derecha': number[],
