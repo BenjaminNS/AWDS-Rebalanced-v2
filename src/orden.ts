@@ -153,10 +153,13 @@ export class OrdenUnidad {
   }
 }
 
-export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<any>{
+export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<boolean>{
   // Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
     const coordDestino = { ...coordOrigen }
+    const casillaOrigen = mapa.getCasilla(coordDestino) as Casilla
+    let casillaFinal = mapa.getCasilla(coordDestino) as Casilla
+    let casillaDestino = mapa.getCasilla(coordDestino) as Casilla
     const unidadSeleccionada = mapa.getCasilla(coordDestino)?.getUnidad() as UnidadCasilla
 
     for (const direccion of direcciones) {
@@ -166,13 +169,13 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
         return
       }
 
-      const casillaOrigen = mapa.getCasilla(coordDestino) as Casilla
       coordDestino.x += translateCoord.x
       coordDestino.y += translateCoord.y
-      const casillaDestino = mapa.getCasilla(coordDestino) as Casilla
+      casillaDestino = mapa.getCasilla(coordDestino) as Casilla
 
       if ( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
-        // Animación de fallo
+        casillaOrigen.setUnidad(null)
+        casillaFinal.setUnidad(unidadSeleccionada)
         reject()
         return
       } else {
@@ -184,14 +187,16 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
             y: spriteUnidad.y() + tamanoCasilla * translateCoord.y,
             onFinish: () => {
               unidadSeleccionada.gastarGasolinaTerreno(casillaDestino.getTipo())
-              casillaDestino.setUnidad(unidadSeleccionada)
-              casillaOrigen.setUnidad(null)
+              casillaFinal = mapa.getCasilla(coordDestino) as Casilla
               res(true)
             }
           }).play()
         })
       }
     }
+
+    casillaOrigen.setUnidad(null)
+    casillaFinal.setUnidad(unidadSeleccionada)
     resolve(true)
   })
 }
