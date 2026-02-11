@@ -103,14 +103,11 @@ export class KonvaMapa{
 
     for (let y = 0; y < filas; y++) {
       for (let x = 0; x < columnas; x++) {
-        const tileCasilla = this.generarSpriteTerreno(
+        this.generarSpriteTerreno(
           mapa.casillas[( ( y * columnas ) + x )],
           { x: x, y: y },
           mapa
         )
-
-        mapa.casillas[( ( y * columnas ) + x )].sprite = tileCasilla
-        this.#capas.layerTerreno.add(tileCasilla)
       }
     }
   }
@@ -246,7 +243,7 @@ export class KonvaMapa{
     return unitKonvaGroup
   // return unitSprite
   }
-  generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, mapa: Mapa){
+  generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, mapa: Mapa):void{
     const terreno = casilla.getTerrenoObjeto()
     const { x,y } = coordenada
     const casillasAdyacentes = {
@@ -281,7 +278,7 @@ export class KonvaMapa{
       spriteTerreno.tintColor = obtenerColorTerreno({ numComandanteJugable: propietario })
     }
 
-    return spriteTerreno
+    this.#capas.layerTerreno.add(spriteTerreno)
   }
 
   // CUADROS DE CASILLA
