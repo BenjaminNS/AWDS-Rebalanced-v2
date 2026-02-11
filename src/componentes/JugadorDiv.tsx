@@ -61,7 +61,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
               {
                 // Agregar evento de click en los poderes
                 jugador.poderes.map((poder, j) => (
-                  <button key={j} disabled={jugador.cargaActual < poder.costo || turnoActual !== i} className='rounded-xl cursor-pointer py-1.5 px-3 bg-orange-200 hover:bg-orange-300 font-bold border-b-gray-500' style={{ flexGrow: '1', maxWidth: '50%', borderWidth: '1px' }}>{poder.nombre}</button>
+                  <button key={j} disabled={jugador.cargaActual < poder.costo || turnoActual !== i} className='rounded-xl cursor-pointer py-1.5 px-3 bg-orange-200 hover:bg-orange-300 font-bold border-b-gray-500' style={{ flexGrow: '1', maxWidth: '50%', borderWidth: '1px' }}>{poder.nombre} ({poder.estrellas}★)</button>
                 ))
               }
             </div>
