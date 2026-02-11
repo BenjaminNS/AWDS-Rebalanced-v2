@@ -34,6 +34,7 @@ export class CursorMapaJuego {
   private coordSeleccionada: null|coordenada
   private casillaSeleccionada: null|Casilla
   #leftClick = true
+  #hoverFlag = true
   #rightClick = true
   private camino = new Camino()
 
@@ -94,6 +95,10 @@ export class CursorMapaJuego {
     })
     // hoverMouse/MouseMove
     this.#konvaMapa.getKonvaStage()?.on('mousemove', () => {
+      if ( !this.#hoverFlag ){
+        return
+      }
+
       // if se tiene abierto un menú (los botones tienen el evento de mouseover) return
       const pos = this.#konvaMapa.getKonvaStage()?.getPointerPosition()
       if (!pos) return
@@ -173,6 +178,7 @@ export class CursorMapaJuego {
         this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
 
         this.#leftClick = false
+        this.#hoverFlag = false
         this.#rightClick = false
 
         moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), this.#konvaMapa.getTamanoCasilla(), this.mapa).then(res => {
@@ -187,6 +193,7 @@ export class CursorMapaJuego {
           .finally(() => {
             console.log('Camino: ', this.camino.getCamino())
             this.#leftClick = true
+            this.#hoverFlag = true
             this.#rightClick = true
             unidadSeleccionada.gastarTurno()
             this.camino.limpiarCoordenadasCamino()
