@@ -287,6 +287,14 @@ export class Mapa{
     return new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
   }
 
+  habilitarTurnoUnidades1Comandante ( propietario: number ){
+    this.casillas.forEach(casilla => {
+      if ( casilla.getUnidad()?.getPropietario() === propietario ){
+        casilla.getUnidad()?.recuperarTurno()
+      }
+    })
+  }
+
   static obtenerTerrenos1Tipo (mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
     const setCoordTerrenos = new Set()
     if (!ListaTerrenos[tipo]){

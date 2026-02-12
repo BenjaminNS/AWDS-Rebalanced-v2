@@ -165,6 +165,8 @@ export class PartidaJuego {
   // Talvez lo cambie a "terminarTurno"
   public siguienteJugador = () => {
     // habilitar el turno a todas las unidades del turno actual antes de pasar al siguiente jugador
+    this.#mapa.habilitarTurnoUnidades1Comandante(this.#turnoActual)
+
     for (let i = 0; i < this.#jugadores.length; i++) {
       this.#turnoActual++
       if ( this.#turnoActual >= this.#jugadores.length ){
