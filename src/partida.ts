@@ -174,6 +174,7 @@ export class PartidaJuego {
         this.setDiaActual(this.#diaActual + 1)
       }
       if ( this.#jugadores[this.#turnoActual].getStatus() ){
+        this.#jugadores[this.#turnoActual].generarIngresosComandantes(this.#mapa, this.#turnoActual)
         return
       }
     }

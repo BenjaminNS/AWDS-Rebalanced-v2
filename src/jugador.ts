@@ -81,6 +81,13 @@ export class Jugador {
     return this.#activo
   }
 
+  public generarIngresosComandantes (mapa: Mapa, numeroJugador: number){
+    this.#comandantes.forEach(comandante => {
+      const listaPropiedades:nombreTerreno[] = mapa.getListaPropiedades(numeroJugador)
+      comandante.generarIngresos(listaPropiedades)
+    })
+  }
+
   public terminarTurno (){}
   public getJugadorData (listaUnidades:UnidadCasilla[], listaPropiedades:nombreTerreno[]):jugadorData{
     let valorTotalUnidades = 0
@@ -92,8 +99,6 @@ export class Jugador {
     let ingresosDiarios = 0
     listaPropiedades.forEach(propiedad => {
       if ( propiedad === 'ciudad' || propiedad === 'cuartelGeneral' || propiedad === 'fabrica' || propiedad === 'aeropuerto' || propiedad === 'puertoNaval' ){
-        // cada personaje debería tener su propia implementación
-        // Viendo que puede ver algunos que generen más ingresos o que otro de propiedades le genere ingresos
         ingresosDiarios += 1000
       }
     })

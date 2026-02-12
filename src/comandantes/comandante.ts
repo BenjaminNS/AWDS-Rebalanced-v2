@@ -1,4 +1,4 @@
-import { type nombrePropiedad, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terreno'
+import { type nombrePropiedad, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades, type nombreTerreno } from '../mapa/terreno'
 import { type UnidadCasilla } from '../unidades/unidades'
 import { getInfoBasica } from '../unidades/unidadInfoBasica'
 import type { nombreUnidad } from '../unidades/unidadInfoBasica'
@@ -118,7 +118,7 @@ export class ComandanteJugable{
   }
   // Por defecto, el límite es 99999G
   sumarDinero (dineroExtra:number, limiteDinero: number = 999999){
-    //
+    // TODO: Reproducir efecto de sonido de dinero si es mayor a 0
     this.#dineroActual = Math.min((this.#dineroActual + dineroExtra), limiteDinero)
   }
   getcargaActual (){{
@@ -216,6 +216,18 @@ export class ComandanteJugable{
     return poderesData
   }
 
+  public generarIngresos (listaPropiedades: nombreTerreno[]){
+    let ingresosDiarios = 0
+    listaPropiedades.forEach(propiedad => {
+      if ( propiedad === 'ciudad' || propiedad === 'cuartelGeneral' || propiedad === 'fabrica' || propiedad === 'aeropuerto' || propiedad === 'puertoNaval' ){
+        // cada personaje debería tener su propia implementación
+        // Viendo que puede ver algunos que generen más ingresos o que otro de propiedades le genere ingresos
+        ingresosDiarios += 1000
+      }
+    })
+
+    this.sumarDinero(ingresosDiarios)
+  }
   public getUnidadesCompraDatos (propiedad: nombrePropiedad, comprarUnidad: (unidad: nombreUnidad)=>void):unidadCompra[]{
     const unidadesCompraDatos:unidadCompra[] = []
 
