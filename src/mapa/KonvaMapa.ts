@@ -185,8 +185,7 @@ export class KonvaMapa{
 
     const unitSprite = unidad.getSprite().clone()
     unitSprite.setAttrs({
-      x: 0, y: 0,
-      name: 'sprite-unidad'
+      x: 0, y: 0, name: 'sprite-unidad', class: 'sprite-unidad'
     })
     const escala = this.#tamanoCasilla / 16
     if (unidad.getPropietario() != null && unidad.getPropietario() % 2 === 0){
@@ -224,7 +223,7 @@ export class KonvaMapa{
 
     const hpActual = Math.ceil( unidad.getHp() / 10 )
     const hpTextConfBase:TextConfig = {
-      name: 'hp-texto',
+      name: 'hp-texto', class: 'hp-texto',
       fontSize: Math.ceil(this.#tamanoCasilla / 2),
       fontFamily: 'monospace', fill: 'white',
       fontStyle: 'bold',
