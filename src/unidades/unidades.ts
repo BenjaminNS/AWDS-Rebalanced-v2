@@ -7,6 +7,7 @@ import type { ComandanteJugable } from '../comandantes/comandante'
 // import type { Casilla } from '../mapa/mapa'
 import type { nombreUnidad, categorias, estado, municiones, tipoMovimiento } from './unidadInfoBasica'
 import { getInfoBasica } from './unidadInfoBasica'
+import { unidadTurnoShader } from '../mapa/shaders'
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
@@ -138,11 +139,19 @@ export class UnidadCasilla {
   }
   public restarTurno (turnos:number){
     this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
+    this.#aplicarShaderTurno()
   }
   public recuperarTurno (){
-    // ¿Talvez debería ser solo igual a 1?
     this.#turnos++
+    this.#aplicarShaderTurno()
   }
+  #aplicarShaderTurno (){
+    const spriteUnidad = this.#unitKonvaGroup?.findOne('.sprite-unidad') as Konva.Sprite
+    if ( spriteUnidad != null ){
+      unidadTurnoShader({ unidadSprite: spriteUnidad, turnos: this.#turnos })
+    }
+  }
+
   public getTurnos (){
     return this.#turnos
   }
