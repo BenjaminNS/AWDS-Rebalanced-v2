@@ -81,6 +81,10 @@ export class ComandanteBase{
   getPowers (){
     return this.#poderes
   }
+  // SETTERS
+  setEstado (estado: estadoComandante){
+    this.#estado = estado
+  }
 
   getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
     const unidadAtacante = casillas.atacante.getUnidad()
