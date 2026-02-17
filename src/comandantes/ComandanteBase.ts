@@ -13,6 +13,9 @@ type ComandantePoder = {
 }
 type estadoComandante = 'normal'|string
 
+const maximoAtaque = 99999
+const minimaDefensa = 1
+
 export class ComandanteBase{
   #nombre: string
   #nombreCorto: string
@@ -32,12 +35,10 @@ export class ComandanteBase{
   // Debes gastar el turno de tu unidad con CO para activar el poder (no puede atacar el mismo turno)
   // tipoCarga: 'Advance Wars 2'|'Days of Ruin'
 
-  // #estrellas: number
   #limiteCarga: number|null
   #estrellasMaximas: number|null
   #poderes: ComandantePoder[]|null
 
-  // Funciones de daño, ataque, defensa, costo, movimiento, rango, etc.
   constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, estrellasMaximas: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null){
     this.#nombre = nombre
     this.#nombreCorto = nombreCorto
@@ -49,7 +50,7 @@ export class ComandanteBase{
     this.#poderes = poderes
     this.#cancion = cancion
   }
-
+  // GETTERS
   getNombre (){
     return this.#nombre
   }
@@ -79,5 +80,40 @@ export class ComandanteBase{
   }
   getPowers (){
     return this.#poderes
+  }
+
+  getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
+    const unidadAtacante = casillas.atacante.getUnidad()
+    const unidadDefensiva = casillas.defensiva.getUnidad()
+
+    if ( unidadAtacante == null || unidadDefensiva == null ) return
+
+    const ataque = Math.min(this.getAtaque(casillas.atacante, casillas.defensiva), maximoAtaque)
+    const defensa = Math.max(jugador.defensivo.getDefensa(casillas.atacante, casillas.defensiva), minimaDefensa)
+
+    const danoMatchup:{base: number, suertePositiva: number, suerteNegativa: number}|null = this.getUnitMatchup(unidadAtacante.getNombreCorto(), unidadDefensiva.getNombreCorto())
+    if (danoMatchup == null) return
+
+    const multHp = Math.ceil(unidadAtacante.getHp() / 100)
+    const danoSuerte = Math.random() * (danoMatchup.suertePositiva + danoMatchup.suerteNegativa) - danoMatchup.suerteNegativa
+    let estrellasTerreno = casillas.defensiva.getTerrenoObjeto()?.estrellasDefensa
+    estrellasTerreno = estrellasTerreno == null ? 0 : estrellasTerreno
+
+    const danoTotal = (danoMatchup.base + danoSuerte) * (ataque / defensa) * multHp * (10 - (estrellasTerreno * multHp))
+
+    if ( contraataque ){
+      return danoTotal * this.getMultiplicadorContraataque()
+    }
+
+    return danoTotal
+  }
+
+  getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
+    return 100
+  }
+
+  getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
+    return 100
+
   }
 }
