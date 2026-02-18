@@ -1,5 +1,8 @@
-import { type UnidadCasilla } from '../unidades/unidades'
+import type { nombreTerreno } from '../mapa/terreno'
+import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
+import type { nombrePropiedad } from '../mapa/terreno'
+import type { Casilla, coordenada } from '../mapa/mapa'
 
 export interface DayToDay {
   descripcion: string
