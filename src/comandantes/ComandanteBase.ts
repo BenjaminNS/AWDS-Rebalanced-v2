@@ -134,6 +134,15 @@ export class ComandanteBase{
     return unidad.getMovilidad()
   }
 
+  public getIngresos (listaPropiedades: nombreTerreno[]):number{
+    let ingresosDiarios = 0
+    listaPropiedades.forEach(propiedad => {
+      if ( propiedad === 'ciudad' || propiedad === 'cuartelGeneral' || propiedad === 'fabrica' || propiedad === 'aeropuerto' || propiedad === 'puertoNaval' ){
+        ingresosDiarios += 1000
+      }
+    })
 
+    return ingresosDiarios
   }
+
 }
