@@ -1,9 +1,9 @@
 import { type UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
 
-type DayToDay = {
-  descripcion: string,
-  variables: object
+export interface DayToDay {
+  descripcion: string
+  [key: string]: string|number
   // efectos, reemplazaría las funciones por defecto del personaje
 }
 
