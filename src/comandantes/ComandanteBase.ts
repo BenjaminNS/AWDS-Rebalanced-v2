@@ -6,10 +6,17 @@ type DayToDay = {
   variables: object
   // efectos, reemplazaría las funciones por defecto del personaje
 }
-type ComandantePoder = {
+
+export interface ComandantePoder {
   nombre: string,
+  descripcion: string,
   costoEstrellas: number,
-  efectoActivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>void
+  // efectoActivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>void
+  // coordenada(s), partidaSetters, eventos (movimiento, ataque, destruir unidad, comprar unidades, etc.)
+  efectoActivacion: ({ unidadesPropias, unidadesAdversarios, coordenadas }: Partial<
+    {unidadesPropias: UnidadCasilla[], unidadesAdversarios: UnidadCasilla[], coordenadas: coordenada}>)=>boolean
+  efectoDesactivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>boolean
+  [key: string]: number|string|Function
 }
 type estadoComandante = 'normal'|string
 
