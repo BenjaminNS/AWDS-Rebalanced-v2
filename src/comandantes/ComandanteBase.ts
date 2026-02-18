@@ -86,6 +86,10 @@ export class ComandanteBase{
     this.#estado = estado
   }
 
+
+  getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
+    return 0
+  }
   getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
     const unidadAtacante = casillas.atacante.getUnidad()
     const unidadDefensiva = casillas.defensiva.getUnidad()
