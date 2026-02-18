@@ -99,18 +99,19 @@ export class ComandanteBase{
     const ataque = Math.min(this.getAtaque(casillas.atacante, casillas.defensiva), maximoAtaque)
     const defensa = Math.max(jugador.defensivo.getDefensa(casillas.atacante, casillas.defensiva), minimaDefensa)
 
-    const danoMatchup:{base: number, suertePositiva: number, suerteNegativa: number}|null = this.getUnitMatchup(unidadAtacante.getNombreCorto(), unidadDefensiva.getNombreCorto())
+    const danoMatchup = this.getUnitMatchup({ unidadAtacante, unidadDefensiva })
     if (danoMatchup == null) return
+    const suerteNegativa = this.getSuerteNegativa(casillas)
 
     const multHp = Math.ceil(unidadAtacante.getHp() / 100)
-    const danoSuerte = Math.random() * (danoMatchup.suertePositiva + danoMatchup.suerteNegativa) - danoMatchup.suerteNegativa
+    const danoSuerte = Math.random() * (danoMatchup.suertePositiva + suerteNegativa) - suerteNegativa
     let estrellasTerreno = casillas.defensiva.getTerrenoObjeto()?.estrellasDefensa
     estrellasTerreno = estrellasTerreno == null ? 0 : estrellasTerreno
 
     const danoTotal = (danoMatchup.base + danoSuerte) * (ataque / defensa) * multHp * (10 - (estrellasTerreno * multHp))
 
     if ( contraataque ){
-      return danoTotal * this.getMultiplicadorContraataque()
+      return danoTotal * this.getMultiplicadorContraataque(casillas)
     }
 
     return danoTotal
@@ -119,7 +120,6 @@ export class ComandanteBase{
   getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
   }
-
   getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
   }
