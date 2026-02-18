@@ -122,6 +122,18 @@ export class ComandanteBase{
 
   getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
+  }
+  getUnitMatchup ({ unidadAtacante, unidadDefensiva }: {unidadAtacante: UnidadCasilla, unidadDefensiva: UnidadCasilla}){
+    return unidadAtacante.getUnitMatchup(unidadDefensiva.getNombreCorto())
+  }
+  getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
+    return 1
+  }
+
+  public getMovilidadUnidad (unidad: UnidadCasilla):number{
+    return unidad.getMovilidad()
+  }
+
 
   }
 }
