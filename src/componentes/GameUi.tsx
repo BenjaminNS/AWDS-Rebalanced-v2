@@ -32,6 +32,7 @@ export function GameUI (){
     setTurnoActual(partidaJuego.current.getTurnoActual())
     setJugadorActual(partidaJuego.current.getTurnoActual())
     setDiaActual(partidaJuego.current.getDiaActual())
+    actualizarInfoJugadores()
   }, [])
 
   const actualizarInfoJugadores = () => {
