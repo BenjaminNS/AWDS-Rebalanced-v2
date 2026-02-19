@@ -133,6 +133,9 @@ export class UnidadCasilla {
   public getHp (){
     return this.#hp
   }
+  public getHpMultiplier (){
+    return Math.ceil(this.#hp / 10)
+  }
   // costoReparacion: number, maxHp: number
   public repararUnidad (hp:number){
     this.#hp = Math.min((this.#hp + hp), 100)
