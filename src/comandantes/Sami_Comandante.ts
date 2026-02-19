@@ -23,9 +23,9 @@ type VictoryMarchCOP = ComandantePoder & {
 
 // Sami 2 poderes
 export class Sami_Comandante extends ComandanteBase {
-  doubleTime:DoubleTimeCOP
-  victoryMarch:VictoryMarchCOP
-  samiD2D: SamiD2D
+  #doubleTime:DoubleTimeCOP
+  #victoryMarch:VictoryMarchCOP
+  #samiD2D: SamiD2D
 
   constructor (){
     // D2D
@@ -93,9 +93,9 @@ export class Sami_Comandante extends ComandanteBase {
 
     super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 70000, 7, [doubleTime, victoryMarch], null)
 
-    this.samiD2D = samiD2D
-    this.doubleTime = doubleTime
-    this.victoryMarch = victoryMarch
+    this.#samiD2D = samiD2D
+    this.#doubleTime = doubleTime
+    this.#victoryMarch = victoryMarch
     Object.seal(this)
   }
 
@@ -111,33 +111,33 @@ export class Sami_Comandante extends ComandanteBase {
     case 'Double Time':
     {
       if ( categorias.includes('Soldado') ){
-        return 100 + this.samiD2D.soldierAttack + this.doubleTime.soldierAttackBonus
+        return 100 + this.#samiD2D.soldierAttack + this.#doubleTime.soldierAttackBonus
       }
       if ( categorias.includes('Vehiculo') && categorias.includes('Directo') ){
-        return 100 - this.samiD2D.directVehicleAttackPenalty + this.doubleTime.standardAttackDefenseBonus
+        return 100 - this.#samiD2D.directVehicleAttackPenalty + this.#doubleTime.standardAttackDefenseBonus
       }
       // default
-      return 100 + this.doubleTime.standardAttackDefenseBonus
+      return 100 + this.#doubleTime.standardAttackDefenseBonus
     }
     case 'Victory March':
     {
       if ( categorias.includes('Soldado') ){
-        return 100 + this.samiD2D.soldierAttack + this.victoryMarch.soldierAttackBonus
+        return 100 + this.#samiD2D.soldierAttack + this.#victoryMarch.soldierAttackBonus
       }
       if ( categorias.includes('Vehiculo') && categorias.includes('Directo') ){
-        return 100 - this.samiD2D.directVehicleAttackPenalty + this.victoryMarch.standardAttackDefenseBonus
+        return 100 - this.#samiD2D.directVehicleAttackPenalty + this.#victoryMarch.standardAttackDefenseBonus
       }
       // default
-      return 100 + this.victoryMarch.standardAttackDefenseBonus
+      return 100 + this.#victoryMarch.standardAttackDefenseBonus
     }
     case 'normal':
     default:
     {
       if ( categorias.includes('Soldado') ){
-        return 100 + this.samiD2D.soldierAttack
+        return 100 + this.#samiD2D.soldierAttack
       }
       if ( categorias.includes('Vehiculo') && categorias.includes('Directo') ){
-        return 100 - this.samiD2D.directVehicleAttackPenalty
+        return 100 - this.#samiD2D.directVehicleAttackPenalty
       }
       // default
       return 100
@@ -148,9 +148,9 @@ export class Sami_Comandante extends ComandanteBase {
   override getDefensa (): number {
     switch (this.getEstado()){
     case 'Double Time':
-      return 100 + this.doubleTime.standardAttackDefenseBonus
+      return 100 + this.#doubleTime.standardAttackDefenseBonus
     case 'Victory March':
-      return 100 + this.victoryMarch.standardAttackDefenseBonus
+      return 100 + this.#victoryMarch.standardAttackDefenseBonus
     case 'normal':
     default:
       return 100
@@ -160,24 +160,24 @@ export class Sami_Comandante extends ComandanteBase {
     switch (this.getEstado()){
     case 'Double Time':
       if ( unidad.getCategorias().includes('Soldado') ){
-        return unidad.getMovilidad() + this.doubleTime.soldierMovementBonus
+        return unidad.getMovilidad() + this.#doubleTime.soldierMovementBonus
       }
       if ( unidad.getCategorias().includes('Transporte') ){
-        return unidad.getMovilidad() + this.samiD2D.transportMovementBonus
+        return unidad.getMovilidad() + this.#samiD2D.transportMovementBonus
       }
       return unidad.getMovilidad()
     case 'Victory March':
       if ( unidad.getCategorias().includes('Soldado') ){
-        return unidad.getMovilidad() + this.victoryMarch.soldierMovementBonus
+        return unidad.getMovilidad() + this.#victoryMarch.soldierMovementBonus
       }
       if ( unidad.getCategorias().includes('Transporte') ){
-        return unidad.getMovilidad() + this.samiD2D.transportMovementBonus
+        return unidad.getMovilidad() + this.#samiD2D.transportMovementBonus
       }
       return unidad.getMovilidad()
     case 'normal':
     default:
       if ( unidad.getCategorias().includes('Transporte') ){
-        return unidad.getMovilidad() + this.samiD2D.transportMovementBonus
+        return unidad.getMovilidad() + this.#samiD2D.transportMovementBonus
       }
       return unidad.getMovilidad()
     }
@@ -192,9 +192,9 @@ export class Sami_Comandante extends ComandanteBase {
 
     switch (this.getEstado()){
     case 'Double Time':
-      return unidad.getHpMultiplier() + this.doubleTime.soldierCaptureBonus
+      return unidad.getHpMultiplier() + this.#doubleTime.soldierCaptureBonus
     case 'Victory March':
-      return unidad.getHpMultiplier() + this.victoryMarch.soldierCaptureBonus
+      return unidad.getHpMultiplier() + this.#victoryMarch.soldierCaptureBonus
     case 'normal':
     default:
       return unidad.getHpMultiplier()
