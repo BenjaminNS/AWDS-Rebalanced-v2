@@ -23,8 +23,10 @@ export interface ComandantePoder {
 }
 type estadoComandante = 'normal'|string
 
+// LIMITES Y ESTANDARES
 const maximoAtaque = 99999
 const minimaDefensa = 1
+const metaPuntosCaptura = 20
 
 export abstract class ComandanteBase{
   #nombre: string
@@ -153,6 +155,19 @@ export abstract class ComandanteBase{
     })
 
     return ingresosDiarios
+  }
+
+  // SECCION CAPTURA DE PROPIEDADES
+  public getPuntosCaptura (casillaCaptura: Casilla){
+    const unidad = casillaCaptura.getUnidad()
+
+    if ( unidad == null )
+      return 0
+
+    return unidad.getHpMultiplier()
+  }
+  public getMetaPuntosCaptura (casillaCaptura: Casilla){
+    return metaPuntosCaptura
   }
 
 }
