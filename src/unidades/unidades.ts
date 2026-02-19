@@ -250,8 +250,7 @@ export class UnidadCasilla {
     return this.#estado
   }
   getMovilidad (): number {
-    return this.#refComandante != null ? this.#refComandante?.getMovilidadUnidad(this.#movilidad, this.#nombreCorto ) : this.#movilidad
-    // return this.#movilidad
+    return this.#movilidad
   }
   getNombreLargo (){
     return this.#nombreLargo
