@@ -22,6 +22,7 @@ export interface ComandantePoder {
   [key: string]: number|string|Function
 }
 type estadoComandante = 'normal'|string
+type statusEffect = 'no-power-charge'|'no-money-generation'
 
 // LIMITES Y ESTANDARES
 const maximoAtaque = 99999
@@ -29,12 +30,22 @@ const minimaDefensa = 1
 export const metaPuntosCaptura = 20
 
 export abstract class ComandanteBase{
+  // IDENTIFICADORES
+  #ID: string
+  #jugador: {id: string, ref: Jugador}
+
+  // STATUS ACTUAL
+  #estado: estadoComandante = 'normal'
+  #activo: boolean
+  #dineroActual: number
+  #cargaActual: number
+  #usosPoder: number
+  #statusEffects: statusEffect[] = []
   #nombre: string
   #nombreCorto: string
   #descripcion: string
   #pais: nombresPaises
   #cancion: AudioData|null
-  #estado: estadoComandante = 'normal'
   // canciones: {normal: AudioData, cop: AudioData, scop: AudioData};
   // spritesComandante: spritesComandante; //Talvez sean coordenadas como los terrenos
 
@@ -51,7 +62,11 @@ export abstract class ComandanteBase{
   #estrellasMaximas: number|null
   #poderes: ComandantePoder[]|null
 
-  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, estrellasMaximas: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null){
+  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, estrellasMaximas: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+    this.#ID = crypto.randomUUID()
+    this.#jugador = jugador
+
+    // BASE COMANDANTE
     this.#nombre = nombre
     this.#nombreCorto = nombreCorto
     this.#descripcion = descripcion
@@ -61,6 +76,13 @@ export abstract class ComandanteBase{
     this.#estrellasMaximas = estrellasMaximas
     this.#poderes = poderes
     this.#cancion = cancion
+
+    // STATUS ACTUAL
+    this.#dineroActual = statusActual.dineroActual
+    this.#cargaActual = statusActual.cargaActual
+    this.#usosPoder = statusActual.usosPoder
+    this.#activo = statusActual.activo
+    this.#statusEffects = statusActual.statusEffects
   }
   // GETTERS
   getNombre (){
