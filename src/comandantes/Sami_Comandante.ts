@@ -1,9 +1,29 @@
 import { ComandanteBase, type ComandantePoder, type DayToDay } from './ComandanteBase'
 
+type SamiD2D = DayToDay & {
+  soldierAttack: number
+  captureLimitDiscount: number
+  transportMovementBonus: number
+  directVehicleAttackPenalty: number
+}
+type DoubleTimeCOP = ComandantePoder & {
+  soldierMovementBonus: number
+  soldierAttackBonus: number
+  soldierCaptureBonus: number
+  standardAttackDefenseBonus: number
+}
+type VictoryMarchCOP = ComandantePoder & {
+  soldierMovementBonus: number
+  soldierAttackBonus: number
+  soldierCaptureBonus: number
+  standardAttackDefenseBonus: number
+}
+
 // Sami 2 poderes
 export class Sami_Comandante extends ComandanteBase {
-  victoryMarch:ComandantePoder
-  doubleTime:ComandantePoder
+  doubleTime:DoubleTimeCOP
+  victoryMarch:VictoryMarchCOP
+  samiD2D: SamiD2D
 
   constructor (){
     // D2D
@@ -12,12 +32,12 @@ export class Sami_Comandante extends ComandanteBase {
     const d2dTransportMovementBonus = 1
     const d2dDirectVehicleAttackPenalty = 10
 
-    const d2d:DayToDay = {
+    const samiD2D:SamiD2D = {
       descripcion: `Sus soldados necesitan ${d2dCaptureLimitDiscount} puntos menos para capturar propiedades, tienen ${d2dSoldierAttack}% más de ataque y sus vehículos de transporte tienen +${d2dTransportMovementBonus} de movilidad, pero todos sus vehículos directos tienen -${d2dDirectVehicleAttackPenalty}% de ataque`,
-      d2dSoldierAttack,
-      d2dCaptureLimitDiscount,
-      d2dTransportMovementBonus,
-      d2dDirectVehicleAttackPenalty
+      soldierAttack: d2dSoldierAttack,
+      captureLimitDiscount: d2dCaptureLimitDiscount,
+      transportMovementBonus: d2dTransportMovementBonus,
+      directVehicleAttackPenalty: d2dDirectVehicleAttackPenalty
     }
 
     // DOUBLE TIME
@@ -26,7 +46,7 @@ export class Sami_Comandante extends ComandanteBase {
     const doubleTimeSoldierAttackBonus = 30
     const doubleTimeSoldierCaptureBonus = 4
     const doubleTimeStandardAttackDefenseBonus = 10
-    const doubleTime:ComandantePoder = {
+    const doubleTime:DoubleTimeCOP = {
       nombre: doubleTimeName,
       descripcion: `Todos sus soldados reciben +${doubleTimeSoldierMovementBonus} de movilidad, ${doubleTimeSoldierAttackBonus}% más de ataque y +${doubleTimeSoldierCaptureBonus} de captura. Bonus estándar de ${doubleTimeStandardAttackDefenseBonus}% de ataque y defensa`,
       costoEstrellas: 7,
@@ -50,7 +70,7 @@ export class Sami_Comandante extends ComandanteBase {
     const victoryMarchSoldierAttackBonus = 50
     const victoryMarchSoldierCaptureBonus = 8
     const victoryMarchStandardAttackDefenseBonus = 10
-    const victoryMarch:ComandantePoder = {
+    const victoryMarch:VictoryMarchCOP = {
       nombre: victoryMarchName,
       descripcion: `Todos sus soldados reciben +${victoryMarchSoldierMovementBonus} de movilidad, ${victoryMarchSoldierAttackBonus}% más de ataque y +${victoryMarchSoldierCaptureBonus} de captura. Bonus estándar de ${victoryMarchStandardAttackDefenseBonus}% de ataque y defensa`,
       costoEstrellas: 6,
@@ -69,10 +89,11 @@ export class Sami_Comandante extends ComandanteBase {
       standardAttackDefenseBonus: victoryMarchStandardAttackDefenseBonus
     }
 
-    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', d2d, 70000, 7, [doubleTime, victoryMarch], null)
+    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 70000, 7, [doubleTime, victoryMarch], null)
 
-    this.victoryMarch = victoryMarch
+    this.samiD2D = samiD2D
     this.doubleTime = doubleTime
+    this.victoryMarch = victoryMarch
     Object.seal(this)
   }
 }
