@@ -1,7 +1,7 @@
 import type { nombreTerreno } from '../mapa/terreno'
 import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
-import type { nombrePropiedad } from '../mapa/terreno'
+// import type { nombrePropiedad } from '../mapa/terreno'
 import type { Casilla, coordenada } from '../mapa/mapa'
 import type { Jugador } from '../jugador'
 
@@ -19,8 +19,9 @@ export interface ComandantePoder {
   // coordenada(s), partidaSetters, eventos (movimiento, ataque, destruir unidad, comprar unidades, etc.)
   efectoActivacion: ({ unidadesPropias, unidadesAdversarios, coordenadas }: Partial<
     {unidadesPropias: UnidadCasilla[], unidadesAdversarios: UnidadCasilla[], coordenadas: coordenada}>)=>boolean
+  // Debería ser una promesa, por si quiero hacerlo animado
   efectoDesactivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>boolean
-  [key: string]: number|string|Function
+  [key: string]: number|string|(()=>boolean)
 }
 type estadoComandante = 'normal'|string
 type statusEffect = 'no-power-charge'|'no-money-generation'
@@ -42,6 +43,9 @@ export abstract class ComandanteBase{
   #cargaActual: number
   #usosPoder: number
   #statusEffects: statusEffect[] = []
+  // records: records;
+
+  // BASE DE COMANDANTE
   #nombre: string
   #nombreCorto: string
   #descripcion: string
@@ -49,16 +53,8 @@ export abstract class ComandanteBase{
   #cancion: AudioData|null
   // canciones: {normal: AudioData, cop: AudioData, scop: AudioData};
   // spritesComandante: spritesComandante; //Talvez sean coordenadas como los terrenos
-
   #d2d: DayToDay
-  // Definiría como se cargan y como se activan los poderes de los comandantes
-  // Advance Wars 2: carga aumenta basado en el valor de las unidades por el daño hecho (60%) y recibido (90%)
-  // y puede ser activado sin unidad con zona de comandante
-  // Days of Ruin: Los poderes cargan solamente por daño hecho a unidades enemigas
-  // Si pierdes tu unidad con zona de comandante, pierdes toda tu carga
-  // Debes gastar el turno de tu unidad con CO para activar el poder (no puede atacar el mismo turno)
   // tipoCarga: 'Advance Wars 2'|'Days of Ruin'
-
   #limiteCarga: number|null
   #estrellasMaximas: number|null
   #poderes: ComandantePoder[]|null
@@ -85,7 +81,8 @@ export abstract class ComandanteBase{
     this.#activo = statusActual.activo
     this.#statusEffects = statusActual.statusEffects
   }
-  // GETTERS
+
+  // GETTERS BASE COMANDANTE
   getNombre (){
     return this.#nombre
   }
@@ -149,10 +146,16 @@ export abstract class ComandanteBase{
     return this.#statusEffects
   }
 
-  getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
+  // TODO: tomar en cuenta como afectarían los climas estos resultados
+  // FUNCIONES DE SUERTE (POSITIVA y NEGATIVA), DAÑO DE TROPA, DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, ESTRELLAS DE DEFENSA, MOVER Y ATACAR, COSTOS DE DESPLIEGUE, OPCIONES DE COMPRA, COSTO DE REPARACION, VELOCIDAD DE REPARACION, COSTO DE REPARACION, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
+  // Resultados unidad base: DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, COSTO DE UNIDAD, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
+
+  // SECCION ATAQUE
+  public getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
     return 0
   }
-  getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
+  // Formula de daño
+  public getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
     const unidadAtacante = casillas.atacante.getUnidad()
     const unidadDefensiva = casillas.defensiva.getUnidad()
 
@@ -165,7 +168,8 @@ export abstract class ComandanteBase{
     if (danoMatchup == null) return
     const suerteNegativa = this.getSuerteNegativa(casillas)
 
-    const multHp = Math.ceil(unidadAtacante.getHp() / 100)
+    const multHp = unidadAtacante.getHpMultiplier()
+    // Usar formula propia de comandante para el daño de suerte
     const danoSuerte = Math.random() * (danoMatchup.suertePositiva + suerteNegativa) - suerteNegativa
     let estrellasTerreno = casillas.defensiva.getTerrenoObjeto()?.estrellasDefensa
     estrellasTerreno = estrellasTerreno == null ? 0 : estrellasTerreno
@@ -178,24 +182,23 @@ export abstract class ComandanteBase{
 
     return danoTotal
   }
-
-  getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
+  public getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
   }
-  getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
+  public getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
   }
-  getUnitMatchup ({ unidadAtacante, unidadDefensiva }: {unidadAtacante: UnidadCasilla, unidadDefensiva: UnidadCasilla}){
+  public getUnitMatchup ({ unidadAtacante, unidadDefensiva }: {unidadAtacante: UnidadCasilla, unidadDefensiva: UnidadCasilla}){
     return unidadAtacante.getUnitMatchup(unidadDefensiva.getNombreCorto())
   }
-  getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
+  public getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
     return 1
   }
-
+  // SECCION MOVILIDAD
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
   }
-
+  // SECCION INGRESOS Y COMPRAS
   public getIngresos (listaPropiedades: nombreTerreno[]):number{
     let ingresosDiarios = 0
     listaPropiedades.forEach(propiedad => {
