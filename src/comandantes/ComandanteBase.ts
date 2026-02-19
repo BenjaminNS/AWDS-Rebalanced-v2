@@ -3,6 +3,7 @@ import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
 import type { nombrePropiedad } from '../mapa/terreno'
 import type { Casilla, coordenada } from '../mapa/mapa'
+import type { Jugador } from '../jugador'
 
 export interface DayToDay {
   descripcion: string
@@ -91,9 +92,6 @@ export abstract class ComandanteBase{
   getNombreCorto (){
     return this.#nombreCorto
   }
-  getEstado (){
-    return this.#estado
-  }
   getDescripcion (){
     return this.#descripcion
   }
@@ -120,6 +118,36 @@ export abstract class ComandanteBase{
     this.#estado = estado
   }
 
+  // GET IDENTIFICADORES
+  getID (){
+    return this.#ID
+  }
+  getJugadorID (){
+    return this.#jugador.id
+  }
+  getJugadorRef (){
+    return this.#jugador.ref
+  }
+
+  // GET STATUS ACTUAL
+  getEstado (){
+    return this.#estado
+  }
+  getActivo (){
+    return this.#activo
+  }
+  getDineroActual (){
+    return this.#dineroActual
+  }
+  getCargaActual (){
+    return this.#cargaActual
+  }
+  getUsosPoder (){
+    return this.#usosPoder
+  }
+  getStatusEffects (){
+    return this.#statusEffects
+  }
 
   getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
     return 0
