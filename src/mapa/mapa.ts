@@ -37,8 +37,9 @@ export class Casilla {
   #propietario: number|null
   #unidad: UnidadCasilla|null
   sprite: Konva.Image|null // ¿Debería ser spriteTerreno o Konva.Image?
+  #coordenada: coordenada
 
-  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null){
+  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null, coordenada: coordenada){
     if (ListaTerrenos[tipo] == undefined){
       console.error('Tipo de casilla no encontrada: ', tipo)
       this.#tipo = 'invalido'
@@ -57,8 +58,13 @@ export class Casilla {
     }
 
     // ¿Debería validar?
+    this.#coordenada = coordenada
     this.#unidad = unidad
     this.sprite = null
+  }
+
+  getCoordenada (){
+    return this.#coordenada
   }
 
   // Quitar esta función y hacer composición
@@ -123,16 +129,18 @@ export class Mapa{
     }
 
     const casillasTemp:Casilla[] = []
+    let i = 0
     for (const casilla of casillas){
-      // if( casilla instanceof Casilla ){
       if ( casilla instanceof Casilla ) {
         casillasTemp.push(casilla)
       } else {
         // ### Aquí haríamos la validación
         // Si los datos no existen desde el json, los ponemos como nulos
-        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad))
+        const coord = { x: (i % dimensiones.columnas), y: Math.floor(i / dimensiones.filas) }
+        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad, coord))
       }
       this.#casillasVision.push(true)
+      i++
     }
 
     this.casillas = casillasTemp
