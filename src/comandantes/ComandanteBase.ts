@@ -26,7 +26,7 @@ type estadoComandante = 'normal'|string
 // LIMITES Y ESTANDARES
 const maximoAtaque = 99999
 const minimaDefensa = 1
-const metaPuntosCaptura = 20
+export const metaPuntosCaptura = 20
 
 export abstract class ComandanteBase{
   #nombre: string
