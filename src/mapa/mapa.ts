@@ -77,6 +77,7 @@ export class Casilla {
   }
   public getUnidad = () => this.#unidad
   public setUnidad (unidad:UnidadCasilla|null){
+    unidad?.setCasilla(this)
     this.#unidad = unidad
   }
   public getSprite (){

@@ -4,10 +4,10 @@ import Konva from 'konva'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
 import type { ComandanteJugable } from '../comandantes/comandante'
-// import type { Casilla } from '../mapa/mapa'
 import type { nombreUnidad, categoriaUnidad, estado, municiones, tipoMovimiento, Matchup } from './unidadInfoBasica'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
+import type { Casilla } from '../mapa/mapa'
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
@@ -42,14 +42,15 @@ export class UnidadCasilla {
   #unitKonvaGroup: Konva.Group|null = null
   // ¿Usar WeakMap o fábrica?
   // https://chatgpt.com/c/691b4330-b6c4-8328-a30a-28514b56e7fa
-  // casilla: Casilla // Referencia de casilla
+  #casilla: Casilla // Referencia de casilla
 
   // (tipoUnidad: nombreUnidad, confUnidad: {}, refComandante: comandante)
   constructor (
     nombreUnidad: nombreUnidad,
     { propietario, hp, municiones, gasActual, estado, turnos }:
     { propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos: number },
-    refComandante: ComandanteJugable|null
+    refComandante: ComandanteJugable|null,
+    casilla: Casilla
   ){
     const infoBasica = getInfoBasica(nombreUnidad)
     if (infoBasica === null) throw new Error('Tipo de unidad invalida')
@@ -82,6 +83,8 @@ export class UnidadCasilla {
       this.#propietario = propietario
       this.#refComandante = refComandante
     }
+
+    this.#casilla = casilla
 
     if ( hp < 1 ){
       console.error('El HP no puede ser menor a 1')
@@ -120,6 +123,11 @@ export class UnidadCasilla {
     } else {
       this.#turnos = 1
     }
+  }
+
+  getCasilla = () => this.#casilla
+  public setCasilla (casilla: Casilla){
+    this.#casilla = casilla
   }
 
   public getPropietario (){
