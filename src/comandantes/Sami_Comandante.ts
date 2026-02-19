@@ -1,10 +1,10 @@
 import type { Casilla } from '../mapa/mapa'
-import { ComandanteBase, type ComandantePoder, type DayToDay } from './ComandanteBase'
+import { ComandanteBase, type ComandantePoder, type DayToDay, metaPuntosCaptura } from './ComandanteBase'
 import type { UnidadCasilla } from '../unidades/unidades'
 
 type SamiD2D = DayToDay & {
   soldierAttack: number
-  captureLimitDiscount: number
+  captureGoalDiscount: number
   transportMovementBonus: number
   directVehicleAttackPenalty: number
 }
@@ -30,14 +30,14 @@ export class Sami_Comandante extends ComandanteBase {
   constructor (){
     // D2D
     const d2dSoldierAttack = 20
-    const d2dCaptureLimitDiscount = 6
+    const d2dCaptureGoalDiscount = 6
     const d2dTransportMovementBonus = 1
     const d2dDirectVehicleAttackPenalty = 10
 
     const samiD2D:SamiD2D = {
-      descripcion: `Sus soldados necesitan ${d2dCaptureLimitDiscount} puntos menos para capturar propiedades, tienen ${d2dSoldierAttack}% más de ataque y sus vehículos de transporte tienen +${d2dTransportMovementBonus} de movilidad, pero todos sus vehículos directos tienen -${d2dDirectVehicleAttackPenalty}% de ataque`,
+      descripcion: `Sus soldados necesitan ${d2dCaptureGoalDiscount} puntos menos para capturar propiedades, tienen ${d2dSoldierAttack}% más de ataque y sus vehículos de transporte tienen +${d2dTransportMovementBonus} de movilidad, pero todos sus vehículos directos tienen -${d2dDirectVehicleAttackPenalty}% de ataque`,
       soldierAttack: d2dSoldierAttack,
-      captureLimitDiscount: d2dCaptureLimitDiscount,
+      captureGoalDiscount: d2dCaptureGoalDiscount,
       transportMovementBonus: d2dTransportMovementBonus,
       directVehicleAttackPenalty: d2dDirectVehicleAttackPenalty
     }
@@ -199,6 +199,9 @@ export class Sami_Comandante extends ComandanteBase {
     default:
       return unidad.getHpMultiplier()
     }
+  }
+  override getMetaPuntosCaptura (): number {
+    return metaPuntosCaptura - this.#samiD2D.captureGoalDiscount
   }
 }
 
