@@ -18,7 +18,7 @@ export type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'
 // Y si es Terrestre, no puede ser aereo o naval
 // No hay problema si se empalma Directo, Indirecto y Transporte
 // Técnicamente lo de directo e indirecto tendría que ser con una función que verifique si el rango minimo es de 1 y el rango máximo es de 2
-export type categorias = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo';
+export type categoriaUnidad = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo';
 // Ocupo que las mismas habilidades indiquen si son posibles de realizar en ese momento o no
 export type habilidades = {
   esperar: () => void,
@@ -44,7 +44,7 @@ export type UnidadInfoBasica = {
   nombreLargo: string
   nombreCorto: nombreUnidad
   descripcion: string
-  categorias: categorias[]
+  categorias: categoriaUnidad[]
   costo: number // Gold
   rango: {minimo: number, extra: number}|null
   movilidad: number

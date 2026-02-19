@@ -5,7 +5,7 @@ import Konva from 'konva'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
 import type { ComandanteJugable } from '../comandantes/comandante'
 // import type { Casilla } from '../mapa/mapa'
-import type { nombreUnidad, categorias, estado, municiones, tipoMovimiento, Matchup } from './unidadInfoBasica'
+import type { nombreUnidad, categoriaUnidad, estado, municiones, tipoMovimiento, Matchup } from './unidadInfoBasica'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
 
@@ -15,7 +15,7 @@ export class UnidadCasilla {
   #nombreLargo: string
   #nombreCorto: nombreUnidad
   #descripcion: string
-  #categorias: categorias[]
+  #categorias: categoriaUnidad[]
   #costo: number // Gold
   #rango: {minimo: number, extra: number}|null
   #movilidad: number
