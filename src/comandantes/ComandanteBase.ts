@@ -26,7 +26,7 @@ type estadoComandante = 'normal'|string
 const maximoAtaque = 99999
 const minimaDefensa = 1
 
-export class ComandanteBase{
+export abstract class ComandanteBase{
   #nombre: string
   #nombreCorto: string
   #descripcion: string
