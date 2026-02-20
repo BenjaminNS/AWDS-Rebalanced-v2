@@ -28,7 +28,7 @@ export class Sami_Comandante extends ComandanteBase {
   #victoryMarch:VictoryMarchCOP
   #samiD2D: SamiD2D
 
-  constructor (statusActual:{ dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+  constructor (statusActual:{ dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
     // D2D
     const d2dSoldierAttack = 20
     const d2dCaptureGoalDiscount = 6
