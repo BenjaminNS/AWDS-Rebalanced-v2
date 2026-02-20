@@ -144,10 +144,10 @@ export class PartidaJuego {
 
   private setTurnoActual = (turnoActual:number, numComandanteJugables:number) => {
     if ( turnoActual < 0 ){
-      // console.error('Turno no puede ser menor a 0')
+      console.error('Turno no puede ser menor a 0')
       this.#turnoActual = 0
     } else if ( turnoActual >= numComandanteJugables ){
-      // console.error('Turno no puede ser mayor al número de jugadores')
+      console.error('Turno no puede ser mayor al número de jugadores')
       // Da la vuelta
       this.#turnoActual = 0
     } else {
@@ -164,7 +164,6 @@ export class PartidaJuego {
   }
   // Talvez lo cambie a "terminarTurno"
   public siguienteJugador = () => {
-    // habilitar el turno a todas las unidades del turno actual antes de pasar al siguiente jugador
     this.#mapa.habilitarTurnoUnidades1Comandante(this.#turnoActual)
 
     for (let i = 0; i < this.#jugadores.length; i++) {
@@ -181,7 +180,6 @@ export class PartidaJuego {
 
     console.log('No hay más jugadores disponibles. Juego terminado.')
     this.#declararJuegoTerminado()
-    // return this.setTurnoActual((this.#turnoActual + 1), this.#mapa.obtenerComandantesJugables().size)
   }
   public getTurnoActual = () => {
     return this.#turnoActual
