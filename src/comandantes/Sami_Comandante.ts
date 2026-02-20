@@ -52,7 +52,7 @@ export class Sami_Comandante extends ComandanteBase {
     const doubleTime:DoubleTimeCOP = {
       nombre: doubleTimeName,
       descripcion: `Todos sus soldados reciben +${doubleTimeSoldierMovementBonus} de movilidad, ${doubleTimeSoldierAttackBonus}% más de ataque y +${doubleTimeSoldierCaptureBonus} de captura. Bonus estándar de ${doubleTimeStandardAttackDefenseBonus}% de ataque y defensa`,
-      costoEstrellas: 7,
+      costoEstrellas: 3,
       efectoActivacion: () => {
         this.setEstado(doubleTimeName)
         return true
@@ -92,7 +92,7 @@ export class Sami_Comandante extends ComandanteBase {
       standardAttackDefenseBonus: victoryMarchStandardAttackDefenseBonus
     }
 
-    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 7,{
+    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 6,{
       doubleTime, victoryMarch
     }, null, statusActual, jugador)
 
