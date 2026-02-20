@@ -309,6 +309,19 @@ export abstract class ComandanteBase{
     this.#dineroActual = Math.min((this.#dineroActual + dineroExtra), limiteDinero)
   }
 
+  // SECCION HP
+  public getMaxReparacionUnidades (unidad: UnidadCasilla){
+    return maxPuntosReparaciones
+  }
+  repararUnidad (unidad: UnidadCasilla){
+    return unidad.repararUnidad(this.getMaxReparacionUnidades(unidad))
+  }
+  public getMultiplicadorCostoReparaciones (unidad: UnidadCasilla){
+    return 1
+  }
+  public getMaxHP (unidad: UnidadCasilla){
+    return unidad.getMaxHP()
+  }
 
   // SECCION CAPTURA DE PROPIEDADES
   public getPuntosCaptura (casillaCaptura: Casilla){
