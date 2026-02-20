@@ -217,6 +217,17 @@ export abstract class ComandanteBase{
   //   return unidad.getTipoMovimiento
   // }
 
+  // SECCION RANGO Y MISC
+  public getRangoMinimo (unidad: UnidadCasilla){
+    return unidad.getRangoMinimo()
+  }
+  public getRangoMaximo (unidad: UnidadCasilla){
+    return unidad.getRangoMaximo()
+  }
+  public getPuedeAtacarYMoverse (unidad: UnidadCasilla){
+    return unidad.getAtacarYMoverse()
+  }
+
   // SECCION GAS
   getGasActual (unidad: UnidadCasilla){
     return unidad.getGasActual()
