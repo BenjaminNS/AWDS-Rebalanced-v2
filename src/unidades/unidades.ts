@@ -225,6 +225,9 @@ export class UnidadCasilla {
   getMunicionesActuales (){
     return this.#municiones
   }
+  getMunicionesMaximas (){
+    return this.#maxMuniciones
+  }
   getMunicionPrincipal (){
     if (this.#municiones?.principal){
       return this.#municiones.principal
@@ -259,6 +262,13 @@ export class UnidadCasilla {
   getGasString () {
     return `${this.#gasActual}/${this.getMaxGasolina}`
   }
+
+  // TODO: Aceptar parametros de gasolina y de municiones
+  reponerUnidad (){
+    this.#gasActual = this.#maxGasolina
+    this.#municiones = this.#maxMuniciones
+  }
+
   getEstado () {
     return this.#estado
   }
