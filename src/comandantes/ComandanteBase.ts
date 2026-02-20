@@ -228,6 +228,12 @@ export abstract class ComandanteBase{
     return unidad.getAtacarYMoverse()
   }
 
+  // SECCION VISION
+  public getVision (unidad: UnidadCasilla){
+    return unidad.getVision()
+  }
+  // public getOculto()
+
   // SECCION GAS
   getGasActual (unidad: UnidadCasilla){
     return unidad.getGasActual()
