@@ -72,10 +72,10 @@ export abstract class ComandanteBase{
   // spritesComandante: spritesComandante; //Talvez sean coordenadas como los terrenos
   #d2d: DayToDay
   // tipoCarga: 'Advance Wars 2'|'Days of Ruin'
-  #estrellasMaximas: number|null
-  #poderes: Record<string, ComandantePoder>|null
+  #estrellasMaximas: number
+  #poderes: Record<string, ComandantePoder>
 
-  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, estrellas: number|null, poderes: Record<string, ComandantePoder>|null, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, estrellas: number, poderes: Record<string, ComandantePoder>, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
     this.#ID = crypto.randomUUID()
     this.#jugador = jugador
 
@@ -289,7 +289,7 @@ export abstract class ComandanteBase{
       return this.#estrellasMaximas * costoEstrella * penalizacionUsosPoderMult
     }
 
-    return null
+    return 0
   }
   getPorcentajeCarga (){
     if ( this.#cargaActual <= 0)
