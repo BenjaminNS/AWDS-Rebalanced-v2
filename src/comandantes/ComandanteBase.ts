@@ -196,6 +196,15 @@ export abstract class ComandanteBase{
   public getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
     return 0
   }
+
+  // SECCION DEFENSA
+  public getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
+    return 100
+  }
+  public getEstrellasDefensa (casillaDefensiva: Casilla){
+    return casillaDefensiva.getTerrenoObjeto()?.estrellasDefensa
+  }
+
   // SECCION MOVILIDAD
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
