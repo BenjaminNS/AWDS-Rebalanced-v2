@@ -196,6 +196,21 @@ export abstract class ComandanteBase{
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
   }
+  // SECCION GAS
+  getGasActual (unidad: UnidadCasilla){
+    return unidad.getGasActual()
+  }
+  public getConsumoGasDiarioNormal (unidad: UnidadCasilla){
+    return unidad.getConsumoDiario('normal')
+  }
+  public getConsumoGasDiarioActual (unidad: UnidadCasilla){
+    return unidad.getConsumoDiario(unidad.getEstado())
+  }
+  public getMaxGasolina (unidad: UnidadCasilla){
+    return unidad.getMaxGasolina()
+  }
+  /* public gastarGasolinas(unidad: UnidadCasilla){} */
+
   // SECCION PODERES
   getCargaActual (){
     return this.#cargaActual
