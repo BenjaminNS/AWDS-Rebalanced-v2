@@ -234,6 +234,9 @@ export abstract class ComandanteBase{
   }
   // public getOculto()
 
+  public reponerUnidad (unidad: UnidadCasilla){
+    unidad.reponerUnidad()
+  }
   // SECCION GAS
   getGasActual (unidad: UnidadCasilla){
     return unidad.getGasActual()
