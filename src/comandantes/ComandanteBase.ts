@@ -1,9 +1,12 @@
-import type { nombreTerreno } from '../mapa/terreno'
+import { type nombreTerreno, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terreno'
 import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
+import { getInfoBasica } from '../unidades/unidadInfoBasica'
 // import type { nombrePropiedad } from '../mapa/terreno'
 import type { Casilla, coordenada } from '../mapa/mapa'
 import type { Jugador } from '../jugador'
+import type { nombreUnidad } from '../unidades/unidadInfoBasica'
+import type { unidadCompra } from '../componentes/compraUnidades'
 
 export interface DayToDay {
   descripcion: string
@@ -137,15 +140,6 @@ export abstract class ComandanteBase{
   getActivo (){
     return this.#activo
   }
-  getDineroActual (){
-    return this.#dineroActual
-  }
-  getCargaActual (){
-    return this.#cargaActual
-  }
-  getUsosPoder (){
-    return this.#usosPoder
-  }
   getStatusEffects (){
     return this.#statusEffects
   }
@@ -241,16 +235,80 @@ export abstract class ComandanteBase{
   }
 
   // SECCION INGRESOS Y COMPRAS
-  public getIngresos (listaPropiedades: nombreTerreno[]):number{
+  getDineroActual (){
+    return this.#dineroActual
+  }
+  public getIngresos (listaPropiedades: nombreTerreno[], dineroPorPropiedad: number):number{
     let ingresosDiarios = 0
     listaPropiedades.forEach(propiedad => {
       if ( propiedad === 'ciudad' || propiedad === 'cuartelGeneral' || propiedad === 'fabrica' || propiedad === 'aeropuerto' || propiedad === 'puertoNaval' ){
-        ingresosDiarios += 1000
+        ingresosDiarios += dineroPorPropiedad
       }
     })
 
     return ingresosDiarios
   }
+  public getMultiplicadorCosto (nombreUnidad: nombreUnidad, propiedad: Casilla):number{
+    return 1
+  }
+  public getListaUnidadesCompraDatos (propiedad: Casilla, comprarUnidad: (unidad: nombreUnidad)=>void):unidadCompra[]{
+    const unidadesCompraDatos:unidadCompra[] = []
+
+    let propiedadUnidades
+    switch (propiedad.getTipo()){
+    case 'fabrica':
+      propiedadUnidades = fabricaUnidades
+      break
+    case 'aeropuerto':
+      propiedadUnidades = aeropuertoUnidades
+      break
+    case 'puertoNaval':
+      propiedadUnidades = puertoNavalUnidades
+      break
+    }
+
+    propiedadUnidades?.forEach((unidadNombre) => {
+      const tempInfoBasica = getInfoBasica(unidadNombre)
+      if ( tempInfoBasica !== null ){
+        const costoTotal = tempInfoBasica.costo * this.getMultiplicadorCosto(tempInfoBasica.nombreCorto, propiedad)
+        unidadesCompraDatos.push({
+          costo: costoTotal,
+          habilitado: this.#dineroActual >= tempInfoBasica.costo ? true : false,
+          nombre: tempInfoBasica.nombreLargo,
+          nombreCorto: tempInfoBasica.nombreCorto,
+          spriteUrl: tempInfoBasica.nombreCorto + '.png',
+          clickHandler: () => {
+            if (this.gastarDinero(costoTotal)){
+              comprarUnidad(unidadNombre)
+            } else {
+              // TODO: Animación de shake en seccion de dinero
+              console.log('No tienes fondos suficientes')
+            }
+          }
+        })
+      }
+    })
+
+    return unidadesCompraDatos
+  }
+  getLimiteDinero (numeroPropiedades: number, ingresosPorPropiedad: number){
+    return numeroPropiedades * maxDineroPorPropiedad * ingresosPorPropiedad
+  }
+  // TODO: Debería tener una función para transacciones
+  // Para que sean las 2 cosas al mismo tiempo (ej: comprar unidad y gastar dinero)
+  gastarDinero (gasto:number){
+    if ( this.#dineroActual < gasto ){
+      return false
+    } else {
+      this.#dineroActual -= gasto
+      return true
+    }
+  }
+  sumarDinero (dineroExtra:number, limiteDinero: number = maxDineroEstandar){
+    // sfx.play('dinero')
+    this.#dineroActual = Math.min((this.#dineroActual + dineroExtra), limiteDinero)
+  }
+
 
   // SECCION CAPTURA DE PROPIEDADES
   public getPuntosCaptura (casillaCaptura: Casilla){
