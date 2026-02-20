@@ -316,6 +316,15 @@ export abstract class ComandanteBase{
 
     return null
   }
+  public getPoderesData (){
+    const poderesData:{nombre: string, costo: number, estrellas: number, efectoActivacion: (unidades: UnidadCasilla[], adversarios: UnidadCasilla[])=>void }[] = []
+
+    // console.log('KAREN HOLA :D', Object.keys(this.#poderes))
+    Object.keys(this.#poderes)?.forEach(poder => {
+      poderesData.push({ nombre: this.#poderes[poder].nombre, costo: (this.#poderes[poder].costoEstrellas * 10000), estrellas: this.#poderes[poder].costoEstrellas, efectoActivacion: this.#poderes[poder].efectoActivacion })
+    })
+    return poderesData
+  }
 
   // SECCION INGRESOS Y COMPRAS
   getDineroActual (){
