@@ -196,6 +196,14 @@ export abstract class ComandanteBase{
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
   }
+  public getTipoMovilidadUnidad (unidad: UnidadCasilla){
+    return unidad.getTipoMovimiento()
+  }
+  // public getLibroMovilidadUnidad (unidad: UnidadCasilla){
+  // FIX: Mover los datos del movimiento del terreno a que la tenga la misma unidad
+  //   return unidad.getTipoMovimiento
+  // }
+
   // SECCION GAS
   getGasActual (unidad: UnidadCasilla){
     return unidad.getGasActual()
