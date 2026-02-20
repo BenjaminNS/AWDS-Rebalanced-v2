@@ -39,7 +39,7 @@ export function GameUI (){
     const jugadoresDataTemp:jugadorData[] = []
     partidaJuego.current.getListaJugadores().forEach((jugador, i) => {
       jugadoresDataTemp.push(
-        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades(i)))
+        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades1Comandante(i)))
     })
     setJugadoresData(jugadoresDataTemp)
   }
@@ -50,7 +50,7 @@ export function GameUI (){
     const jugadoresDataTemp:jugadorData[] = []
     partidaJuego.current.getListaJugadores().forEach((jugador, i) => {
       jugadoresDataTemp.push(
-        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades(i)))
+        jugador.getJugadorData(partidaJuego.current.getMapa().getListaUnidadesDe1Comandante(i), partidaJuego.current.getMapa().getListaPropiedades1Comandante(i)))
     })
     setJugadoresData(jugadoresDataTemp)
     setDiaActual(partidaJuego.current.getDiaActual())
