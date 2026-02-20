@@ -27,7 +27,7 @@ export interface ComandantePoder {
   [key: string]: number|string|(()=>boolean)
 }
 type estadoComandante = 'normal'|string
-type statusEffect = 'no-power-charge'|'no-money-generation'
+export type statusEffect = 'no-power-charge'|'no-money-generation'
 
 // LIMITES Y ESTANDARES
 export const maximoAtaque = 99999

@@ -1,5 +1,5 @@
 import type { Casilla } from '../mapa/mapa'
-import { ComandanteBase, type ComandantePoder, type DayToDay, metaPuntosCaptura } from './ComandanteBase'
+import { ComandanteBase, type ComandantePoder, type DayToDay, metaPuntosCaptura, type statusEffect } from './ComandanteBase'
 import type { UnidadCasilla } from '../unidades/unidades'
 import type { Jugador } from '../jugador'
 
