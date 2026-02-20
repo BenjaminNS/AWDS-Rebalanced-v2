@@ -145,11 +145,9 @@ export abstract class ComandanteBase{
   }
 
   // TODO: tomar en cuenta como afectarían los climas estos resultados
-  // FUNCIONES DE SUERTE (POSITIVA y NEGATIVA), DAÑO DE TROPA, DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, ESTRELLAS DE DEFENSA, MOVER Y ATACAR, COSTOS DE DESPLIEGUE, OPCIONES DE COMPRA, COSTO DE REPARACION, VELOCIDAD DE REPARACION, COSTO DE REPARACION, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
-  // Resultados unidad base: DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, COSTO DE UNIDAD, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
 
-  // Formula de daño
-  public getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
+  // SECCION FORMULA DAÑO
+  getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
     const unidadAtacante = casillas.atacante.getUnidad()
     const unidadDefensiva = casillas.defensiva.getUnidad()
 
@@ -176,6 +174,8 @@ export abstract class ComandanteBase{
 
     return danoTotal
   }
+  /* getDanoMinimo, getDanoMaximo, getRangoDano, getPrediccion */
+
   // SECCION ATAQUE
   public getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
