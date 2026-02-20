@@ -245,8 +245,9 @@ export abstract class ComandanteBase{
   public getVision (unidad: UnidadCasilla){
     return unidad.getVision()
   }
-  // public getOculto()
+  // public getOculto(unidad: UnidadCasilla, hayFOW: boolean)
 
+  // Agregar campo de cuanta gas y municiones repone (en caso de querer menos)
   public reponerUnidad (unidad: UnidadCasilla){
     unidad.reponerUnidad()
   }
@@ -260,6 +261,8 @@ export abstract class ComandanteBase{
   public getConsumoGasDiarioActual (unidad: UnidadCasilla){
     return unidad.getConsumoDiario(unidad.getEstado())
   }
+  // OJO: Aquí hay disonancia entre lo que la unidad va a tener por defecto
+  // y lo que el comandante diga (talvez ocupe modificar el constructor de unidad)
   public getMaxGasolina (unidad: UnidadCasilla){
     return unidad.getMaxGasolina()
   }
@@ -421,3 +424,9 @@ export abstract class ComandanteBase{
     return unidadSeleccionada.getAccionesDisponibles()
   }
 }
+
+// DEBERÍA VERIFICAR QUE LAS FUNCIONES DE UNIDADES QUE MANDE A LLAMAR
+// SEAN DEL JUGADOR/COMANDANTE ACTUAL
+
+// FUNCIONES TRIGGER: EMPEZANDO O TERMINANDO TURNO, TENIENDO UN COMBATE, DESTRUYENDO  O PERDIENDO UNIDADES
+// CASILLAS AVANZADAS, VECES REPARANDO, TRANSPORTANDO O SOLTANDO UNIDADES, COMPRANDO O REPARANDO UNIDADES
