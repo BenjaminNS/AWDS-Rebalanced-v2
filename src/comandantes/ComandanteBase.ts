@@ -211,6 +211,17 @@ export abstract class ComandanteBase{
   }
   /* public gastarGasolinas(unidad: UnidadCasilla){} */
 
+  // SECCION MUNICIONES
+  getMunicionesActuales (unidad: UnidadCasilla){
+    return unidad.getMunicionesActuales()
+  }
+  public getMunicionesMaximas (unidad: UnidadCasilla){
+    return unidad.getMunicionesMaximas()
+  }
+  // public gastarMuniciones (unidad: UnidadCasilla, municionesGastadas: {tipo: string, cantidad: number}[]){
+  //   unidad.gastarMuniciones(municionesGastadas)
+  // }
+
   // SECCION PODERES
   getCargaActual (){
     return this.#cargaActual
