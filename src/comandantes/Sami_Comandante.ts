@@ -1,6 +1,7 @@
 import type { Casilla } from '../mapa/mapa'
 import { ComandanteBase, type ComandantePoder, type DayToDay, metaPuntosCaptura } from './ComandanteBase'
 import type { UnidadCasilla } from '../unidades/unidades'
+import type { Jugador } from '../jugador'
 
 type SamiD2D = DayToDay & {
   soldierAttack: number
@@ -27,7 +28,7 @@ export class Sami_Comandante extends ComandanteBase {
   #victoryMarch:VictoryMarchCOP
   #samiD2D: SamiD2D
 
-  constructor (){
+  constructor (statusActual:{ dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
     // D2D
     const d2dSoldierAttack = 20
     const d2dCaptureGoalDiscount = 6
@@ -91,7 +92,9 @@ export class Sami_Comandante extends ComandanteBase {
       standardAttackDefenseBonus: victoryMarchStandardAttackDefenseBonus
     }
 
-    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 70000, 7, [doubleTime, victoryMarch], null)
+    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 7,{
+      doubleTime, victoryMarch
+    }, null, statusActual, jugador)
 
     this.#samiD2D = samiD2D
     this.#doubleTime = doubleTime
