@@ -394,4 +394,8 @@ export abstract class ComandanteBase{
     return metaPuntosCaptura
   }
 
+  // SECCION ACCIONES
+  public getAccionesUnidad (unidadSeleccionada: UnidadCasilla){
+    return unidadSeleccionada.getAccionesDisponibles()
+  }
 }
