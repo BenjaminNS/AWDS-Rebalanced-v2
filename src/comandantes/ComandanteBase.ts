@@ -27,9 +27,23 @@ type estadoComandante = 'normal'|string
 type statusEffect = 'no-power-charge'|'no-money-generation'
 
 // LIMITES Y ESTANDARES
-const maximoAtaque = 99999
-const minimaDefensa = 1
+export const maximoAtaque = 99999
+export const minimaDefensa = 1
+
 export const metaPuntosCaptura = 20
+export const maxDineroEstandar = 99999
+export const maxDineroPorPropiedad = 5000
+
+export const costoEstrella = 9000
+export const multiplicadorCargaUnidadPropia = .5
+export const multiplicadorCargaUnidadEnemiga = 1
+export const penalizacionUsosPoder = .2
+export const penalizacionCargaSobrante = .2
+
+export const maxMovilidad = 12
+export const maxRango = 12
+
+export const maxPuntosReparaciones = 20
 
 export abstract class ComandanteBase{
   // IDENTIFICADORES
