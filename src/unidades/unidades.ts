@@ -11,6 +11,8 @@ import type { Casilla } from '../mapa/mapa'
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
+const maxHp = 100
+
 export class UnidadCasilla {
   #nombreLargo: string
   #nombreCorto: nombreUnidad
@@ -89,9 +91,9 @@ export class UnidadCasilla {
     if ( hp < 1 ){
       console.error('El HP no puede ser menor a 1')
       this.#hp = 1
-    } else if ( hp > 100 ){
-      console.error('El HP no puede ser mayor a 100')
-      this.#hp = 100
+    } else if ( hp > maxHp ){
+      console.error(`El HP no puede ser mayor a ${maxHp}`)
+      this.#hp = maxHp
     } else {
       this.#hp = hp
     }
@@ -144,9 +146,12 @@ export class UnidadCasilla {
   public getHpMultiplier (){
     return Math.ceil(this.#hp / 10)
   }
+  public getMaxHP (){
+    return maxHp
+  }
   // costoReparacion: number, maxHp: number
   public repararUnidad (hp:number){
-    this.#hp = Math.min((this.#hp + hp), 100)
+    this.#hp = Math.min((this.#hp + hp), maxHp)
   }
   public restarTurno (turnos:number){
     this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
