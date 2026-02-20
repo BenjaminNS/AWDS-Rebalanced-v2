@@ -114,15 +114,6 @@ export abstract class ComandanteBase{
   getDayToDay (){
     return this.#d2d
   }
-  getLimiteCarga (){
-    return this.#limiteCarga
-  }
-  getEstrellasMaximas (){
-    return this.#estrellasMaximas
-  }
-  getPowers (){
-    return this.#poderes
-  }
   // SETTERS
   setEstado (estado: estadoComandante){
     this.#estado = estado
@@ -211,6 +202,44 @@ export abstract class ComandanteBase{
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
   }
+  // SECCION PODERES
+  getCargaActual (){
+    return this.#cargaActual
+  }
+  getLimiteCargaActual (){
+    if ( this.#estrellasMaximas ){
+      const penalizacionUsosPoderMult = ( 1 + (this.#usosPoder * penalizacionUsosPoder) )
+      return this.#estrellasMaximas * costoEstrella * penalizacionUsosPoderMult
+    }
+
+    return null
+  }
+  getPorcentajeCarga (){
+    if ( this.#cargaActual <= 0)
+      return 0
+
+    const cargaLimiteCargaActual = this.getLimiteCargaActual()
+    if (cargaLimiteCargaActual == null)
+      return 0
+
+    return this.#cargaActual / cargaLimiteCargaActual
+  }
+  getEstrellasComandante (){
+    return this.#estrellasMaximas
+  }
+  getUsosPoder (){
+    return this.#usosPoder
+  }
+  getListaPoderes (){
+    return this.#poderes
+  }
+  getPoder (nombrePoder: string){
+    if ( this.#poderes )
+      return this.#poderes[nombrePoder]
+
+    return null
+  }
+
   // SECCION INGRESOS Y COMPRAS
   public getIngresos (listaPropiedades: nombreTerreno[]):number{
     let ingresosDiarios = 0
