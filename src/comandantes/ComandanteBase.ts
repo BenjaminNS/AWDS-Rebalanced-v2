@@ -228,6 +228,19 @@ export abstract class ComandanteBase{
     return unidad.getAtacarYMoverse()
   }
 
+  // SECCION CONTRAATAQUE Y PRIORIDAD
+  public getPuedeContraatacar (){
+    // TODO: Revisa si hay municiones, esta dentro del rango y si contraataque es mayor a 0
+    return true
+  }
+  public getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
+    return 1
+  }
+  public getPrioridadAtaque (esContraataque: boolean){
+    if (esContraataque) return 0
+    return 1
+  }
+
   // SECCION VISION
   public getVision (unidad: UnidadCasilla){
     return unidad.getVision()
