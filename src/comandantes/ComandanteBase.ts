@@ -148,10 +148,6 @@ export abstract class ComandanteBase{
   // FUNCIONES DE SUERTE (POSITIVA y NEGATIVA), DAÑO DE TROPA, DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, ESTRELLAS DE DEFENSA, MOVER Y ATACAR, COSTOS DE DESPLIEGUE, OPCIONES DE COMPRA, COSTO DE REPARACION, VELOCIDAD DE REPARACION, COSTO DE REPARACION, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
   // Resultados unidad base: DAÑO MINIMO, DAÑO MAXIMO, RANGO DE DAÑO, COSTO DE UNIDAD, TIPO DE MOVILIDAD, LIBRO DE MOVILIDAD, RANGO MINIMO, RANGO MAXIMO, VISION, GASOLINA, MUNICIONES, ACCIONES DISPONIBLES
 
-  // SECCION ATAQUE
-  public getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
-    return 0
-  }
   // Formula de daño
   public getDanoTotal (casillas: {atacante: Casilla, defensiva: Casilla}, jugador: {defensivo: ComandanteBase}, contraataque: boolean):number|undefined{
     const unidadAtacante = casillas.atacante.getUnidad()
@@ -180,17 +176,25 @@ export abstract class ComandanteBase{
 
     return danoTotal
   }
+  // SECCION ATAQUE
   public getAtaque (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
-    return 100
-  }
-  public getDefensa (casillaAtacante: Casilla, casillaDefensiva: Casilla):number{
     return 100
   }
   public getUnitMatchup ({ unidadAtacante, unidadDefensiva }: {unidadAtacante: UnidadCasilla, unidadDefensiva: UnidadCasilla}){
     return unidadAtacante.getUnitMatchup(unidadDefensiva.getNombreCorto())
   }
-  public getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
-    return 1
+  public getSuertePositiva (casillas: {atacante: Casilla, defensiva: Casilla}){
+    const unidadAtacante = casillas.atacante.getUnidad()
+    const unidadDefensiva = casillas.atacante.getUnidad()
+
+    if ( unidadAtacante == null || unidadDefensiva == null ){
+      return 0
+    }
+
+    return unidadAtacante.getUnitMatchup(unidadDefensiva.getNombreCorto())?.suertePositiva
+  }
+  public getSuerteNegativa (casillas: {atacante: Casilla, defensiva: Casilla}){
+    return 0
   }
   // SECCION MOVILIDAD
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
