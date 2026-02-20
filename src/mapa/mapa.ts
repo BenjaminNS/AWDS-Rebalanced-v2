@@ -423,8 +423,7 @@ export class Mapa{
 
     return listaUnidades
   }
-
-  public getListaPropiedades (numeroComandante: number):nombreTerreno[]{
+  public getListaPropiedades1Comandante (numeroComandante: number):nombreTerreno[]{
     const listaPropiedades:nombreTerreno[] = []
 
     this.casillas.forEach(casilla => {
