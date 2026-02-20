@@ -327,6 +327,12 @@ export class UnidadCasilla {
     return this.#contraataque
   }
 
+  getAccionesDisponibles (){
+    // Hacer verificacion de que acciones puede retornar
+    // Dependiendo el contexto
+    return 'Esperar'
+  }
+
   getSprite (){
     return this.#sprite
   }
