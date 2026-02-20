@@ -69,11 +69,10 @@ export abstract class ComandanteBase{
   // spritesComandante: spritesComandante; //Talvez sean coordenadas como los terrenos
   #d2d: DayToDay
   // tipoCarga: 'Advance Wars 2'|'Days of Ruin'
-  #limiteCarga: number|null
   #estrellasMaximas: number|null
-  #poderes: ComandantePoder[]|null
+  #poderes: Record<string, ComandantePoder>|null
 
-  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, limiteCarga: number|null, estrellasMaximas: number|null, poderes: ComandantePoder[]|null, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, estrellas: number|null, poderes: Record<string, ComandantePoder>|null, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, comandanteInstancia:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
     this.#ID = crypto.randomUUID()
     this.#jugador = jugador
 
@@ -83,8 +82,8 @@ export abstract class ComandanteBase{
     this.#descripcion = descripcion
     this.#pais = pais
     this.#d2d = d2d
-    this.#limiteCarga = limiteCarga
-    this.#estrellasMaximas = estrellasMaximas
+    // FUTURO: ¿Qué pasa si las estrellas tiene decimales?
+    this.#estrellasMaximas = estrellas
     this.#poderes = poderes
     this.#cancion = cancion
 
