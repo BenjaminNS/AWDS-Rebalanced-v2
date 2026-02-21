@@ -6,7 +6,7 @@ export type InfoCasillaT = {estrellas:number, terreno: string, hp:number, gasAct
 export function InfoCasilla ({ info }:{info: InfoCasillaT}){
   const { hp, gasActual, gasMaxima, munPrincipal, munSecundaria, estrellas } = info
   return (
-    <section id="casilla-info" className="rounded-xl mb-2 p-2 bg-amber-200 grid grid-cols-3 grid-rows-2 justify-center align-top">
+    <section id="casilla-info" className="rounded-xl mb-2 mx-auto p-2 bg-amber-200 grid grid-cols-3 grid-rows-2 justify-center align-top">
       <output className="info-txt" id="estrella-txt">
         <img src="./img/huds/star.png" alt="hp-txt" className="icon" />
         <span>{estrellas} stars</span>

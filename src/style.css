@@ -117,7 +117,7 @@ form{
 #casilla-info{
   --gapSize: 7px;
   width: 100%;
-  max-width: 350px;
+  max-width: 500px;
   gap: 0;
 
   .info-txt{
