@@ -168,11 +168,11 @@ export class Mapa{
   obtenerComandantesJugables = ():Set<number|null> => {
     const setComandanteJugables = new Set()
     for (let i = 0; i < this.casillas.length; i++) {
-      if ( typeof this.casillas[i].propietario === 'number' ){
-        setComandanteJugables.add(this.casillas[i].propietario)
+      if ( typeof this.casillas[i].getPropietario() === 'number' ){
+        setComandanteJugables.add(this.casillas[i].getPropietario())
       }
-      if ( this.casillas[i].unidad != null && typeof this.casillas[i].unidad?.propietario === 'number' ){
-        setComandanteJugables.add(this.casillas[i].unidad?.propietario)
+      if ( this.casillas[i].getUnidad() != null && typeof this.casillas[i].getUnidad()?.propietario === 'number' ){
+        setComandanteJugables.add(this.casillas[i].getUnidad()?.propietario)
 
       }
     }
@@ -206,16 +206,16 @@ export class Mapa{
     // Que al menos cada comandante jugable tenga una unidad o al menos algún tipo de fábrica
     for (let i = 0; i < this.casillas.length; i++) {
       // Que al menos cada comandante jugable tenga un tipo de fábrica
-      if ( typeof this.casillas[i].propietario === 'number'
+      if ( typeof this.casillas[i].getPropietario() === 'number'
         &&
-        ( this.casillas[i].tipo === 'fabrica' || this.casillas[i].tipo === 'aeropuerto' || this.casillas[i].tipo === 'puertoNaval' )
+        ( this.casillas[i].getTipo() === 'fabrica' || this.casillas[i].getTipo() === 'aeropuerto' || this.casillas[i].getTipo() === 'puertoNaval' )
       ){
-        setComandanteJugables.delete(this.casillas[i].propietario)
+        setComandanteJugables.delete(this.casillas[i].getPropietario())
       }
 
       // O al menos una unidad
-      if ( this.casillas[i].unidad != null && typeof this.casillas[i].unidad.propietario === 'number' ){
-        setComandanteJugables.delete(this.casillas[i].unidad.propietario)
+      if ( this.casillas[i].getUnidad() != null && typeof this.casillas[i].getUnidad()?.getPropietario() === 'number' ){
+        setComandanteJugables.delete(this.casillas[i].getUnidad()?.getPropietario())
       }
     }
     if ( setComandanteJugables.size > 0 ){
