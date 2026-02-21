@@ -3,7 +3,7 @@ import Konva from 'konva'
 // import type { GroupConfig } from 'konva/lib/Group'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
-import type { ComandanteJugable } from '../comandantes/comandante'
+import type { ComandanteBase } from '../comandantes/ComandanteBase'
 import type { nombreUnidad, categoriaUnidad, estado, municiones, tipoMovimiento, Matchup } from './unidadInfoBasica'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
@@ -33,7 +33,7 @@ export class UnidadCasilla {
   #matchups: Matchup
   id: string // O debería ser el código del comandante jugable
   #propietario: number|null
-  #refComandante: ComandanteJugable|null // ¿Cambiar nombre a solo comandante?
+  #refComandante: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
   #hp: number
   #municiones: municiones|null
   #gasActual: number
@@ -353,6 +353,10 @@ export class UnidadCasilla {
   // }
 
   // Mover funcion a Mapa
+
+  getRefComandante (){
+    return this.#refComandante
+  }
 }
 
 export type UnidadSimple = {
