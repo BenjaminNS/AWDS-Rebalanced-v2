@@ -1,6 +1,8 @@
-import { ComandanteJugable } from './comandantes/comandante'
+import type { ComandanteBase } from './comandantes/ComandanteBase'
 export type equipo = 'A'|'B'|'C'|'D'
-import type { jugadorData } from './componentes/jugador-divs'
+import type { jugadorData } from './componentes/JugadorDiv'
+import type { Mapa } from './mapa/mapa'
+import type { nombreTerreno } from './mapa/terreno'
 
 export class Jugador {
   // Cada jugador debería existir en la base de datos y ser obtenido por medio de su ID
@@ -10,11 +12,11 @@ export class Jugador {
   #activo: boolean
   #equipo: equipo
   #tiempoDisponible?: number|null
-  #comandantes: ComandanteJugable[]
+  #comandantes: ComandanteBase[]
   #id: string // crypto.randomUUID
   #color: string
 
-  constructor (nombre: string, equipo: equipo, activo: boolean, tiempoDisponible: number|null, comandantes: ComandanteJugable[], color: string){
+  constructor (nombre: string, equipo: equipo, activo: boolean, tiempoDisponible: number|null, comandantes: ComandanteBase[], color: string){
     this.#nombre = nombre
     this.#equipo = equipo
     this.#activo = activo
@@ -83,7 +85,7 @@ export class Jugador {
 
   public generarIngresosComandantes (mapa: Mapa, numeroJugador: number){
     this.#comandantes.forEach(comandante => {
-      const listaPropiedades:nombreTerreno[] = mapa.getListaPropiedades(numeroJugador)
+      const listaPropiedades:nombreTerreno[] = mapa.getListaPropiedades1Comandante(numeroJugador)
       comandante.generarIngresos(listaPropiedades)
     })
   }
@@ -110,8 +112,8 @@ export class Jugador {
       // Este dato debería ser de un arreglo si pienso hacer que un
       // solo jugador controle a más de 1 comandante
       comandanteImgUrl: `${this.#comandantes[0].getNombreCorto()}`,
-      cargaActual: this.#comandantes[0].getcargaActual(),
-      cargaMaxima: this.#comandantes[0].getCargaMaxima(),
+      cargaActual: this.#comandantes[0].getCargaActual(),
+      cargaMaxima: this.#comandantes[0].getLimiteCargaActual(),
       numUnidades: listaUnidades.length,
       unidadesValor: valorTotalUnidades,
       numPropiedades: listaPropiedades.length,
@@ -120,7 +122,7 @@ export class Jugador {
       equipo: this.#equipo,
       poderes: this.#comandantes[0].getPoderesData(),
       // Falta meter el dato de las estrellas al comandante
-      estrellas: this.#comandantes[0].getMaximoEstrellas(),
+      estrellas: this.#comandantes[0].getEstrellasComandante(),
       // Falta meter el dato del color al jugador y/o al comandante
       color: this.#color
     }
