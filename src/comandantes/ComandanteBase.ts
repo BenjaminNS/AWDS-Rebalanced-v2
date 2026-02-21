@@ -330,6 +330,9 @@ export abstract class ComandanteBase{
   getDineroActual (){
     return this.#dineroActual
   }
+  public generarIngresos (listaPropiedades: nombreTerreno[], dineroPorPropiedad: number){
+    this.sumarDinero(this.getIngresos(listaPropiedades, dineroPorPropiedad))
+  }
   public getIngresos (listaPropiedades: nombreTerreno[], dineroPorPropiedad: number):number{
     let ingresosDiarios = 0
     listaPropiedades.forEach(propiedad => {

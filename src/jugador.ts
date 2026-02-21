@@ -86,7 +86,8 @@ export class Jugador {
   public generarIngresosComandantes (mapa: Mapa, numeroJugador: number){
     this.#comandantes.forEach(comandante => {
       const listaPropiedades:nombreTerreno[] = mapa.getListaPropiedades1Comandante(numeroJugador)
-      comandante.generarIngresos(listaPropiedades)
+      // TODO: Cambiar 1000 por el dato de reglas
+      comandante.generarIngresos(listaPropiedades, 1000)
     })
   }
 
