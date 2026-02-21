@@ -150,12 +150,11 @@ export class CursorMapaJuego {
       // Si es tu propiedad y no tiene unidad encima
       } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
-        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getUnidadesCompraDatos(tempCasilla.getTipo(),
+        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getListaUnidadesCompraDatos(tempCasilla,
           (unidadNombre: nombreUnidad) => {
-            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, null), coord)
+            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual(), tempCasilla), coord)
           })
         if ( unidadesCompraDatos.length > 0 ){
-          console.log('Escogiste tu propiedad')
           this.#fnReactSetters.setPropiedadSeleccionada(true)
           this.#fnReactSetters.setUnidadesCompra(unidadesCompraDatos)
           return true
