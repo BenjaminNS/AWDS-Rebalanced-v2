@@ -173,8 +173,7 @@ export class UnidadCasilla {
   }
 
   public getMaxMovimiento (){
-    const movilidad = this.#refComandante != null ? this.#refComandante?.getMovilidadUnidad(this.#movilidad, this.#nombreCorto ) : this.#movilidad
-    return Math.min(movilidad, this.#gasActual)
+    return Math.min(this.#movilidad, this.#gasActual)
   }
 
   setUnitKonvaGroup (unitKonvaGroupConf: Konva.Group){
