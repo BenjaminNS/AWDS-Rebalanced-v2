@@ -171,19 +171,6 @@ export class UnidadCasilla {
     }
   }
 
-  getCasilla = () => this.#casilla
-  public setCasilla (casilla: Casilla){
-    this.#casilla = casilla
-  }
-
-  public getPropietario (){
-    return this.#propietario
-  }
-  // Se supone que no debería cambiar después de crearse
-  // public setPropietario (propietarioId: number){
-  //   this.#propietario = propietarioId
-  // }
-
   public getHp (){
     return this.#hp
   }
