@@ -137,11 +137,13 @@ export class CursorMapaJuego {
       const tempCasilla = this.mapa.getCasilla(coord)
       if ( tempCasilla == null ) return false
 
-      if ( tempCasilla.getUnidad() != null && tempCasilla.getUnidad()?.getTurnos() ){
+      const unidadSeleccionada = tempCasilla.getUnidad()
+      if ( unidadSeleccionada != null && unidadSeleccionada.getTurnos() ){
         this.coordSeleccionada = coord
         this.casillaSeleccionada = this.mapa.getCasilla(coord) as Casilla
-        this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, this.casillaSeleccionada?.getUnidad()))
-        this.camino.setMaxCosto(this.casillaSeleccionada.getUnidad()?.getMaxMovimiento() ?? 0)
+        this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, unidadSeleccionada))
+
+        this.camino.setMaxCosto(unidadSeleccionada.getRefComandante()?.getMaxMovilidad(unidadSeleccionada) ?? 0)
         this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
 
         this.#konvaMapa.mostrarCasillasCuadros(this.camino.getCoordenadasDisponibles())
