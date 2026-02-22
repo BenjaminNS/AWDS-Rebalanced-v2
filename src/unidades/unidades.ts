@@ -196,6 +196,13 @@ export class UnidadCasilla {
   // costoReparacion: number, maxHp: number
   public repararUnidad (hp:number){
     this.#hp = Math.min((this.#hp + hp), maxHp)
+    this.actualizarTextoHP()
+    return this.#hp
+  }
+  public danarUnidad (dano:number){
+    this.#hp -= dano
+    this.actualizarTextoHP()
+    return this.#hp // Si regresa 0 o menos, destruye la unidad
   }
   public restarTurno (turnos:number){
     this.#turnos = (this.#turnos - turnos) < 0 ? 0 : (this.#turnos - turnos)
@@ -232,7 +239,7 @@ export class UnidadCasilla {
     return this.#unitKonvaGroup
   }
   actualizarTextoHP (){
-    if ( !this.#unitKonvaGroup.hpTexto ){
+    if ( this.#unitKonvaGroup != null && !this.#unitKonvaGroup.hpTexto ){
       this.#unitKonvaGroup.hpTexto = new Konva.Text({
         name: 'textoHp',
         text: String(this.hp),
@@ -241,7 +248,7 @@ export class UnidadCasilla {
         x: 0, y: 24
       })
     } else {
-      this.#unitKonvaGroup.hpTexto.setAttr('text', String(this.#hp))
+      this.#unitKonvaGroup?.hpTexto.setAttr('text', String(this.#hp))
     }
   }
 
