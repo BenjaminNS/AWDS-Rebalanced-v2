@@ -23,7 +23,7 @@ export class UnidadCasilla {
   #movilidad: number
   #tipoMovimiento: tipoMovimiento
   #vision: number
-  #maxGasolina: number
+  #maxGasolina!: number
   #consumoDiario: (estado:estado)=> number
   #maxMuniciones: municiones|null
   #atacarYMoverse: boolean
@@ -32,15 +32,16 @@ export class UnidadCasilla {
   // #habilidadesEspeciales: habilidades[]
   #matchups: Matchup
   id: string // O debería ser el código del comandante jugable
-  #propietario: number|null
-  #refComandante: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
-  #hp: number
-  #municiones: municiones|null
-  #gasActual: number
-  #estado: estado // status
-  #turnos: number
+  #propietario!: number|null
+  #refComandante!: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
+  #hp!: number
+  #municiones!: municiones|null
+  #gasActual!: number
+  #estado!: estado // status
+  #turnos!: number
   // TO-FIX: #sprite tendrá que funcionar o ser declarado distinto
   #sprite?: Konva.Sprite|null // ¿Lo dejo?
+  // TO-DO: Cambiar al nuevo tipo de objeto de sprite (creado en KonvaMapa)
   #unitKonvaGroup: Konva.Group|null = null
   // ¿Usar WeakMap o fábrica?
   // https://chatgpt.com/c/691b4330-b6c4-8328-a30a-28514b56e7fa
@@ -49,9 +50,9 @@ export class UnidadCasilla {
   // (tipoUnidad: nombreUnidad, confUnidad: {}, refComandante: comandante)
   constructor (
     nombreUnidad: nombreUnidad,
-    { propietario, hp, municiones, gasActual, estado, turnos }:
-    { propietario: number|null, hp: number, municiones: municiones|null, gasActual: number, estado: estado|null, turnos: number },
-    refComandante: ComandanteJugable|null,
+    { propietario, hp, municionesActuales, gasActual, estado, turnos }:
+    { propietario: number|null, hp: number, municionesActuales?: municiones|null, gasActual?: number, estado: estado|null, turnos: number },
+    refComandante: ComandanteBase,
     casilla: Casilla
   ){
     const infoBasica = getInfoBasica(nombreUnidad)
@@ -67,7 +68,6 @@ export class UnidadCasilla {
     this.#movilidad = infoBasica.movilidad
     this.#tipoMovimiento = infoBasica.tipoMovimiento
     this.#vision = infoBasica.vision
-    this.#maxGasolina = infoBasica.maxGasolina
     this.#consumoDiario = infoBasica.consumoDiario
     this.#maxMuniciones = infoBasica.maxMuniciones
     this.#contraataque = infoBasica.contraataque
@@ -75,7 +75,27 @@ export class UnidadCasilla {
     this.#sprite = infoBasica.sprite
 
     this.id = crypto.randomUUID()
+    this.#casilla = casilla
 
+    this.#setPropietario(propietario, refComandante)
+    this.#setHP(hp)
+
+    this.#setGasolina(gasActual, infoBasica.maxGasolina)
+    this.#setMuniciones(municionesActuales, infoBasica.maxMuniciones)
+    this.setEstado(estado)
+    this.#setTurnos(turnos)
+  }
+
+  getCasilla = () => this.#casilla
+  public setCasilla (casilla: Casilla){
+    this.#casilla = casilla
+  }
+
+  public getPropietario (){
+    return this.#propietario
+  }
+
+  #setPropietario (propietario: number|null, refComandante: ComandanteBase){
     if ( propietario != null && propietario < 0 ){
       console.error('La unidad no puede tener este propietario: ', propietario )
       this.#propietario = null
@@ -85,9 +105,8 @@ export class UnidadCasilla {
       this.#propietario = propietario
       this.#refComandante = refComandante
     }
-
-    this.#casilla = casilla
-
+  }
+  #setHP (hp: number){
     if ( hp < 1 ){
       console.error('El HP no puede ser menor a 1')
       this.#hp = 1
@@ -97,29 +116,54 @@ export class UnidadCasilla {
     } else {
       this.#hp = hp
     }
+  }
+  #setGasolina (gasActual:number|undefined, gasMaxima:number){
+    this.#maxGasolina = gasMaxima
+    // Por defecto, si no pones el dato, asigna el valor mas alto por defecto
+    if (gasActual === undefined){
+      this.#gasActual = gasMaxima
+      return
+    }
 
-    // TO-DO: Validar municiones
-    this.#municiones = municiones
     this.#gasActual = gasActual
-    if ( gasActual <= 0 ){
-      console.error('La gasActual actual no puede ser menos de 0')
+    if ( gasActual < 0 ){
+      console.error('La gas actual actual no puede ser menor a 0')
       this.#gasActual = 0
-      // CORREGIR: this.maxGasolina
 
-    } else if ( gasActual > this.getMaxGasolina() ){
-      // ${ListaUnidades[nombreUnidad].maxGasolina}
-      console.error(`La gasActual actual no puede ser mayor a gasMaxima: ${this.getMaxGasolina()}`)
-      this.#gasActual = this.getMaxGasolina()
+    } else if ( gasActual > gasMaxima ){
+      console.error(`La gas actual actual no puede ser mayor a gasMaxima: ${gasMaxima}`)
+      this.#gasActual = gasMaxima
     } else {
       this.#gasActual = gasActual
     }
-    // O que no es un posible estado
-    if (estado === null ){
-      this.#estado = 'normal'
-    } else {
-      this.#estado = estado
+  }
+  #setMuniciones (municionesActuales: municiones|undefined|null, maxMuniciones: municiones|null){
+    this.#maxMuniciones = maxMuniciones
+
+    if ( municionesActuales == null || maxMuniciones == null ){
+      this.#municiones = maxMuniciones
+      return
     }
 
+    const tempMunicionesActuales:municiones = {}
+    // Validar primero que cada municion agregada exista y luego ver que no supere los datos mayores
+    Object.keys(municionesActuales).forEach(key => {
+      if ( maxMuniciones[key] != null && typeof maxMuniciones[key] === 'number'){
+        if ( municionesActuales[key] < 0 ){
+          console.error(`Municion[${key}] no puede ser menor a 0`)
+          municionesActuales[key] = 0
+        } else if ( municionesActuales[key] > maxMuniciones[key] ){
+          console.error(`Municion[${key}] no puede ser mayor que las MaxMunicion[${key}]`)
+          municionesActuales[key] = maxMuniciones[key]
+        } else {
+          tempMunicionesActuales[key] = municionesActuales[tempMunicionesActuales]
+        }
+      }
+    })
+
+    this.#municiones = tempMunicionesActuales
+  }
+  #setTurnos (turnos: number|null){
     if (turnos != null){
       this.#turnos = Math.max(turnos, 0)
     } else {
@@ -268,6 +312,14 @@ export class UnidadCasilla {
     this.#municiones = this.#maxMuniciones
   }
 
+  setEstado (estado: estado|null) {
+    // O que no es un posible estado
+    if (estado == null ){
+      this.#estado = 'normal'
+    } else {
+      this.#estado = estado
+    }
+  }
   getEstado () {
     return this.#estado
   }
@@ -362,7 +414,7 @@ export type UnidadSimple = {
   nombreUnidad: nombreUnidad,
   id: string, // O debería ser el código del comandante jugable
   propietario: number|null,
-  refComandante: ComandanteJugable|null, // ¿Cambiar nombre a solo comandante?
+  refComandante: ComandanteBase|null, // ¿Cambiar nombre a solo comandante?
   hp: number,
   municiones: municiones|null,
   gasActual: number,
@@ -374,7 +426,7 @@ export type UnidadSimple = {
 //   nombreCorto: nombreUnidad
 //   id: string // O debería ser el código del comandante jugable
 //   propietario: number|null
-//   refComandante: ComandanteJugable|null // ¿Cambiar nombre a solo comandante?
+//   refComandante: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
 //   hp: number
 //   municiones: municiones|null
 //   gasActual: number
