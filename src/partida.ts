@@ -97,7 +97,7 @@ export class PartidaJuego {
   public setClima = (clima: Clima) => {
     if ( !esClima(clima) ){
       console.error('Clima no existente: ', clima)
-      if ( this.#climaActual == undefined ){
+      if ( this.#climaActual == null ){
         this.#climaActual = 'Soleado'
       }
     } else {
