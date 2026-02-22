@@ -209,6 +209,9 @@ export abstract class ComandanteBase{
   public getMovilidadUnidad (unidad: UnidadCasilla):number{
     return unidad.getMovilidad()
   }
+  public getMaxMovilidad (unidad: UnidadCasilla):number{
+    return unidad.getMaxMovimiento()
+  }
   public getTipoMovilidadUnidad (unidad: UnidadCasilla){
     return unidad.getTipoMovimiento()
   }
