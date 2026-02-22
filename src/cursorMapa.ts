@@ -154,7 +154,7 @@ export class CursorMapaJuego {
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
         const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getListaUnidadesCompraDatos(tempCasilla,
           (unidadNombre: nombreUnidad) => {
-            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual(), tempCasilla), coord)
+            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municionesActuales: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual().getComandantesJugador()[0], tempCasilla), coord)
           })
         if ( unidadesCompraDatos.length > 0 ){
           this.#fnReactSetters.setPropiedadSeleccionada(true)
