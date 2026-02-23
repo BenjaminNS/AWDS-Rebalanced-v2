@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import './header.css'
 
 type elementoHeader = {
@@ -24,20 +24,31 @@ export const ElementosHeader:elementoHeader[] = [
 ]
 
 export function Header ({ elementosHeader }: { elementosHeader: elementoHeader[] }){
+  const mostrarClase = 'mostrar'
+  const listaPaginas:Ref<HTMLUListElement> = useRef(null)
+  const btnMenuClickHandler = () => {
+    if ( listaPaginas.current.classList.toggle ){
+      listaPaginas.current.classList.toggle('mostrar')
+    }
+  }
+
   return (
     React.useMemo(() => (
-      <header>
+      <header className='justify-between'>
         <a href="" className='flex items-center' style={{ columnGap: '8px' }}>
           <div className="icono-seccion">
             <img src="./awds_rebalanced.ico" />
           </div>
           <div className="nombre-pagina">AW Rebalanced!</div>
         </a>
-        <ul className="lista-paginas">
+        <div className='cursor-pointer'>
+          <img id="btn-menu" onClick={btnMenuClickHandler} src="./img/icons/burger-bar.png" alt="Btn menu movil" className='object-cover' style={{ width: '2rem' }} />
+        </div>
+        <ul className="lista-paginas" ref={listaPaginas}>
           {elementosHeader.map((elemHeader, i) => {
             if ( !elemHeader.privada ){
               return (
-                <a key={i} href={elemHeader.liga}>{elemHeader.texto}</a>
+                <a className='pagina-link' key={i} href={elemHeader.liga}>{elemHeader.texto}</a>
               )
             }
           })}
