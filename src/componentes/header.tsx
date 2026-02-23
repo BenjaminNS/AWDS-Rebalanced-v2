@@ -24,7 +24,6 @@ export const ElementosHeader:elementoHeader[] = [
 ]
 
 export function Header ({ elementosHeader }: { elementosHeader: elementoHeader[] }){
-  const mostrarClase = 'mostrar'
   const listaPaginas:Ref<HTMLUListElement> = useRef(null)
   const btnMenuClickHandler = () => {
     if ( listaPaginas.current.classList.toggle ){

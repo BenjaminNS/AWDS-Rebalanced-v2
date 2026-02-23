@@ -79,6 +79,9 @@ header{
       max-width: 90%;
       position: absolute;
       top: calc(var(--altoHeader) * .8);
+      max-height: calc(100vh - (var(--altoHeader) * .8));
+      overflow-x: hidden;
+      overflow-y: auto;
       right: 0;
       background: #722E2C;
       background: linear-gradient(0deg,rgba(114, 46, 44, 1) 0%, rgba(168, 34, 38, 1) 100%);
