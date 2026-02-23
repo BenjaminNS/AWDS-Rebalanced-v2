@@ -40,7 +40,7 @@ export function Header ({ elementosHeader }: { elementosHeader: elementoHeader[]
           </div>
           <div className="nombre-pagina">AW Rebalanced!</div>
         </a>
-        <div className='cursor-pointer'>
+        <div className='cursor-pointer block md:hidden'>
           <img id="btn-menu" onClick={btnMenuClickHandler} src="./img/icons/burger-bar.png" alt="Btn menu movil" className='object-cover' style={{ width: '2rem' }} />
         </div>
         <ul className="lista-paginas" ref={listaPaginas}>
