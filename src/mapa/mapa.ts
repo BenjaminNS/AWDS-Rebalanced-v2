@@ -327,12 +327,13 @@ export class Mapa{
     return setCoordTerrenos
   }
 
+  // TODO: En vez de mandar la unidad, mandar las cantidad de movimiento y su libro de movimiento
   obtenerCoordenadasMovimiento (mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla|undefined|null){
     const listaCoordMovimiento = [{ ...coordOriginal, movDisponible: 0, costo: 0 }]
     if ( unidad == null ){
       return listaCoordMovimiento
     }
-    const distanciaMax = Math.min(unidad.getMovilidad(), unidad.getGasActual())
+    const distanciaMax = unidad.getRefComandante().getMaxMovilidad(unidad)
     listaCoordMovimiento[0].movDisponible = distanciaMax
 
     // El paso puede ser de +0.5 para aceptar movimientos intermedios
@@ -484,7 +485,7 @@ function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: nu
   const objTerreno = casillaValida.getTerrenoObjeto()
   if ( objTerreno == null ) return null
 
-  const costoMovimiento = objTerreno.costosMovimientos[unidad.getTipoMovimiento()]
+  const costoMovimiento = unidad.getLibroMovilidadTerreno(objTerreno.nombreCorto)
   if ( costoMovimiento == null ) return null
 
   if ( ( coordDato.movDisponible - costoMovimiento ) < 0 ) return null
