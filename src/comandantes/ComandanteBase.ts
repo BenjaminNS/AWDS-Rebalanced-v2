@@ -1,4 +1,5 @@
-import { type nombreTerreno, fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terreno'
+import { type nombreTerreno } from '../mapa/terreno'
+import { fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../mapa/terrenosCompra'
 import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'
 import { getInfoBasica } from '../unidades/unidadInfoBasica'
