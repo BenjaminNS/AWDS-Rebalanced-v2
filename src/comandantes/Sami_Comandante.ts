@@ -185,6 +185,9 @@ export class Sami_Comandante extends ComandanteBase {
       return unidad.getMovilidad()
     }
   }
+  override getMaxMovilidad (unidad: UnidadCasilla):number{
+    return Math.min(this.getMovilidadUnidad(unidad), unidad.getGasActual())
+  }
   override getPuntosCaptura (casillaCaptura: Casilla){
     const unidad = casillaCaptura.getUnidad()
 
