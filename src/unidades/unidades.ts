@@ -4,7 +4,8 @@ import Konva from 'konva'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
 import type { ComandanteBase } from '../comandantes/ComandanteBase'
-import type { nombreUnidad, categoriaUnidad, estado, municiones, tipoMovimiento, Matchup } from './unidadInfoBasica'
+import type { nombreUnidad, categoriaUnidad, estado, municiones, Matchup } from './unidadInfoBasica'
+import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
 import type { Casilla } from '../mapa/mapa'
@@ -320,6 +321,13 @@ export class UnidadCasilla {
   getMovilidad (): number {
     return this.#movilidad
   }
+  getLibroMovilidad (){
+    return LibroMovilidad[this.#tipoMovimiento]
+  }
+  getLibroMovilidadTerreno (tipo: nombreTerreno){
+    return LibroMovilidad[this.#tipoMovimiento][tipo]
+  }
+
   getNombreLargo (){
     return this.#nombreLargo
   }

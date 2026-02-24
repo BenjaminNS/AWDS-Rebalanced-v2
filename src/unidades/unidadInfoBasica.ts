@@ -7,13 +7,13 @@ import {
   spriteBCopter, spriteTCopter, spriteFighter, spriteBomber,
   spriteLander, spriteCruiser, spriteSubmarino, spriteBattleship
 } from './spriteUnidades'
+import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 
 export type nombreUnidad = 'infanteria'|'mecha'|'recon'|'tanqueLigero'|'tanqueMediano'|'neotanque'|'megatanque'|'apc'|'artilleria'|'cohetes'|'tanqueAntiaereo'|'misiles'|'piperunner'|'bCopter'|'tCopter'|'fighter'|'bomber'|'stealthFighter'|'blackBomb'|'lander'|'cruiser'|'submarino'|'battleship'|'carrier'|'blackBoat'|'motocicletas'|'lanchas'|'sniper'
 export type municiones = {
   principal: number|null,
   secundaria?: number|null,
 }
-export type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'|'naval';
 // Se supone que si es soldado, no puede ser vehiculo
 // Y si es Terrestre, no puede ser aereo o naval
 // No hay problema si se empalma Directo, Indirecto y Transporte
