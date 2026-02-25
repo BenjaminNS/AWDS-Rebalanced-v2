@@ -10,10 +10,12 @@ import {
 import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { infanteria_MU, mecha_MU, recon_MU, tanqueLigero_MU, tanqueMediano_MU, neotanque_MU, apc_MU, artilleria_MU, cohetes_MU, tanqueAntiaereo_MU, misiles_MU, bCopter_MU, tCopter_MU, fighter_MU, bomber_MU, lander_MU, cruiser_MU, submarino_MU, battleship_MU } from './matchups'
 
-export type municiones = {
-  principal: number|null,
-  secundaria?: number|null,
 export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'
+
+type municionBase = {actual: number, maxima: number}
+export interface municiones {
+  principal?: municionBase,
+  secundaria?: municionBase
 }
 // Se supone que si es soldado, no puede ser vehiculo
 // Y si es Terrestre, no puede ser aereo o naval

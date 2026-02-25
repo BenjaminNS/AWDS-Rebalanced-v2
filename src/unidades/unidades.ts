@@ -27,7 +27,6 @@ export class UnidadCasilla {
   #vision: number
   #maxGasolina!: number
   #consumoDiario: (estado:estado)=> number
-  #maxMuniciones: municiones|null
   #atacarYMoverse: boolean
   #contraataque: number|null
   // compradaEn: tipoPropiedad
@@ -52,8 +51,10 @@ export class UnidadCasilla {
   // (tipoUnidad: nombreUnidad, confUnidad: {}, refComandante: comandante)
   constructor (
     nombreUnidad: nombreUnidad,
-    { propietario, hp, municionesActuales, gasActual, estado, turnos }:
-    { propietario: number|null, hp: number, municionesActuales?: municiones|null, gasActual?: number, estado: estado|null, turnos: number },
+    { propietario, hp, municiones, gasActual, estado, turnos }:
+    { propietario: number|null, hp: number,
+      municiones: { principal: {actual: number|null, maxima: number}, secundaria?: {actual: number|null, maxima: number} }|null,
+      gasActual?: number, estado: estado|null, turnos: number },
     refComandante: ComandanteBase,
     casilla: Casilla
   ){
@@ -71,7 +72,6 @@ export class UnidadCasilla {
     this.#tipoMovimiento = infoBasica.tipoMovimiento
     this.#vision = infoBasica.vision
     this.#consumoDiario = infoBasica.consumoDiario
-    this.#maxMuniciones = infoBasica.maxMuniciones
     this.#contraataque = infoBasica.contraataque
     this.#atacarYMoverse = infoBasica.atacarYMoverse
     this.#sprite = infoBasica.sprite
@@ -83,7 +83,7 @@ export class UnidadCasilla {
     this.#setHP(hp)
 
     this.#setGasolina(gasActual, infoBasica.maxGasolina)
-    this.#setMuniciones(municionesActuales, infoBasica.maxMuniciones)
+    this.#setMuniciones(municiones)
     this.setEstado(estado)
     this.#setTurnos(turnos)
   }
@@ -139,31 +139,25 @@ export class UnidadCasilla {
       this.#gasActual = gasActual
     }
   }
-  #setMuniciones (municionesActuales: municiones|undefined|null, maxMuniciones: municiones|null){
-    this.#maxMuniciones = maxMuniciones
-
-    if ( municionesActuales == null || maxMuniciones == null ){
-      this.#municiones = maxMuniciones
+  #setMuniciones (municiones: { principal: {actual: number|null, maxima: number}, secundaria?: {actual: number|null, maxima: number} }|null){
+    if ( municiones == null ){
+      this.#municiones = null
       return
     }
 
-    const tempMunicionesActuales:municiones = {}
-    // Validar primero que cada municion agregada exista y luego ver que no supere los datos mayores
-    Object.keys(municionesActuales).forEach(key => {
-      if ( maxMuniciones[key] != null && typeof maxMuniciones[key] === 'number'){
-        if ( municionesActuales[key] < 0 ){
-          console.error(`Municion[${key}] no puede ser menor a 0`)
-          municionesActuales[key] = 0
-        } else if ( municionesActuales[key] > maxMuniciones[key] ){
-          console.error(`Municion[${key}] no puede ser mayor que las MaxMunicion[${key}]`)
-          municionesActuales[key] = maxMuniciones[key]
-        } else {
-          tempMunicionesActuales[key] = municionesActuales[tempMunicionesActuales]
-        }
-      }
-    })
+    // Por defecto le pone el maximo de municiones si no lo defines
+    if ( municiones.principal.actual == null || municiones.principal.actual > municiones.principal.maxima ){
+      municiones.principal.actual = municiones.principal.maxima
+    } else if ( municiones.principal.actual < 0 ){
+      municiones.principal.actual = 0
+    }
+    if ( municiones.secundaria != null && (municiones.secundaria.actual == null || municiones.secundaria.actual > municiones.secundaria.maxima) ){
+      municiones.secundaria.actual = municiones.secundaria.maxima
+    } else if ( municiones.secundaria != null && municiones.secundaria.actual != null && municiones.secundaria.actual < 0 ){
+      municiones.secundaria.actual = 0
+    }
 
-    this.#municiones = tempMunicionesActuales
+    this.#municiones = municiones as municiones
   }
   #setTurnos (turnos: number|null){
     if (turnos != null){
