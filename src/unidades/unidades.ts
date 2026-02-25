@@ -29,12 +29,11 @@ export class UnidadCasilla {
   #consumoDiario: (estado:estado)=> number
   #atacarYMoverse: boolean
   #contraataque: number|null
-  // compradaEn: tipoPropiedad
   // #habilidadesEspeciales: habilidades[]
   #matchups: Matchups
   id: string // O debería ser el código del comandante jugable
   #propietario!: number|null
-  #refComandante!: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
+  #refComandante!: ComandanteBase // ¿Cambiar nombre a solo comandante?
   #hp!: number
   #municiones!: municiones|null
   #gasActual!: number
@@ -48,7 +47,6 @@ export class UnidadCasilla {
   // https://chatgpt.com/c/691b4330-b6c4-8328-a30a-28514b56e7fa
   #casilla: Casilla // Referencia de casilla
 
-  // (tipoUnidad: nombreUnidad, confUnidad: {}, refComandante: comandante)
   constructor (
     nombreUnidad: nombreUnidad,
     { propietario, hp, municiones, gasActual, estado, turnos }:
@@ -97,16 +95,9 @@ export class UnidadCasilla {
     return this.#propietario
   }
 
-  #setPropietario (propietario: number|null, refComandante: ComandanteBase){
-    if ( propietario != null && propietario < 0 ){
-      console.error('La unidad no puede tener este propietario: ', propietario )
-      this.#propietario = null
-      // Ignora el comandante indicado si el propietario es inválido
-      this.#refComandante = null
-    } else {
-      this.#propietario = propietario
-      this.#refComandante = refComandante
-    }
+  #setPropietario (propietario: number, refComandante: ComandanteBase){
+    this.#propietario = propietario
+    this.#refComandante = refComandante
   }
   #setHP (hp: number){
     if ( hp < 1 ){
