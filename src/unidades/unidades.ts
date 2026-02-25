@@ -4,7 +4,8 @@ import Konva from 'konva'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
 import type { ComandanteBase } from '../comandantes/ComandanteBase'
-import type { nombreUnidad, categoriaUnidad, estado, municiones, Matchup } from './unidadInfoBasica'
+import type { nombreUnidad, categoriaUnidad, estado, municiones } from './unidadInfoBasica'
+import { Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
@@ -31,7 +32,7 @@ export class UnidadCasilla {
   #contraataque: number|null
   // compradaEn: tipoPropiedad
   // #habilidadesEspeciales: habilidades[]
-  #matchups: Matchup
+  #matchups: Matchups
   id: string // O debería ser el código del comandante jugable
   #propietario!: number|null
   #refComandante!: ComandanteBase|null // ¿Cambiar nombre a solo comandante?
@@ -373,8 +374,14 @@ export class UnidadCasilla {
   getAtacarYMoverse (){
     return this.#atacarYMoverse
   }
-  getUnitMatchup (unidadDefensivaNombre: nombreUnidad){
-    return this.#matchups[unidadDefensivaNombre]
+  getUnitMatchupList (){
+    return this.#matchups
+  }
+  getUnitMatchup (unidadDefensivaNombre: nombreUnidad, tipo: 'principal'|'secundaria'){
+    if ( this.#matchups[tipo] == null )
+      return null
+
+    return this.#matchups[tipo][unidadDefensivaNombre]
   }
   getContraataque (){
     return this.#contraataque
