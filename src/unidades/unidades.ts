@@ -49,9 +49,9 @@ export class UnidadCasilla {
 
   constructor (
     nombreUnidad: nombreUnidad,
-    { propietario, hp, municiones, gasActual, estado, turnos }:
-    { propietario: number|null, hp: number,
-      municiones: { principal: {actual: number|null, maxima: number}, secundaria?: {actual: number|null, maxima: number} }|null,
+    { propietario, hp, municionesActuales, gasActual, estado, turnos }:
+    { propietario: number, hp: number,
+      municionesActuales: { principal: { actual: number|null }, secundaria?: {actual: number|null} }|null,
       gasActual?: number, estado: estado|null, turnos: number },
     refComandante: ComandanteBase,
     casilla: Casilla
@@ -81,7 +81,7 @@ export class UnidadCasilla {
     this.#setHP(hp)
 
     this.#setGasolina(gasActual, infoBasica.maxGasolina)
-    this.#setMuniciones(municiones)
+    this.#setMuniciones(municionesActuales, infoBasica.maxMuniciones)
     this.setEstado(estado)
     this.#setTurnos(turnos)
   }
@@ -130,25 +130,23 @@ export class UnidadCasilla {
       this.#gasActual = gasActual
     }
   }
-  #setMuniciones (municiones: { principal: {actual: number|null, maxima: number}, secundaria?: {actual: number|null, maxima: number} }|null){
-    if ( municiones == null ){
-      this.#municiones = null
-      return
+  #setMuniciones (municionesActuales: { principal: {actual: number|null}, secundaria?: {actual: number|null} }|null, municionesBase: municiones|null){
+    const munTemp = Object.assign({}, municionesBase)
+
+    if ( munTemp != null ){
+      if ( municionesActuales != null){
+        if ( typeof municionesActuales.principal.actual === 'number' ){
+          munTemp.principal.actual = Math.min(munTemp.principal.maxima, Math.max( municionesActuales.principal.actual, 0))
+        }
+        if ( munTemp?.secundaria != null ){
+          if ( municionesActuales.secundaria != null && typeof municionesActuales.secundaria.actual === 'number' ){
+            munTemp.secundaria.actual = Math.min(munTemp.secundaria.maxima, Math.max( municionesActuales.secundaria.actual, 0))
+          }
+        }
+      }
     }
 
-    // Por defecto le pone el maximo de municiones si no lo defines
-    if ( municiones.principal.actual == null || municiones.principal.actual > municiones.principal.maxima ){
-      municiones.principal.actual = municiones.principal.maxima
-    } else if ( municiones.principal.actual < 0 ){
-      municiones.principal.actual = 0
-    }
-    if ( municiones.secundaria != null && (municiones.secundaria.actual == null || municiones.secundaria.actual > municiones.secundaria.maxima) ){
-      municiones.secundaria.actual = municiones.secundaria.maxima
-    } else if ( municiones.secundaria != null && municiones.secundaria.actual != null && municiones.secundaria.actual < 0 ){
-      municiones.secundaria.actual = 0
-    }
-
-    this.#municiones = municiones as municiones
+    this.#municiones = munTemp
   }
   #setTurnos (turnos: number|null){
     if (turnos != null){
@@ -249,9 +247,6 @@ export class UnidadCasilla {
   getMunicionesActuales (){
     return this.#municiones
   }
-  getMunicionesMaximas (){
-    return this.#maxMuniciones
-  }
   getMunicionPrincipal (){
     if (this.#municiones?.principal){
       return this.#municiones.principal
@@ -261,7 +256,7 @@ export class UnidadCasilla {
   }
   getMunicionPrincipalString () {
     if (this.#municiones?.principal){
-      return `${this.#municiones.principal}/${this.getMaxMuniciones()?.principal}`
+      return `${this.#municiones.principal.actual}/${this.#municiones.principal.maxima}`
     } else {
       return ''
     }
@@ -275,7 +270,7 @@ export class UnidadCasilla {
   }
   getMunicionSecundariaString () {
     if (this.#municiones?.secundaria){
-      return `${this.#municiones.secundaria}/${this.getMaxMuniciones()?.secundaria}`
+      return `${this.#municiones.secundaria.actual}/${this.#municiones.secundaria.maxima}`
     } else {
       return ''
     }
@@ -290,7 +285,14 @@ export class UnidadCasilla {
   // TODO: Aceptar parametros de gasolina y de municiones
   reponerUnidad (){
     this.#gasActual = this.#maxGasolina
-    this.#municiones = this.#maxMuniciones
+    if ( this.#municiones != null ){
+      if ( this.#municiones.principal != null ){
+        this.#municiones.principal.actual = this.#municiones.principal.maxima
+      }
+      if ( this.#municiones.secundaria != null ){
+        this.#municiones.secundaria.actual = this.#municiones.secundaria.maxima
+      }
+    }
   }
 
   setEstado (estado: estado|null) {
@@ -352,9 +354,6 @@ export class UnidadCasilla {
   }
   getConsumoDiario ( estado: estado ){
     return this.#consumoDiario( estado )
-  }
-  getMaxMuniciones (){
-    return this.#maxMuniciones
   }
   getAtacarYMoverse (){
     return this.#atacarYMoverse

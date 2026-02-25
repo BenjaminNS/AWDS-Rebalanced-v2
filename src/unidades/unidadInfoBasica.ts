@@ -14,7 +14,7 @@ export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'
 
 type municionBase = {actual: number, maxima: number}
 export interface municiones {
-  principal?: municionBase,
+  principal: municionBase,
   secundaria?: municionBase
 }
 // Se supone que si es soldado, no puede ser vehiculo
@@ -80,7 +80,7 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
     // case 'megatanque':
     // megatanque {
     //   nombreLargo: 'Mega Tanque', nombreCorto: 'megatanque', descripcion: 'El súper tanque. Capaz de asestar un daño letal contra todos los vehiculos terrestres y daño significativo a unidades navales y aéreas.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //   costo: 28000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: truematchups: infanteria_MU, , sprite:
+    //   costo: 28000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: truematchups: infanteria_MU, , sprite:
     // }
 
     // 'APC', 'Vehiculo de transporte capaz de mover soldados, reponer municiones y gasolina a todas las unidades y *puede construir aeropuertos y puertos navales temporales.', ['Vehiculo', 'Terrestre', 'Transporte'],
@@ -88,27 +88,27 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
   case 'apc':
     return ListaUnidades['apc']
     // 'Artillería', 'Vehículo indirecto efectivo contra unidades terrestres y navales.', ['Soldado', 'Terrestre', 'Indirecto'],
-    // 25000, 1, 1, 4, 'oruga', 1, 50, (estado: estado)=>{return 0}, {'principal': 4, 'secundaria': 8 }, 1, true, spriteMegatanque
+    // 25000, 1, 1, 4, 'oruga', 1, 50, (estado: estado)=>{return 0}, {'principal': {actual: 4, maxima: 4}, 'secundaria': {actual: 8, maxima: 8} }, 1, true, spriteMegatanque
   case 'artilleria':
     return ListaUnidades['artilleria']
     // 'Cohetes', 'Vehículo indirecto potente y de buen alcance contra unidades terrestres y navales..', ['Vehiculo', 'Terrestre', 'Directo'],
-    // 15000, 2, 5, 5, 'ruedas', 3, 50, (estado: estado) => {return 0}, { 'principal': 7 }, 0, false, spriteCohetes
+    // 15000, 2, 5, 5, 'ruedas', 3, 50, (estado: estado) => {return 0}, { 'principal': {actual: 7, maxima: 7} }, 0, false, spriteCohetes
   case 'cohetes':
     return ListaUnidades['cohetes']
     // 'Tanque Antiaéreo', 'Vehículo directo terrestre letal contra vehículos aéreos.', ['Vehiculo', 'Terrestre', 'Directo', 'Antiaereo'],
-    // 6000, 2, 3, 5, 'oruga', 2, 50, (estado: estado) => {return 0}, { 'principal': 7 }, 0, false, spriteArtilleria
+    // 6000, 2, 3, 5, 'oruga', 2, 50, (estado: estado) => {return 0}, { 'principal': {actual: 7, maxima: 7} }, 0, false, spriteArtilleria
   case 'tanqueAntiaereo':
     return ListaUnidades['tanqueAntiaereo']
     // 'Misiles', 'Vehículo indirecto letal contra todos tipo de unidades aéreas y que cubre una vasta área.', ['Soldado', 'Terrestre', 'Directo'],
-    // 12000, 3, 6, 5, 'ruedas', 5, 40, (estado: estado) => {return 0}, { 'principal': 6 }, 0, false, spriteMisiles
+    // 12000, 3, 6, 5, 'ruedas', 5, 40, (estado: estado) => {return 0}, { 'principal': {actual: 6, maxima: 6} }, 0, false, spriteMisiles
   case 'misiles':
     return ListaUnidades['misiles']
     // case 'piperunner':
     // 'Pipe', 'Vehículo indirecto que solo puede moverse a través de pipes.', ['Soldado', 'Terrestre', 'Directopiperunner],
-    // 15000, 2, 5, 9, 'piperunner', 3, 99, (estado: estado)=>{return 0}, {'principal': 8 }, 0, false, spritePiperunner
+    // 15000, 2, 5, 9, 'piperunner', 3, 99, (estado: estado)=>{return 0}, {'principal': {actual: 8, maxima: 8} }, 0, false, spritePiperunner
     //   }
     // 'Battle Copter', 'Helicóptero efectivo contra vehiculos pequeños, soldados y otros helicópteros.', ['Vehiculo', 'Aereo', 'Directo'],
-    // 9000, 1, 1, 6, 'aereo', 3, 99, (estado: estado) => {return 2}, { 'principal': 6, 'secundaria': 6 }, 1, true, spriteBCopter
+    // 9000, 1, 1, 6, 'aereo', 3, 99, (estado: estado) => {return 2}, { 'principal': {actual: 6, maxima: 6}, 'secundaria': {actual: 6, maxima: 6} }, 1, true, spriteBCopter
   case 'bCopter':
     return ListaUnidades['bCopter']
     // 'Transport Copter', 'Helicóptero capaz de transportar soldados a cualquier zona del mapa.', ['Vehiculo', 'Aereo', 'Transporte'],
@@ -116,11 +116,11 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
   case 'tCopter':
     return ListaUnidades['tCopter']
     // 'Fighter', 'El mejor antiaéreo aéreo. Letal contra todas las demás unidades, la mejor movilidad y excelente visión.', ['Vehiculo', 'Aereo', 'Directo', 'Antiaereo'],
-    // 19000, 1, 1, 9, 'aereo', 5, 110, (estado: estado) => {return 5}, { 'principal': 8 }, 1, true, spriteFighter
+    // 19000, 1, 1, 9, 'aereo', 5, 110, (estado: estado) => {return 5}, { 'principal': {actual: 8, maxima: 8} }, 1, true, spriteFighter
   case 'fighter':
     return ListaUnidades['fighter']
     // 'Bomber', 'Unidad áerea poderosa contra vehículos terrestres y navales.', ['Vehiculo', 'Aereo', 'Directo'],
-    // 20000, 1, 1, 7, 'aereo', 3, 99, (estado: estado) => {return 5}, { 'principal': 8 }, 1, true, spriteBomber
+    // 20000, 1, 1, 7, 'aereo', 3, 99, (estado: estado) => {return 5}, { 'principal': {actual: 8, maxima: 8} }, 1, true, spriteBomber
   case 'bomber':
     return ListaUnidades['bomber']
     // case 'stealthFighter':
@@ -128,21 +128,21 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
     // 24000, 1, 1, 6, 'aereo', 2, 60, (estado: estado)=
     //   return {
     //     nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //   }
     // case 'blackBomb':
     //   // 'Black Bomb', 'Unidad aérea capaz de autodetonarse y causar un potente daño amplio de área.', ['Aereo', 'DirectoblackBomb],
     //   // 30000, 1, 1, 9, 'aereo', 1, 40, (estado: estado)=>{return 5}, null, 0, false, spriteBlackBomb
     //   return {
     //     nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //   }
     // 'Lander', 'Unidad de transporte naval. Puede mover hasta 2 unidades terrestres de cualquier tipo.', ['Vehiculo', 'Naval', 'Transporte'],
     // 8000, 1, 1, 6, 'naval', 2, 99, (estado: estado) => {return 1}, null, 0, false, spriteLander
   case 'lander':
     return ListaUnidades['lander']
     // 'Cruiser', 'Unidad naval eficaz contra unidades aéreas y submarinos.', ['Vehiculo', 'Naval', 'Directo', 'Antiaereo', 'Transporte'],
-    // 12000, 1, 1, 6, 'naval', 3, 80, (estado: estado) => {return 1}, { 'principal': 8 }, 1, true, spriteCruiser
+    // 12000, 1, 1, 6, 'naval', 3, 80, (estado: estado) => {return 1}, { 'principal': {actual: 8, maxima: 8} }, 1, true, spriteCruiser
   case 'cruiser':
     return ListaUnidades['cruiser']
     // 'Submarino', 'Unidad naval efectivo contra unidades navales y capaz de esconderse.', ['Vehiculo', 'Naval', 'Directo'],
@@ -150,7 +150,7 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
   case 'submarino':
     return ListaUnidades['submarino']
     // 'Battleship', 'Unidad indirecta naval capaz de moverse y atacar en el mismo turno.', ['Vehiculo', 'Naval', 'Indirecto'],
-    // 20000, 2, 3, 5, 'naval', 3, 70, (estado: estado) => {return 1}, { 'principal': 7 }, 0, true, spriteBattleship
+    // 20000, 2, 3, 5, 'naval', 3, 70, (estado: estado) => {return 1}, { 'principal': {actual: 7, maxima: 7} }, 0, true, spriteBattleship
   case 'battleship':
     return ListaUnidades['battleship']
     //   case 'carrier':
@@ -158,31 +158,31 @@ export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
     //     // 25000, 3, 7, 5, 'naval', 2, 70, (estado: estado) => {return 1}, null, 0, false, spriteBlackBoat
     //     return {
     //       nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //       costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //       costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //     }
     //   case 'blackBoat':
     //     // 'Black Boat', 'Unidad de transporte naval que puede mover hasta 2 soldados y puede reparar y reponer a otras unidades.', ['Vehiculo', 'Naval', 'TransporteblackBoat],
     //     // 7000, 1, 1, 7, 'naval', 1, 60, (estado: estado) => {return 1}, null, 0, false, spriteCruiser
     //     return {
     //       nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //       costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //       costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //     }
     // case 'motocicletas':
     //   motocicletas {
     //     nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //   }
     // case 'lanchas':
     // 'Infantería', 'Soldado capaz de capturar propiedades.', ['Soldado', 'Naval', 'Directolanchas],
-    // 3500, 1, 1, 4, 'pie', 2, 60, (estado: estado) => {return 1}, { 'principal': 6 }, 1, true, spriteLanchas
+    // 3500, 1, 1, 4, 'pie', 2, 60, (estado: estado) => {return 1}, { 'principal': {actual: 6, maxima: 6} }, 1, true, spriteLanchas
     // return {
     //   nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //   costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //   costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     // }
     // case 'sniper':
     //   sniper {
     //     nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
+    //     costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': {actual: 6, maxima: 6} }, contraataque: 1, atacarYMoverse: true, matchups: , sprite: spriteInfanteria
     //   }
   default:
     return null
@@ -215,41 +215,41 @@ type listaUnidades = {
 export const ListaUnidades:listaUnidades = {
   'infanteria': {
     nombreLargo: 'Infantería', nombreCorto: 'infanteria', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: infanteria_MU, sprite: spriteInfanteria
+    costo: 1000, rango: { minimo: 1, extra: 0 }, movilidad: 3, tipoMovimiento: 'pie', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 6, maxima: 6 } }, contraataque: 1, atacarYMoverse: true, matchups: infanteria_MU, sprite: spriteInfanteria
   },
   'mecha': {
     nombreLargo: 'Mecha', nombreCorto: 'mecha', descripcion: 'Soldado que puede atacar vehiculos y capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    costo: 3000, rango: { minimo: 1, extra: 0 }, movilidad: 2, tipoMovimiento: 'mecha', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 4, 'secundaria': 6 }, contraataque: 1, atacarYMoverse: true, matchups: mecha_MU, sprite: spriteMecha
+    costo: 3000, rango: { minimo: 1, extra: 0 }, movilidad: 2, tipoMovimiento: 'mecha', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 4, maxima: 4 }, 'secundaria': { actual: 6, maxima: 6 } }, contraataque: 1, atacarYMoverse: true, matchups: mecha_MU, sprite: spriteMecha
   },
   'recon': {
     nombreLargo: 'Recon', nombreCorto: 'recon', descripcion: 'Vehículo pequeño con alta visión, eficiente contra soldados.', categorias: ['Vehiculo', 'Terrestre', 'Directo'],
-    costo: 4000, rango: { minimo: 1, extra: 0 }, movilidad: 8, tipoMovimiento: 'ruedas', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 8 }, contraataque: 1, atacarYMoverse: true, matchups: recon_MU, sprite: spriteRecon
+    costo: 4000, rango: { minimo: 1, extra: 0 }, movilidad: 8, tipoMovimiento: 'ruedas', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 8, maxima: 8 } }, contraataque: 1, atacarYMoverse: true, matchups: recon_MU, sprite: spriteRecon
   },
   'tanqueLigero': {
     nombreLargo: 'Tanque Ligero', nombreCorto: 'tanqueLigero', descripcion: 'Tanque ágil eficaz contra otros vehiculos terrestres iguales o más pequeños y contra soldados.', categorias: ['Soldado', 'Terrestre', 'Directo'],
-    costo: 7000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 70, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 1, atacarYMoverse: true, matchups: tanqueLigero_MU, sprite: spriteTanqueLigero
+    costo: 7000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 70, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 6, maxima: 6 } }, contraataque: 1, atacarYMoverse: true, matchups: tanqueLigero_MU, sprite: spriteTanqueLigero
   },
   'tanqueMediano': {
-    nombreLargo: 'Tanque Mediano', nombreCorto: 'tanqueMediano', descripcion: 'Tanque pesado muy efectivo contra todos los vehiculos terrestres.', categorias: ['Vehiculo', 'Terrestre', 'Directo'], costo: 15000, rango: { minimo: 1, extra: 0 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 6, 'secundaria': 6 }, contraataque: 1, atacarYMoverse: true, matchups: tanqueMediano_MU, sprite: spriteTanqueMediano
+    nombreLargo: 'Tanque Mediano', nombreCorto: 'tanqueMediano', descripcion: 'Tanque pesado muy efectivo contra todos los vehiculos terrestres.', categorias: ['Vehiculo', 'Terrestre', 'Directo'], costo: 15000, rango: { minimo: 1, extra: 0 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 6, maxima: 6 }, 'secundaria': { actual: 6, maxima: 6 } }, contraataque: 1, atacarYMoverse: true, matchups: tanqueMediano_MU, sprite: spriteTanqueMediano
   },
   'neotanque': {
-    nombreLargo: 'Neotanque', nombreCorto: 'neotanque', descripcion: 'Tanque ágil y poderoso contra todos los vehiculos terrestres.', categorias: ['Vehiculo', 'Terrestre', 'Directo'], costo: 20000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 99, consumoDiario: () => 0, maxMuniciones: { 'principal': 9, 'secundaria': 9 }, contraataque: 1, atacarYMoverse: true, matchups: neotanque_MU, sprite: spriteNeotanque
+    nombreLargo: 'Neotanque', nombreCorto: 'neotanque', descripcion: 'Tanque ágil y poderoso contra todos los vehiculos terrestres.', categorias: ['Vehiculo', 'Terrestre', 'Directo'], costo: 20000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 99, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 9, maxima: 9 }, 'secundaria': { actual: 9, maxima: 9 } }, contraataque: 1, atacarYMoverse: true, matchups: neotanque_MU, sprite: spriteNeotanque
   },
   'apc': {
     nombreLargo: 'APC', nombreCorto: 'apc', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Vehiculo', 'Terrestre', 'Transporte'],
     costo: 4000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 1, maxGasolina: 99, consumoDiario: () => 0, maxMuniciones: null, contraataque: null, atacarYMoverse: true, matchups: apc_MU, sprite: spriteApc
   },
   'artilleria': {
-    nombreLargo: 'Artillería', nombreCorto: 'artilleria', descripcion: 'Vehículo indirecto efectivo contra unidades terrestres y navales.', categorias: ['Vehiculo', 'Terrestre', 'Indirecto'], costo: 6000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 7 }, contraataque: 0, atacarYMoverse: true, matchups: artilleria_MU, sprite: spriteArtilleria
+    nombreLargo: 'Artillería', nombreCorto: 'artilleria', descripcion: 'Vehículo indirecto efectivo contra unidades terrestres y navales.', categorias: ['Vehiculo', 'Terrestre', 'Indirecto'], costo: 6000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 7, maxima: 7 } }, contraataque: 0, atacarYMoverse: true, matchups: artilleria_MU, sprite: spriteArtilleria
   },
   'cohetes': {
-    nombreLargo: 'Cohetes', nombreCorto: 'cohetes', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 15000, rango: { minimo: 2, extra: 3 }, movilidad: 5, tipoMovimiento: 'ruedas', vision: 3, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 0, atacarYMoverse: true, matchups: cohetes_MU, sprite: spriteCohetes
+    nombreLargo: 'Cohetes', nombreCorto: 'cohetes', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 15000, rango: { minimo: 2, extra: 3 }, movilidad: 5, tipoMovimiento: 'ruedas', vision: 3, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 6, maxima: 6 } }, contraataque: 0, atacarYMoverse: true, matchups: cohetes_MU, sprite: spriteCohetes
   },
   'tanqueAntiaereo': {
-    nombreLargo: 'Tanque Antiaéreo', nombreCorto: 'tanqueAntiaereo', descripcion: 'Vehículo directo terrestre letal contra vehículos aéreos.', categorias: ['Vehiculo', 'Terrestre', 'Directo', 'Antiaereo'], costo: 8000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 70, consumoDiario: () => 0, maxMuniciones: { 'principal': 9 }, contraataque: 1, atacarYMoverse: true, matchups: tanqueAntiaereo_MU, sprite: spriteTanqueAntiaereo
+    nombreLargo: 'Tanque Antiaéreo', nombreCorto: 'tanqueAntiaereo', descripcion: 'Vehículo directo terrestre letal contra vehículos aéreos.', categorias: ['Vehiculo', 'Terrestre', 'Directo', 'Antiaereo'], costo: 8000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 2, maxGasolina: 70, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 9, maxima: 9 } }, contraataque: 1, atacarYMoverse: true, matchups: tanqueAntiaereo_MU, sprite: spriteTanqueAntiaereo
   },
   'misiles': {
-    nombreLargo: 'Misiles', nombreCorto: 'misiles', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Vehiculo', 'Indirecto', 'Antiaereo'], costo: 12000, rango: { minimo: 2, extra: 3 }, movilidad: 5, tipoMovimiento: 'ruedas', vision: 5, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': 6 }, contraataque: 0, atacarYMoverse: true, matchups: misiles_MU, sprite: spriteMisiles
+    nombreLargo: 'Misiles', nombreCorto: 'misiles', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Vehiculo', 'Indirecto', 'Antiaereo'], costo: 12000, rango: { minimo: 2, extra: 3 }, movilidad: 5, tipoMovimiento: 'ruedas', vision: 5, maxGasolina: 50, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 6, maxima: 6 } }, contraataque: 0, atacarYMoverse: true, matchups: misiles_MU, sprite: spriteMisiles
   },
   'bCopter': {
     nombreLargo: 'Battle Copter', nombreCorto: 'bCopter', descripcion: 'Helicóptero de combate efectivo contra vehiculos pequeños, soldados y otros helicópteros.', categorias: ['Vehiculo', 'Aereo', 'Directo'], costo: 9000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'aereo', vision: 3, maxGasolina: 90, consumoDiario: () => 2, maxMuniciones: null, contraataque: 1, atacarYMoverse: true, matchups: bCopter_MU, sprite: spriteBCopter
@@ -258,21 +258,21 @@ export const ListaUnidades:listaUnidades = {
     nombreLargo: 'Transport Copter', nombreCorto: 'tCopter', descripcion: 'Helicóptero capaz de transportar soldados a cualquier zona del mapa.', categorias: ['Vehiculo', 'Aereo', 'Transporte'], costo: 4000, rango: null, movilidad: 6, tipoMovimiento: 'aereo', vision: 2, maxGasolina: 90, consumoDiario: () => 2, maxMuniciones: null, contraataque: 1, atacarYMoverse: false, matchups: tCopter_MU, sprite: spriteTCopter
   },
   'fighter': {
-    nombreLargo: 'Fighter', nombreCorto: 'fighter', descripcion: 'Nave aérea letal contra todas las demás unidades aéreas, ofrece excelente movilidad y visión.', categorias: ['Vehiculo', 'Directo', 'Aereo', 'Indirecto'], costo: 18000, rango: { minimo: 1, extra: 0 }, movilidad: 9, tipoMovimiento: 'aereo', vision: 5, maxGasolina: 99, consumoDiario: () => 5, maxMuniciones: { 'principal': 9 }, contraataque: 1, atacarYMoverse: true, matchups: fighter_MU, sprite: spriteFighter
+    nombreLargo: 'Fighter', nombreCorto: 'fighter', descripcion: 'Nave aérea letal contra todas las demás unidades aéreas, ofrece excelente movilidad y visión.', categorias: ['Vehiculo', 'Directo', 'Aereo', 'Indirecto'], costo: 18000, rango: { minimo: 1, extra: 0 }, movilidad: 9, tipoMovimiento: 'aereo', vision: 5, maxGasolina: 99, consumoDiario: () => 5, maxMuniciones: { 'principal': { actual: 9, maxima: 9 } }, contraataque: 1, atacarYMoverse: true, matchups: fighter_MU, sprite: spriteFighter
   },
   'bomber': {
-    nombreLargo: 'Bomber', nombreCorto: 'bomber', descripcion: 'Unidad áerea poderosa contra vehículos terrestres y navales.', categorias: ['Vehiculo', 'Aereo', 'Directo'], costo: 20000, rango: { minimo: 1, extra: 0 }, movilidad: 7, tipoMovimiento: 'aereo', vision: 3, maxGasolina: 99, consumoDiario: () => 5, maxMuniciones: { 'principal': 9 }, contraataque: 1, atacarYMoverse: true, matchups: bomber_MU, sprite: spriteBomber
+    nombreLargo: 'Bomber', nombreCorto: 'bomber', descripcion: 'Unidad áerea poderosa contra vehículos terrestres y navales.', categorias: ['Vehiculo', 'Aereo', 'Directo'], costo: 20000, rango: { minimo: 1, extra: 0 }, movilidad: 7, tipoMovimiento: 'aereo', vision: 3, maxGasolina: 99, consumoDiario: () => 5, maxMuniciones: { 'principal': { actual: 9, maxima: 9 } }, contraataque: 1, atacarYMoverse: true, matchups: bomber_MU, sprite: spriteBomber
   },
   'lander': {
     nombreLargo: 'Lander', nombreCorto: 'lander', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 8000, rango: null, movilidad: 6, tipoMovimiento: 'naval', vision: 1, maxGasolina: 90, consumoDiario: () => 1, maxMuniciones: null, contraataque: null, atacarYMoverse: false, matchups: lander_MU, sprite: spriteLander
   },
   'cruiser': {
-    nombreLargo: 'Cruiser', nombreCorto: 'cruiser', descripcion: 'Unidad naval eficaz contra unidades aéreas y submarinos.', categorias: ['Vehiculo', 'Naval', 'Directo', 'Antiaereo'], costo: 14000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'naval', vision: 3, maxGasolina: 80, consumoDiario: () => 1, maxMuniciones: { 'principal': 8 }, contraataque: 1, atacarYMoverse: true, matchups: cruiser_MU, sprite: spriteCruiser
+    nombreLargo: 'Cruiser', nombreCorto: 'cruiser', descripcion: 'Unidad naval eficaz contra unidades aéreas y submarinos.', categorias: ['Vehiculo', 'Naval', 'Directo', 'Antiaereo'], costo: 14000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'naval', vision: 3, maxGasolina: 80, consumoDiario: () => 1, maxMuniciones: { 'principal': { actual: 8, maxima: 8 } }, contraataque: 1, atacarYMoverse: true, matchups: cruiser_MU, sprite: spriteCruiser
   },
   'submarino': {
-    nombreLargo: 'Submarino', nombreCorto: 'submarino', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Vehiculo', 'Naval', 'Directo'], costo: 12500, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'naval', vision: 5, maxGasolina: 70, consumoDiario: (estado:estado) => { return estado === 'oculto' ? 5 : 1 }, maxMuniciones: { 'principal': 7 }, contraataque: 1, atacarYMoverse: true, matchups: submarino_MU, sprite: spriteSubmarino
+    nombreLargo: 'Submarino', nombreCorto: 'submarino', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Vehiculo', 'Naval', 'Directo'], costo: 12500, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'naval', vision: 5, maxGasolina: 70, consumoDiario: (estado:estado) => { return estado === 'oculto' ? 5 : 1 }, maxMuniciones: { 'principal': { actual: 7, maxima: 7 } }, contraataque: 1, atacarYMoverse: true, matchups: submarino_MU, sprite: spriteSubmarino
   },
   'battleship': {
-    nombreLargo: 'Battleship', nombreCorto: 'battleship', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 20000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'naval', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': 7 }, contraataque: 1, atacarYMoverse: true, matchups: battleship_MU, sprite: spriteBattleship
+    nombreLargo: 'Battleship', nombreCorto: 'battleship', descripcion: 'Soldado capaz de capturar propiedades.', categorias: ['Soldado', 'Terrestre', 'Directo'], costo: 20000, rango: { minimo: 2, extra: 1 }, movilidad: 5, tipoMovimiento: 'naval', vision: 2, maxGasolina: 40, consumoDiario: () => 0, maxMuniciones: { 'principal': { actual: 7, maxima: 7 } }, contraataque: 1, atacarYMoverse: true, matchups: battleship_MU, sprite: spriteBattleship
   }
 }
