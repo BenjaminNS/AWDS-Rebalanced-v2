@@ -5,7 +5,7 @@ import Konva from 'konva'
 import { ListaTerrenos, Terreno, type nombreTerreno } from '../mapa/terreno'
 import type { ComandanteBase } from '../comandantes/ComandanteBase'
 import type { nombreUnidad, categoriaUnidad, estado, municiones } from './unidadInfoBasica'
-import { Matchups } from './matchups'
+import { type Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
@@ -233,14 +233,11 @@ export class UnidadCasilla {
   }
 
   public gastarGasolinaTerreno (tipoTerreno:nombreTerreno){
-    // Esto debería cambiar a una función que regrese el valor
-    // O directamente que cada unidad tenga su propia lista de costos de movimiento
-    const costosMovimientos:Terreno|null = ListaTerrenos[tipoTerreno]?.costosMovimientos
-    if ( costosMovimientos ){
-      const gasConsumida = costosMovimientos[this.#tipoMovimiento]
-      if ( gasConsumida ){
-        this.#gasActual -= gasConsumida
-      }
+    const gasConsumida = LibroMovilidad[this.#tipoMovimiento][tipoTerreno]
+    if ( gasConsumida ){
+      this.#gasActual -= gasConsumida
+    } else {
+      console.error('La unidad no puede avanzar por ese terreno')
     }
   }
 
