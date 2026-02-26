@@ -127,7 +127,7 @@ export abstract class ComandanteBase{
     return this.#ID
   }
   setJugadorRef (jugador:Jugador){
-    if ( this.#jugadorRef != null ){
+    if ( this.#jugadorRef == null ){
       this.#jugadorRef = jugador
     } else {
       console.error('Se intento modificar la referencia de ', this,' a este jugador: ', jugador)

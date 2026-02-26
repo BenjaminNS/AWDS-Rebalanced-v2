@@ -24,7 +24,6 @@ export class Jugador {
     this.#tiempoDisponible = tiempoDisponible
     this.#comandantes = comandantes
     this.#comandantes.forEach(comandante => {
-      comandante.setJugadorID(this.#id)
       comandante.setJugadorRef(this)
     })
     this.#color = color
