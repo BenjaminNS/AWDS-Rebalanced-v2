@@ -398,6 +398,9 @@ export class UnidadCasilla {
   getRefComandante (){
     return this.#refComandante
   }
+  getEquipo (){
+    return this.#refComandante.getEquipo()
+  }
 }
 
 export type UnidadSimple = {

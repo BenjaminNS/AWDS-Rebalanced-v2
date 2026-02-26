@@ -173,7 +173,8 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
       coordDestino.y += translateCoord.y
       casillaDestino = mapa.getCasilla(coordDestino) as Casilla
 
-      if ( casillaDestino == null || casillaDestino.getUnidad()?.getTurnos() ){
+      if ( casillaDestino == null || ( casillaDestino.getUnidad() != null && casillaDestino.getUnidad()?.getEquipo() !== unidadSeleccionada.getEquipo() ) ){
+        // TODO: Animación de fallo
         casillaOrigen.setUnidad(null)
         casillaFinal.setUnidad(unidadSeleccionada)
         reject()
