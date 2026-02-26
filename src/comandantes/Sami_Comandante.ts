@@ -28,7 +28,7 @@ export class Sami_Comandante extends ComandanteBase {
   #victoryMarch:VictoryMarchCOP
   #samiD2D: SamiD2D
 
-  constructor (statusActual:{ dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+  constructor (statusActual:{ dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }){
     // D2D
     const d2dSoldierAttack = 20
     const d2dCaptureGoalDiscount = 6
@@ -92,9 +92,8 @@ export class Sami_Comandante extends ComandanteBase {
       standardAttackDefenseBonus: victoryMarchStandardAttackDefenseBonus
     }
 
-    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 6,{
-      doubleTime, victoryMarch
-    }, null, statusActual, jugador)
+    super('Sami', 'sami', 'Especialista en infanterías y vehículos de transporte.', 'Orange Star', samiD2D, 6,
+      { doubleTime, victoryMarch }, null, statusActual)
 
     this.#samiD2D = samiD2D
     this.#doubleTime = doubleTime

@@ -52,7 +52,7 @@ export const maxPuntosReparaciones = 20
 export abstract class ComandanteBase{
   // IDENTIFICADORES
   #ID: string
-  #jugador: {id: string, ref: Jugador}
+  #jugadorRef: jugador
 
   // STATUS ACTUAL
   #estado: estadoComandante = 'normal'
@@ -76,9 +76,8 @@ export abstract class ComandanteBase{
   #estrellasMaximas: number
   #poderes: Record<string, ComandantePoder>
 
-  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, estrellas: number, poderes: Record<string, ComandantePoder>, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }, jugador: {ref: Jugador, id: string}){
+  constructor (nombre: string, nombreCorto: string, descripcion: string, pais: nombresPaises, d2d: DayToDay, estrellas: number, poderes: Record<string, ComandantePoder>, cancion: AudioData|null, statusActual: { dineroActual:number, cargaActual:number, usosPoder:number, activo:boolean, statusEffects:statusEffect[] }){
     this.#ID = crypto.randomUUID()
-    this.#jugador = jugador
 
     // BASE COMANDANTE
     this.#nombre = nombre
@@ -127,11 +126,21 @@ export abstract class ComandanteBase{
   getID (){
     return this.#ID
   }
-  getJugadorID (){
-    return this.#jugador.id
+  setJugadorRef (jugador:Jugador){
+    if ( this.#jugadorRef != null ){
+      this.#jugadorRef = jugador
+    } else {
+      console.error('Se intento modificar la referencia de ', this,' a este jugador: ', jugador)
+    }
   }
   getJugadorRef (){
-    return this.#jugador.ref
+    return this.#jugadorRef
+  }
+  getJugadorID (){
+    return this.#jugadorRef?.getId()
+  }
+  getEquipo (){
+    this.#jugadorRef.getEquipo()
   }
 
   // GET STATUS ACTUAL

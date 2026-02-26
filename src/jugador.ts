@@ -5,6 +5,7 @@ import type { Mapa } from './mapa/mapa'
 import type { nombreTerreno } from './mapa/terreno'
 
 export class Jugador {
+  #id: string // crypto.randomUUID
   // Cada jugador debería existir en la base de datos y ser obtenido por medio de su ID
   // Pero en juego no es necesario tener el dato idéntico, solo necesita tener un código único por partida
   #tiempoSegundos?: any
@@ -13,19 +14,25 @@ export class Jugador {
   #equipo: equipo
   #tiempoDisponible?: number|null
   #comandantes: ComandanteBase[]
-  #id: string // crypto.randomUUID
   #color: string
 
   constructor (nombre: string, equipo: equipo, activo: boolean, tiempoDisponible: number|null, comandantes: ComandanteBase[], color: string){
+    this.#id = crypto.randomUUID()
     this.#nombre = nombre
     this.#equipo = equipo
     this.#activo = activo
     this.#tiempoDisponible = tiempoDisponible
     this.#comandantes = comandantes
-    this.#id = crypto.randomUUID()
+    this.#comandantes.forEach(comandante => {
+      comandante.setJugadorID(this.#id)
+      comandante.setJugadorRef(this)
+    })
     this.#color = color
   }
 
+  public getId (){
+    return this.#id
+  }
   public getNombre (){
     return this.#nombre
   }
