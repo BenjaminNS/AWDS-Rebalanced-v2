@@ -7,8 +7,8 @@ import {
   spriteBCopter, spriteTCopter, spriteFighter, spriteBomber,
   spriteLander, spriteCruiser, spriteSubmarino, spriteBattleship
 } from './spriteUnidades'
-import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
-import { infanteria_MU, mecha_MU, recon_MU, tanqueLigero_MU, tanqueMediano_MU, neotanque_MU, apc_MU, artilleria_MU, cohetes_MU, tanqueAntiaereo_MU, misiles_MU, bCopter_MU, tCopter_MU, fighter_MU, bomber_MU, lander_MU, cruiser_MU, submarino_MU, battleship_MU } from './matchups'
+import { type tipoMovimiento } from './tipoMovilidad'
+import { type Matchups, infanteria_MU, mecha_MU, recon_MU, tanqueLigero_MU, tanqueMediano_MU, neotanque_MU, apc_MU, artilleria_MU, cohetes_MU, tanqueAntiaereo_MU, misiles_MU, bCopter_MU, tCopter_MU, fighter_MU, bomber_MU, lander_MU, cruiser_MU, submarino_MU, battleship_MU } from './matchups'
 
 export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'
 
@@ -60,7 +60,7 @@ export type UnidadInfoBasica = {
   contraataque: number|null
   sprite: Konva.Sprite
   // habilidadesEspeciales: habilidades[]
-  matchups: Matchup
+  matchups: Matchups
 }
 
 export function getInfoBasica (nombre: nombreUnidad) : UnidadInfoBasica|null {
