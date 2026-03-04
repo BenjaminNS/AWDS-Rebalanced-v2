@@ -17,7 +17,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        creadormapas: resolve(__dirname, 'creador-mapas.html')
+        creadormapas: resolve(__dirname, 'creador-mapas.html'),
+        comojugar: resolve(__dirname, 'paginas/como_jugar.html')
       }
     }
   }
