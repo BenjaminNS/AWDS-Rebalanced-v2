@@ -1,4 +1,5 @@
-import { type Casilla, type coordenada, Mapa } from './mapa/mapa'
+import { type Casilla, type coordenada } from './mapa/casilla'
+import { Mapa } from './mapa/mapaJuego'
 // import type { Unidad } from "./unidades/unidades";
 import Konva from 'konva'
 import type { Unidad, UnidadCasilla } from './unidades/unidades'
