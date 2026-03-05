@@ -119,20 +119,18 @@ form{
   width: 100%;
   max-width: 500px;
   gap: 0;
+}
 
-  .info-txt{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--gapSize);
-  }
+#casilla-info .info-txt{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gapSize);
 }
 
 .konvajs-content{
   margin: auto;
 
-ul, ol{
-  li{
-    margin-left: 1.25em;
-  }
+ul li, ol li {
+  margin-left: 1.25em;
 }
