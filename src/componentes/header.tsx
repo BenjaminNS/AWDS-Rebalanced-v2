@@ -15,7 +15,7 @@ export const ElementosHeader:elementoHeader[] = [
   { texto: 'Crear partida', liga: 'crear_partida.html' },
   { texto: 'Buscar partida', liga: 'buscar_partida.html' },
   { texto: 'Crear mapa 🔧', liga: 'creador-mapas.html' },
-  { texto: '¿Cómo jugar?', liga: 'como_jugar.html' }, // Esta página enlista las páginas de comandantes, terrenos, propiedades y unidades
+  { texto: '¿Cómo jugar?', liga: './src/paginas/como_jugar.html' }, // Esta página enlista las páginas de comandantes, terrenos, propiedades y unidades
 
   // Privadas
   { texto: 'Editor de unidades', liga: 'editor_unidades.html', privada: true },
