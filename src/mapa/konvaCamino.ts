@@ -1,5 +1,5 @@
 import Konva from 'konva'
-import { type Mapa, type coordenada } from './mapa.ts'
+import { type Mapa, type coordenada } from './mapaJuego.ts'
 import { MAPA_CAPAS } from './mapaKonva'
 import { tamanoCasilla } from './mapaKonva'
 import { type direccion, generarDireccion } from '../camino.ts'

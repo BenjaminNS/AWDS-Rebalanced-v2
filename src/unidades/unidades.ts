@@ -9,7 +9,7 @@ import { type Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
-import type { Casilla } from '../mapa/mapa'
+import type { Casilla } from '../mapa/mapaJuego'
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 

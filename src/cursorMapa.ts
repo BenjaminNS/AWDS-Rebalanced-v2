@@ -1,4 +1,5 @@
-import { Mapa, type coordenada, type Casilla } from './mapa/mapa'
+import { Mapa } from './mapa/mapaJuego.ts'
+import { type coordenada, type Casilla } from './mapa/casilla.ts'
 // import { Accion, moverUnidad, OrdenUnidad } from './orden.ts'
 import { moverUnidad } from './orden.ts'
 import Konva from 'konva'

@@ -1,97 +1,14 @@
 import { ListaTerrenos } from './terreno'
-import type { nombreTerreno, Terreno } from './terreno'
+import type { nombreTerreno } from './terreno'
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
 import { tamanoCasilla } from './spriteTerrenos'
 import type { Jugador } from '../jugador'
-// import type { equipo } from '../jugador'
+import { Casilla, CasillaSimple, type coordenada } from './casilla'
 
 export type dimension = {
   filas: number,
   columnas: number
-}
-export type coordenada = {
-  x: number,
-  y: number
-}
-
-export class CasillaSimple{
-  tipo: nombreTerreno
-  propietario: number|null
-  // clima?: Clima
-  unidad?: UnidadSimple|null
-
-  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
-    if (ListaTerrenos[tipo] == undefined){
-      console.error('Tipo de casilla no encontrada: ', tipo)
-      this.tipo = 'invalido'
-    } else {
-      this.tipo = tipo
-    }
-    this.propietario = propietario
-    this.unidad = unidad
-  }
-}
-export class Casilla {
-  #tipo: nombreTerreno
-  #propietario: number|null
-  #unidad: UnidadCasilla|null
-  sprite: Konva.Image|null // ¿Debería ser spriteTerreno o Konva.Image?
-  #coordenada: coordenada
-
-  constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null, coordenada: coordenada){
-    if (ListaTerrenos[tipo] == undefined){
-      console.error('Tipo de casilla no encontrada: ', tipo)
-      this.#tipo = 'invalido'
-      this.#propietario = null
-    } else {
-      this.#tipo = tipo
-
-      if ( ListaTerrenos[tipo].propiedad != null ){
-        this.#propietario = propietario
-      } else if ( !ListaTerrenos[tipo].propiedad && propietario != null ) {
-        console.error(`No se puede ser dueño de las casillas tipo "${tipo}"`)
-        this.#propietario = null
-      } else {
-        this.#propietario = null
-      }
-    }
-
-    // ¿Debería validar?
-    this.#coordenada = coordenada
-    this.#unidad = unidad
-    this.sprite = null
-  }
-
-  getCoordenada (){
-    return this.#coordenada
-  }
-
-  // Quitar esta función y hacer composición
-  public getTerrenoObjeto = ():Terreno|null => {
-    return ListaTerrenos[this.#tipo]
-  }
-  public getTipo = () => {
-    return this.#tipo
-  }
-  public setTipo = (nombreTerreno:nombreTerreno) => {
-    this.#tipo = nombreTerreno
-  }
-  public getPropietario = () => this.#propietario
-  public setPropietario (propietario:number|null){
-    this.#propietario = propietario
-  }
-  public getUnidad = () => this.#unidad
-  public setUnidad (unidad:UnidadCasilla|null){
-    unidad?.setCasilla(this)
-    this.#unidad = unidad
-  }
-  public getSprite (){
-    return
-  }
-  public setSprite (sprite:Konva.Image){
-    this.sprite = sprite
-  }
 }
 
 export class Mapa{
@@ -277,13 +194,14 @@ export class Mapa{
     mapaSimple.casillas.forEach(casillaSimple => {
 
       let refComandante = null
-      if ( casillaSimple.unidad?.propietario != null ){
+      if ( casillaSimple.unidad != null && casillaSimple.unidad.propietario != null ){
         refComandante = listaJugadores[casillaSimple.unidad.propietario].getComandantesJugador()[0]
       }
+      // Las unidades se tendrian que crear luego de que se terminen de crear el objeto del mapa para tener acceso a las casillas
       const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
         new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario: casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
           municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado, turnos: casillaSimple.unidad.turnos },
-        refComandante) : null
+        refComandante, null) : null
 
       _casillasCompletas.push({
         sprite: null,
@@ -434,6 +352,16 @@ export class Mapa{
     })
 
     return listaPropiedades
+  }
+
+  public getCasillasSeleccionadas (coordenadas: coordenada[]):Casilla[]{
+    const casillasSeleccionadas:Casilla[] = []
+    coordenadas.forEach(coord => {
+      const casillaSeleccionada = this.getCasilla(coord)
+      if ( casillaSeleccionada != null )
+        casillasSeleccionadas.push()
+    })
+    return casillasSeleccionadas
   }
 }
 

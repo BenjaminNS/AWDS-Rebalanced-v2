@@ -5,7 +5,8 @@ TerrainTilesheets.src = terrainTilesheets
 import { sleep } from '../common.js'
 import { listaPaises } from '../comandantes/paises.ts'
 import { arregloTerrenosNombres, type nombreTerreno } from './terreno.ts'
-import { type coordenada, type dimension, Casilla, Mapa } from './mapa.ts'
+import { type dimension, Mapa } from './mapaJuego.ts'
+import { type coordenada, Casilla } from './casilla.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 import { generarCapaCaminos } from './konvaCamino.ts'
 

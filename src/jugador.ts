@@ -1,7 +1,7 @@
 import type { ComandanteBase } from './comandantes/ComandanteBase'
 export type equipo = 'A'|'B'|'C'|'D'
 import type { jugadorData } from './componentes/JugadorDiv'
-import type { Mapa } from './mapa/mapa'
+import type { Mapa } from './mapa/mapaJuego'
 import type { nombreTerreno } from './mapa/terreno'
 
 export class Jugador {

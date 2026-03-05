@@ -1,5 +1,5 @@
 import './style.css'
-import { Mapa, MapaSimple, type coordenada } from './mapa/mapa.ts'
+import { Mapa, MapaSimple, type coordenada } from './mapa/mapaJuego.ts'
 import { Jugador } from './jugador.ts'
 import { Reglas } from './reglas.ts'
 import { esClima } from './clima.ts'

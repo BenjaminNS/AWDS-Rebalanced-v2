@@ -1,6 +1,6 @@
 import type Konva from 'konva'
 import { pintarCamino } from './mapa/konvaCamino'
-import { type coordenada } from './mapa/mapa'
+import { type coordenada } from './mapa/casilla'
 import { Layer } from 'konva/lib/Layer'
 export type cordCosto = coordenada & { costo:number, movDisponible:number }
 export type direccion = 'arriba'|'izquierda'|'derecha'|'abajo'
