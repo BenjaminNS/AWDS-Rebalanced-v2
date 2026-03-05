@@ -130,6 +130,11 @@ form{
 
 .konvajs-content{
   margin: auto;
+}
+
+#mapa-konva{
+  filter: saturate(0.9) brightness(0.9);
+}
 
 ul li, ol li {
   margin-left: 1.25em;
