@@ -130,4 +130,9 @@ form{
 
 .konvajs-content{
   margin: auto;
+
+ul, ol{
+  li{
+    margin-left: 1.25em;
+  }
 }

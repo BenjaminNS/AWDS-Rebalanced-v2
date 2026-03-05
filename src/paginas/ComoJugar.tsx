@@ -1,7 +1,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import './style.css'
+import './../style.css'
 import { Header, ElementosHeader } from './../componentes/header.tsx'
+import './comojugar.css'
 
 function ComoJugar (){
   return <>
