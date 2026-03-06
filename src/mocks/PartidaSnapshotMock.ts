@@ -2,9 +2,9 @@ import { PartidaSnapshot } from '../partida'
 import mapaFastBrawl from './mapa_fast-brawl_513014.json'
 import { usuario1, usuario2, usuario3 } from './jugadoresMocks'
 import { Reglas } from '../reglas'
-import { Mapa } from '../mapa/mapaJuego'
+import { Mapa, MapaSimple } from '../mapa/mapaJuego'
 
-const mapaFastBrawlTyped = mapaFastBrawl as Mapa
+const mapaFastBrawlTyped = mapaFastBrawl as MapaSimple
 const reglas = new Reglas(1000, 99999, null, null, 'Soleado', true, null, 'Normal', false)
 const listaJugadores = [usuario1, usuario2, usuario3]
 const mapaCompleto = Mapa.generarMapaCompleto(mapaFastBrawlTyped, listaJugadores)

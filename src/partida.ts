@@ -11,7 +11,7 @@ import type { UnidadCasilla } from './unidades/unidades.ts'
 
 // Clase PartidaSnapshot: una captura del estatus de una partida.
 export class PartidaSnapshot {
-  Mapa: MapaSimple
+  Mapa: MapaSimple|Mapa
   // Aquí pudieran guardarse los id's de los jugadores en vez de todo el objeto
   // y ya en la partidaJuego se carga el dato del jugador
   Jugadores: Jugador[]
@@ -22,7 +22,7 @@ export class PartidaSnapshot {
   ordenJugadores: number[] // Lista de id's de jugadores (o sus nombres) ordenados. Técnicamente se pueden sacar del orden del arreglo
   fechaEmpezado: Date
 
-  constructor (Mapa: MapaSimple, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date){
+  constructor (Mapa: MapaSimple|Mapa, Jugadores: Jugador[], Reglas: Reglas, climaActual: Clima, diaActual: number, turnoActual: number, ordenJugadores: number[], fechaEmpezado: Date){
     this.Mapa = Mapa
     this.Jugadores = Jugadores
     this.Reglas = Reglas
