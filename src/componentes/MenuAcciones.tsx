@@ -3,19 +3,25 @@ import React from 'react'
 import './MenuAcciones.css'
 
 export type opcionAccion = {
-  texto: string,
+  nombre: string,
   clickHandler: () => void
 }
 
-export function MenuAcciones (opciones:opcionAccion[]){
-  // const { opciones, setOpciones } = useState([])
+export function MenuAcciones ({ opciones, setOpciones } : {opciones:opcionAccion[]|null, setOpciones: Function}){
+
+  if ( opciones == null || opciones.length === 0 )
+    return
+
   return (
-    <>
+    <div id='contenedor-menu-acciones'>
       <div id='menu-acciones'>
         {opciones.map((opcion) => (
-          <button className='opcion-accion' onClick={opcion.clickHandler}>{opcion.texto}</button>
+          <button key={opcion.nombre} className='opcion-accion bg-gray-300 hover:bg-gray-400 px-2 py-1 font-medium' onClick={() => {
+            setOpciones([])
+            opcion.clickHandler()
+          }}>{opcion.nombre}</button>
         ))}
       </div>
-    </>
+    </div>
   )
 }
