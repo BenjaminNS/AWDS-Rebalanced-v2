@@ -246,7 +246,7 @@ export abstract class ComandanteBase{
     // TODO: Revisa si hay municiones, esta dentro del rango y si contraataque es mayor a 0
     return true
   }
-  public getMultiplicadorContraataque (casillas: {atacante: Casilla, defensiva: Casilla}){
+  public getMultiplicadorContraataque (casilla: {atacante: Casilla, defensiva: Casilla}){
     return 1
   }
   public getPrioridadAtaque (esContraataque: boolean){
@@ -390,6 +390,7 @@ export abstract class ComandanteBase{
               comprarUnidad(unidadNombre)
             } else {
               // TODO: Animación de shake en seccion de dinero
+              // SFX de accion negada
               console.log('No tienes fondos suficientes')
             }
           }
