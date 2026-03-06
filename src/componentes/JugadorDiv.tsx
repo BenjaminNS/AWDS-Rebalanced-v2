@@ -51,7 +51,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
               <div className="carga-cop mb-2" title={jugador.cargaActual.toString()} style={{ '--porcentajeCarga': ( jugador.cargaActual / jugador.cargaMaxima * 100 ) + '%', width: (jugador.estrellas * 10) + '%' }}>
                 {Array.from({ length: Math.max(0, jugador.estrellas - 1) }).map((_, j) => {
                   const index = jugador.poderes.findIndex(poder => (poder.estrellas - 1) === j)
-                  return <div className={ index !== -1 ? 'separador poder' : 'separador'}></div>
+                  return <div key={j} className={ index !== -1 ? 'separador poder' : 'separador'}></div>
                 }
                 )}
               </div>
@@ -61,7 +61,7 @@ export function DivJugadores ({ jugadoresData, turnoActual }: { jugadoresData: j
               {
                 // Agregar evento de click en los poderes
                 jugador.poderes.map((poder, j) => (
-                  <button key={j} disabled={jugador.cargaActual < poder.costo || turnoActual !== i} className='rounded-xl cursor-pointer py-1.5 px-3 bg-orange-200 hover:bg-orange-300 font-bold border-b-gray-500' style={{ flexGrow: '1', maxWidth: '50%', borderWidth: '1px' }}>{poder.nombre} ({poder.estrellas}★)</button>
+                  <button key={poder.nombre} disabled={jugador.cargaActual < poder.costo || turnoActual !== i} className='rounded-xl cursor-pointer py-1.5 px-3 bg-orange-200 hover:bg-orange-300 font-bold border-b-gray-500' style={{ flexGrow: '1', maxWidth: '50%', borderWidth: '1px' }}>{poder.nombre} ({poder.estrellas}★)</button>
                 ))
               }
             </div>
