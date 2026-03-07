@@ -9,11 +9,16 @@ export type opcionAccion = {
 
 export function MenuAcciones ({ opciones, setOpciones } : {opciones:opcionAccion[]|null, setOpciones: Function}){
 
+  const rightClickHandler = (ev:Event) => {
+    ev.preventDefault()
+    setOpciones([])
+  }
+
   if ( opciones == null || opciones.length === 0 )
     return
 
   return (
-    <div id='contenedor-menu-acciones'>
+    <div id='contenedor-menu-acciones' onContextMenu={rightClickHandler}>
       <div id='menu-acciones'>
         {opciones.map((opcion) => (
           <button key={opcion.nombre} className='opcion-accion bg-gray-300 hover:bg-gray-400 px-2 py-1 font-medium' onClick={() => {
