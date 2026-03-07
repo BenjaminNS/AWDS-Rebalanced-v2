@@ -7,6 +7,7 @@ import { PartidaJuego } from './../partida.ts'
 import { CursorMapaJuego } from './../cursorMapa.ts'
 import type { Jugador } from './../jugador.ts'
 import { PartidaSnapshotMock } from '../mocks/PartidaSnapshotMock.ts'
+import { MenuAcciones } from './MenuAcciones.tsx'
 
 export function GameUI (){
   const partidaJuego:React.RefObject<PartidaJuego> = useRef(null)
@@ -26,6 +27,7 @@ export function GameUI (){
   const [propiedadSeleccionada, setPropiedadSeleccionada] = useState(false)
   const [unidadesCompra, setUnidadesCompra] = useState([])
   const [turnoActual, setTurnoActual] = useState(0)
+  const [opcionesMenuAccion, setOpcionesMenuAccion] = useState()
 
   const terminarTurnoBtnClickHandler = React.useCallback(() => {
     partidaJuego.current.siguienteJugador()
@@ -59,7 +61,8 @@ export function GameUI (){
     new CursorMapaJuego(partidaJuego.current.getMapa(), partidaJuego.current.getKonvaMapa(), {
       setInfoCasilla: setInfoCasilla, setCasillaHover: setCasillaHover,
       setCasillaSeleccionada: setCasillaSeleccionada, setJugadorActual: setJugadorActual,
-      setPropiedadSeleccionada: setPropiedadSeleccionada, setUnidadesCompra: setUnidadesCompra
+      setPropiedadSeleccionada: setPropiedadSeleccionada, setUnidadesCompra: setUnidadesCompra,
+      setOpcionesMenuAccion: setOpcionesMenuAccion
     }, {
       getJugadorActual: ():Jugador => {
         return partidaJuego.current.getJugadorActual()
@@ -76,7 +79,7 @@ export function GameUI (){
           {React.useMemo(() => (
             <CompraUnidadesMenu listaUnidades={unidadesCompra} propiedadSeleccionada={propiedadSeleccionada} setPropiedadSeleccionada={setPropiedadSeleccionada} actualizarInfo={actualizarInfoJugadores}/>
           ), [unidadesCompra, propiedadSeleccionada])}
-          {/* <div id="menu-acciones"></div> */}
+          <MenuAcciones opciones={opcionesMenuAccion} setOpciones={setOpcionesMenuAccion}></MenuAcciones>
         </div>
         <div>
           <h1 className='text-center font-bold text-xl'>Dia {diaActual}</h1>
