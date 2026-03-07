@@ -130,6 +130,20 @@ export class CursorMapaJuego {
     })
     // this.mapa.agregarEventoHover(handleHoverMapa, tamanoCasilla)
     this.casillaSeleccionada = null
+
+  #getContextoAcciones () {
+    return {
+      konvaMapa: this.#konvaMapa,
+      bloquearInteracciones: this.bloquearInteracciones.bind(this),
+      desbloquearInteracciones: this.desbloquearInteracciones.bind(this),
+      moverUnidad,
+      ultimaCasillaSeleccionada: this.ultimaCasillaSeleccionada,
+      camino: this.camino,
+      mapa: this.mapa,
+      unidadSeleccionada: this.unidadSeleccionada,
+      ordenUnidad: this.ordenUnidad,
+      deseleccionarCasilla: this.deseleccionarCasilla.bind(this)
+    }
   }
 
   // Quitar parte asíncrona, va donde se ejecute la orden
