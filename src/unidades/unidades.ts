@@ -368,10 +368,88 @@ export class UnidadCasilla {
     return this.#contraataque
   }
 
-  getAccionesDisponibles (){
-    // Hacer verificacion de que acciones puede retornar
-    // Dependiendo el contexto
-    return 'Esperar'
+  // TODO: Hacer verificacion de que acciones puede retornar
+  // Dependiendo el contexto
+
+  /*
+    ESPERAR: La casilla seleccionada no este ocupada por otra unidad (propia o de enemigo,
+    a menos que haya FOG y no tenga vision de esta area, o este oculta)
+    ATACAR: Desde la casilla seleccionada hay matchups disponibles, municiones disponibles,
+    tiene permitido atacar ahi (ej: indirectos si se movieron)
+    ABORDAR: Si la casilla seleccionada contiene una unidad que puede transportar el tipo
+    de unidad que está intentando abordar y tiene cupo disponible
+    COMBINAR: Si la casilla seleccionada contiene una unidad del mismo tipo que tenga 90
+    o menos puntos de vida o también si es una unidad de transporte que contenga esa unidad
+    SOLTAR: Es una unidad de transporte que contenga al menos una unidad abordando
+    esta unidad y hay casillas "libres" y posibles alrededor
+    CAPTURAR: Si la casilla seleccionada es una propiedad, no es del comandante actual
+    y la unidad tiene esa habilidad
+    OCULTAR/MOSTRAR: Si la unidad tiene la habilidad, es un switch, aparece una habilidad
+    u otra dependiendo el estado actual de esa unidad
+    REPONER: si la unidad tiene la habilidad y tiene al menos una unidad aliada adyacente
+    (del mismo comandante o de equipo) adyacentes a esta unidad
+    REPARAR: si la unidad tiene la habilidad, si hay al menos una unidad aliada adyacente
+    (del mismo comandante o de equipo) adyacentes a esta unidad que tenga 90 o menos de HP
+    */
+  /**
+   * Obtiene las acciones disponibles para la unidad según el contexto.
+   * @param contexto Objeto con referencias necesarias para las acciones.
+   * Debe incluir: {
+   *   konvaMapa,
+   *   bloquearInteracciones,
+   *   desbloquearInteracciones,
+   *   moverUnidad,
+   *   ultimaCasillaSeleccionada,
+   *   camino,
+   *   mapa,
+   *   unidadSeleccionada,
+   *   ordenUnidad,
+   *   deseleccionarCasilla
+   * }
+   */
+  getAccionesDisponibles (contexto: {
+    konvaMapa: any,
+    bloquearInteracciones: () => void,
+    desbloquearInteracciones: () => void,
+    moverUnidad: Function,
+    ultimaCasillaSeleccionada: any,
+    camino: any,
+    mapa: any,
+    unidadSeleccionada: any,
+    ordenUnidad: any,
+    deseleccionarCasilla: () => void
+  }) {
+    // Por ahora solo acción Esperar
+    return [{
+      nombre: 'Esperar',
+      clickHandler: () => {
+        console.log('Esperar...')
+        contexto.konvaMapa.ocultarCasillasCuadros(contexto.konvaMapa.getCapaCasillas())
+        contexto.bloquearInteracciones()
+
+        contexto.moverUnidad(
+          contexto.ultimaCasillaSeleccionada,
+          contexto.camino.getDirecciones(),
+          contexto.konvaMapa.getTamanoCasilla(),
+          contexto.mapa
+        )
+          .then(() => true)
+          .catch(() => {
+            console.log('Movimiento interrumpido')
+            // TO-DO: Agregar hud de click
+            return false
+          })
+          .finally(() => {
+            console.log('Camino: ', contexto.camino.getCamino())
+            contexto.desbloquearInteracciones()
+            contexto.unidadSeleccionada.gastarTurno()
+            contexto.camino.limpiarCoordenadasCamino()
+            // contexto.ordenUnidad.limpiarOrden()
+            contexto.unidadSeleccionada = null
+            contexto.deseleccionarCasilla()
+          })
+      }
+    }]
   }
 
   getSprite (){
