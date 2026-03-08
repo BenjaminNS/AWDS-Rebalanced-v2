@@ -24,6 +24,7 @@ type fnSetters = {
   setJugadorActual: Function,
   setPropiedadSeleccionada: Function,
   setUnidadesCompra: Function
+  setOpcionesMenuAccion: Function
 }
 type fnGetter = {
   getJugadorActual: ()=>Jugador,
@@ -97,9 +98,8 @@ export class CursorMapaJuego {
     })
     // hoverMouse/MouseMove
     this.#konvaMapa.getKonvaStage()?.on('mousemove', () => {
-      if ( !this.#hoverFlag ){
+      if ( !this.#hoverFlag )
         return
-      }
 
       // if se tiene abierto un menú (los botones tienen el evento de mouseover) return
       const pos = this.#konvaMapa.getKonvaStage()?.getPointerPosition()
