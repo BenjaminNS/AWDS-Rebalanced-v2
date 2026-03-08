@@ -190,7 +190,17 @@ export class CursorMapaJuego {
     this.#fnReactSetters.setOpcionesMenuAccion(accionesDisponibles)
   }
 
+  desbloquearInteracciones (){
+    this.#leftClick = true
+    this.#hoverFlag = true
+    this.#rightClick = true
   }
+  bloquearInteracciones (){
+    this.#leftClick = false
+    this.#hoverFlag = false
+    this.#rightClick = false
+  }
+
   #actualizarInfoCasilla (coordHover: coordenada, casillaHover: Casilla){
     // Solo debería acomodar la imagen del cursor cuando no hay algún menú abierto en el canva
     this.cursorImg.x(coordHover.x * this.#konvaMapa.getTamanoCasilla())
