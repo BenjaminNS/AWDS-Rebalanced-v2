@@ -32,8 +32,7 @@ type fnGetter = {
 
 // Interfaz para interactuar con el mapa
 export class CursorMapaJuego {
-  private coordSeleccionada: null|coordenada
-  private casillaSeleccionada: null|Casilla
+  private ultimaCasillaSeleccionada: null|Casilla
   #leftClick = true
   #hoverFlag = true
   #rightClick = true
@@ -46,7 +45,10 @@ export class CursorMapaJuego {
   #fnReactSetters: fnSetters
   #fnGetters: fnGetter
   private cursorImg:Konva.Image
-  #otros: any
+  #otros: object
+
+  unidadSeleccionada!:UnidadCasilla|null
+
   // #reactSetters:Function[]
   // private layerGUI:Konva.Layer
 
@@ -65,7 +67,6 @@ export class CursorMapaJuego {
     this.#fnGetters = fnGetters
     this.#konvaMapa = konvaMapa
 
-    this.coordSeleccionada = null
     this.mapa = mapa
     this.#otros = otros
     this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
@@ -148,42 +149,24 @@ export class CursorMapaJuego {
 
   // Quitar parte asíncrona, va donde se ejecute la orden
   private async seleccionarCasilla (coord: coordenada):boolean{
-    if ( !this.coordSeleccionada ){
+    if ( !this.ultimaCasillaSeleccionada ){
       const tempCasilla = this.mapa.getCasilla(coord)
       if ( tempCasilla == null ) return false
 
       const unidadSeleccionada = tempCasilla.getUnidad()
       if ( unidadSeleccionada != null && unidadSeleccionada.getTurnos() ){
-        this.coordSeleccionada = coord
-        this.casillaSeleccionada = this.mapa.getCasilla(coord) as Casilla
-        this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, unidadSeleccionada))
-
-        this.camino.setMaxCosto(unidadSeleccionada.getRefComandante()?.getMaxMovilidad(unidadSeleccionada) ?? 0)
-        this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
-
-        this.#konvaMapa.mostrarCasillasCuadros(this.camino.getCoordenadasDisponibles())
-        return true
+        return this.#mostrarCasillasMovimiento(unidadSeleccionada, coord)
 
       // Si es tu propiedad y no tiene unidad encima
       } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
-        const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getListaUnidadesCompraDatos(tempCasilla,
-          (unidadNombre: nombreUnidad) => {
-            this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municionesActuales: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual().getComandantesJugador()[0], tempCasilla), coord)
-          })
-        if ( unidadesCompraDatos.length > 0 ){
-          this.#fnReactSetters.setPropiedadSeleccionada(true)
-          this.#fnReactSetters.setUnidadesCompra(unidadesCompraDatos)
-          return true
-        } else {
-          return false
-        }
+        return this.#abrirMenuCompra(tempCasilla, coord)
       }
       else {
         return false
       }
     } else {
-      const unidadSeleccionada = this.casillaSeleccionada?.getUnidad() as UnidadCasilla
+      const unidadSeleccionada = this.ultimaCasillaSeleccionada?.getUnidad() as UnidadCasilla
       // Si no es tu unidad...
       if ( unidadSeleccionada.getPropietario() !== this.#fnGetters.getTurnoActual() ){
         accionInvalidaSFX_player.play()
@@ -194,37 +177,58 @@ export class CursorMapaJuego {
         accionInvalidaSFX_player.play()
         return false
       }
-      const spriteUnidad = this.#konvaMapa.getCapaUnidad().findOne(`#${unidadSeleccionada?.id}`) as Konva.Sprite
 
-      if ( spriteUnidad ){
-        this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
-
-        this.#leftClick = false
-        this.#hoverFlag = false
-        this.#rightClick = false
-
-        moverUnidad(this.coordSeleccionada, spriteUnidad, this.camino.getDirecciones(), this.#konvaMapa.getTamanoCasilla(), this.mapa).then(res => {
-          console.log('Response: ', res)
-          return true
-        })
-          .catch(() => {
-            console.log('Movimiento interrumpido')
-            // TO-DO: Agregar hud de click
-            return false
-          })
-          .finally(() => {
-            console.log('Camino: ', this.camino.getCamino())
-            this.#leftClick = true
-            this.#hoverFlag = true
-            this.#rightClick = true
-            unidadSeleccionada.gastarTurno()
-            this.camino.limpiarCoordenadasCamino()
-            this.deseleccionarCasilla()
-          })
-      }
+      this.unidadSeleccionada = unidadSeleccionada
+      this.#mostrarOpcionesMenu(unidadSeleccionada)
     }
 
     return true
+  }
+
+  #mostrarOpcionesMenu (unidadSeleccionada: UnidadCasilla){
+    const accionesDisponibles = unidadSeleccionada.getAccionesDisponibles(this.#getContextoAcciones())
+    this.#fnReactSetters.setOpcionesMenuAccion(accionesDisponibles)
+  }
+
+  }
+  #actualizarInfoCasilla (coordHover: coordenada, casillaHover: Casilla){
+    // Solo debería acomodar la imagen del cursor cuando no hay algún menú abierto en el canva
+    this.cursorImg.x(coordHover.x * this.#konvaMapa.getTamanoCasilla())
+    this.cursorImg.y(coordHover.y * this.#konvaMapa.getTamanoCasilla())
+
+    this.#fnReactSetters.setInfoCasilla({
+      estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
+      gasActual: casillaHover.getUnidad()?.getGasActual(),
+      gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
+      hp: casillaHover.getUnidad()?.getHp(),
+      municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
+      municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
+      status: casillaHover.getUnidad()?.getEstado(),
+      terreno: casillaHover.getTipo()
+    })
+  }
+  #mostrarCasillasMovimiento (unidadSeleccionada: UnidadCasilla, coord: coordenada){
+    this.ultimaCasillaSeleccionada = this.mapa.getCasilla(coord) as Casilla
+    this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, unidadSeleccionada))
+
+    this.camino.setMaxCosto(unidadSeleccionada.getRefComandante()?.getMaxMovilidad(unidadSeleccionada) ?? 0)
+    this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
+
+    this.#konvaMapa.mostrarCasillasCuadros(this.camino.getCoordenadasDisponibles())
+    return true
+  }
+  #abrirMenuCompra (tempCasilla: Casilla, coord: coordenada){
+    const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getListaUnidadesCompraDatos(tempCasilla,
+      (unidadNombre: nombreUnidad) => {
+        this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municionesActuales: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual().getComandantesJugador()[0], tempCasilla), coord)
+      })
+    if ( unidadesCompraDatos.length > 0 ){
+      this.#fnReactSetters.setPropiedadSeleccionada(true)
+      this.#fnReactSetters.setUnidadesCompra(unidadesCompraDatos)
+      return true
+    } else {
+      return false
+    }
   }
 
   private deseleccionarCasilla (){
