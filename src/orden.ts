@@ -2,7 +2,7 @@ import { type Casilla, type coordenada } from './mapa/casilla'
 import { Mapa } from './mapa/mapaJuego'
 // import type { Unidad } from "./unidades/unidades";
 import Konva from 'konva'
-import type { Unidad, UnidadCasilla } from './unidades/unidades'
+import type { UnidadCasilla } from './unidades/unidades'
 import { generarCoordenadaVector } from './camino'
 import { type direccion } from './camino'
 const durationMovement = .25
@@ -154,17 +154,23 @@ export class OrdenUnidad {
   }
 }
 
-export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sprite, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<boolean>{
-  // Regresar un arreglo de las casillas avanzadas
+export async function moverUnidad (casOrigen:Casilla, direcciones: (direccion|'ninguno')[], tamanoCasilla:number, mapa:Mapa):Promise<boolean>{
+  // TO-DO: Regresar un arreglo de las casillas avanzadas
   return new Promise(async (resolve, reject) => {
-    const coordDestino = { ...coordOrigen }
-    const casillaOrigen = mapa.getCasilla(coordDestino) as Casilla
+    const konvaGroupUnidad = casOrigen.getUnidad()?.getUnitKonvaGroup()
+    if ( konvaGroupUnidad == null ){
+      reject()
+      return
+    }
+
+    const coordDestino = { ...casOrigen.getCoordenada() }
+    const casillaOrigen = casOrigen
     let casillaFinal = mapa.getCasilla(coordDestino) as Casilla
     let casillaDestino = mapa.getCasilla(coordDestino) as Casilla
     const unidadSeleccionada = mapa.getCasilla(coordDestino)?.getUnidad() as UnidadCasilla
 
     for (const direccion of direcciones) {
-      const translateCoord = generarCoordenadaVector(direccion)
+      const translateCoord = generarCoordenadaVector(direccion as direccion)
       if (translateCoord.x === 0 && translateCoord.y === 0) {
         reject()
         return
@@ -183,10 +189,10 @@ export async function moverUnidad (coordOrigen:coordenada, spriteUnidad:Konva.Sp
       } else {
         await new Promise((res) => {
           new Konva.Tween({
-            node: spriteUnidad,
+            node: konvaGroupUnidad,
             duration: durationMovement,
-            x: spriteUnidad.x() + tamanoCasilla * translateCoord.x,
-            y: spriteUnidad.y() + tamanoCasilla * translateCoord.y,
+            x: konvaGroupUnidad.x() + tamanoCasilla * translateCoord.x,
+            y: konvaGroupUnidad.y() + tamanoCasilla * translateCoord.y,
             onFinish: () => {
               unidadSeleccionada.gastarGasolinaTerreno(casillaDestino.getTipo())
               casillaFinal = mapa.getCasilla(coordDestino) as Casilla
