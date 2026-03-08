@@ -108,24 +108,11 @@ export class CursorMapaJuego {
       const casillaHover = this.mapa.getCasilla(coordHover)
       if ( casillaHover == null ) return
 
-      // if hay unidad seleccionada en proceso de escoger camino y casillaHover es nueva en la ruta
-      if ( this.casillaSeleccionada?.getUnidad() != null && this.coordSeleccionada != null ){
+      // Si hay unidad seleccionada en proceso de escoger camino y casillaHover es nueva en la ruta
+      if ( this.ultimaCasillaSeleccionada?.getUnidad() != null ){
         this.camino.agregarCoordenada(coordHover)
       } else {
-        // Solo debería acomodar la imagen del cursor cuando no hay algún menú abierto en el canva
-        this.cursorImg.x(coordHover.x * this.#konvaMapa.getTamanoCasilla())
-        this.cursorImg.y(coordHover.y * this.#konvaMapa.getTamanoCasilla())
-
-        this.#fnReactSetters.setInfoCasilla({
-          estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
-          gasActual: casillaHover.getUnidad()?.getGasActual(),
-          gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
-          hp: casillaHover.getUnidad()?.getHp(),
-          municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
-          municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
-          status: casillaHover.getUnidad()?.getEstado(),
-          terreno: casillaHover.getTipo()
-        })
+        this.#actualizarInfoCasilla(coordHover, casillaHover)
       }
 
     })
