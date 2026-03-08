@@ -1,7 +1,6 @@
 import type Konva from 'konva'
 import { pintarCamino } from './mapa/konvaCamino'
 import { type coordenada } from './mapa/casilla'
-import { Layer } from 'konva/lib/Layer'
 export type cordCosto = coordenada & { costo:number, movDisponible:number }
 export type direccion = 'arriba'|'izquierda'|'derecha'|'abajo'
 
@@ -10,7 +9,6 @@ export class Camino{
   private coordenadasDisponibles:cordCosto[] = []
   private coordenadasCamino:cordCosto[] = []
   private maxCosto:number = 0
-  private layerCamino:Konva.Layer
   constructor (){}
 
   public setMaxCosto (maxCosto:number){
@@ -38,10 +36,10 @@ export class Camino{
 
     const indexCamino = this.getIndexCamino(coord)
 
-    if ( indexCamino != -1 && (indexCamino + 1) === this.coordenadasCamino.length ){
+    if ( indexCamino !== -1 && (indexCamino + 1) === this.coordenadasCamino.length ){
       return false
     }
-    if ( indexCamino != -1 ){
+    if ( indexCamino !== -1 ){
       this.coordenadasCamino.splice( ( indexCamino + 1 ), 1 )
       pintarCamino(this.layerCamino, this.coordenadasCamino, this.getDirecciones())
       return true
@@ -112,22 +110,22 @@ export class Camino{
 
       // top, left, right, bottom
       index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x, y: caminoCoord[0].y - 1 })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
+      if ( index !== -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         maxMovilidad = Math.max(this.coordenadasDisponibles[index].movDisponible, maxMovilidad)
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x - 1, y: caminoCoord[0].y })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
+      if ( index !== -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         maxMovilidad = Math.max(this.coordenadasDisponibles[index].movDisponible, maxMovilidad)
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x + 1, y: caminoCoord[0].y })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
+      if ( index !== -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         maxMovilidad = Math.max(this.coordenadasDisponibles[index].movDisponible, maxMovilidad)
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
       index = this.getIndexCoordenadaDisponible({ x: caminoCoord[0].x, y: caminoCoord[0].y + 1 })
-      if ( index != -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
+      if ( index !== -1 && ( this.coordenadasDisponibles[index].movDisponible >= caminoCoord[0].movDisponible ) ){
         maxMovilidad = Math.max(this.coordenadasDisponibles[index].movDisponible, maxMovilidad)
         posiblesCaminos.push(this.coordenadasDisponibles[index])
       }
