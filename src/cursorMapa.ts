@@ -130,7 +130,8 @@ export class CursorMapaJuego {
 
     })
     // this.mapa.agregarEventoHover(handleHoverMapa, tamanoCasilla)
-    this.casillaSeleccionada = null
+    this.ultimaCasillaSeleccionada = null
+  }
 
   #getContextoAcciones () {
     return {
@@ -243,10 +244,9 @@ export class CursorMapaJuego {
 
   private deseleccionarCasilla (){
     // Si se seleccionó una propiedad
-    // ocultarMenuOpciones()
+    // ocultarMenuCompra()
     // Si se seleccionó una unidad
-    this.coordSeleccionada = null
-    this.casillaSeleccionada = null
+    this.ultimaCasillaSeleccionada = null
     this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCasillas())
     this.#konvaMapa.ocultarCasillasCuadros(this.#konvaMapa.getCapaCamino())
   }
@@ -256,12 +256,8 @@ export class CursorMapaJuego {
     // o escoger una opción de menú
     this.deseleccionarCasilla()
   }
-
-  public limpiarCoordSeleccionada (){
-    this.coordSeleccionada = null
-  }
   public getCasillaSeleccionada (){
-    return this.coordSeleccionada
+    return this.ultimaCasillaSeleccionada
   }
 
 }
