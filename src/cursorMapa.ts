@@ -161,7 +161,8 @@ export class CursorMapaJuego {
         return false
       }
       // Si la casilla que estas seleccionando tiene otra unidad ocupando el espacio
-      if ( this.mapa.getCasilla(coord)?.getUnidad() != null ){
+      if ( this.mapa.getCasilla(coord)?.getUnidad() != null
+      && this.mapa.getCasilla(coord)?.getUnidad()?.id !== unidadSeleccionada.id ){
         accionInvalidaSFX_player.play()
         return false
       }
