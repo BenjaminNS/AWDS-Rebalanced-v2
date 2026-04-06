@@ -1,3 +1,5 @@
+import type { nombreUnidad } from '../unidades/unidadInfoBasica'
+
 type Recompensa = Partial<{
   dinero?: number,
   ataque?: number, // Torre de comunicación
@@ -7,10 +9,12 @@ type Recompensa = Partial<{
 export class Propiedad{
   #propietario: number
   #recompensas: Recompensa
+  #opcionesCompra: nombreUnidad[]
 
-  constructor ({ propietario, recompensas }: {propietario: number, recompensas: Recompensa}){
+  constructor ({ propietario, recompensas, opcionesCompra }: {propietario: number, recompensas: Recompensa, opcionesCompra: nombreUnidad[]}){
     this.#propietario = propietario
     this.#recompensas = recompensas
+    this.#opcionesCompra = opcionesCompra
   }
   setPropietario (propietario: number){
     this.#propietario = propietario
@@ -20,5 +24,9 @@ export class Propiedad{
   }
   getRecompensas (){
     return this.#recompensas
+  }
+
+  getOpcionesCompra (){
+    return this.#opcionesCompra
   }
 }
