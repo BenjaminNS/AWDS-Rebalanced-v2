@@ -1,8 +1,8 @@
-import { ListaTerrenos } from './terreno'
-import type { nombreTerreno } from './terreno'
+import { ListaTerrenos } from '../terreno/terreno'
+import type { nombreTerreno } from '../terreno/terreno'
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
-import { tamanoCasilla } from './spriteTerrenos'
+import { tamanoCasilla } from '../terreno/spriteTerrenos'
 import type { Jugador } from '../jugador'
 import { Casilla, CasillaSimple, type coordenada } from './casilla'
 

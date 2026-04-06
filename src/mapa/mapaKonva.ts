@@ -4,7 +4,7 @@ const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src = terrainTilesheets
 import { sleep } from '../common.js'
 import { listaPaises } from '../comandantes/paises.ts'
-import { arregloTerrenosNombres, type nombreTerreno } from './terreno.ts'
+import { arregloTerrenosNombres, type nombreTerreno } from '../terreno/terreno.ts'
 import { type dimension, Mapa } from './mapaJuego.ts'
 import { type coordenada, Casilla } from './casilla.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'

@@ -1,4 +1,4 @@
-import { type nombreTerreno } from '../mapa/terreno'
+import { type nombreTerreno } from '../terreno/terreno'
 export type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'|'naval'
 
 export const LibroMovilidad:Record<tipoMovimiento, Partial<Record<nombreTerreno, number>>> = {

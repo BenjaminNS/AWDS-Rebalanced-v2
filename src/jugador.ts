@@ -2,7 +2,7 @@ import type { ComandanteBase } from './comandantes/ComandanteBase'
 export type equipo = 'A'|'B'|'C'|'D'
 import type { jugadorData } from './componentes/JugadorDiv'
 import type { Mapa } from './mapa/mapaJuego'
-import type { nombreTerreno } from './mapa/terreno'
+import type { nombreTerreno } from './terreno/terreno'
 
 export class Jugador {
   #id: string // crypto.randomUUID

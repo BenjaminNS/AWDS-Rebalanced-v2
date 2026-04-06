@@ -3,7 +3,7 @@ import Konva from 'konva'
 import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad, generarShaderPropiedad } from './mapa/mapaKonva'
 import { Mapa } from './mapa/mapaJuego'
 import { Casilla, type coordenada } from './mapa/casilla'
-import { ListaTerrenos, type nombreTerreno } from './mapa/terreno'
+import { ListaTerrenos, type nombreTerreno } from './terreno/terreno'
 import { UnidadCasilla } from './unidades/unidades'
 import { ListaUnidades, type municiones, type nombreUnidad } from './unidades/unidadInfoBasica'
 let layerUnidad:Konva.Layer, layerTerreno:Konva.Layer
