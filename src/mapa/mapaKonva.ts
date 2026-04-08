@@ -4,7 +4,7 @@ const TerrainTilesheets = new window.Image()
 TerrainTilesheets.src = terrainTilesheets
 import { sleep } from '../common.js'
 import { listaPaises } from '../comandantes/paises.ts'
-import { arregloTerrenosNombres, type nombreTerreno } from '../terreno/terreno.ts'
+import { type nombreTerreno } from '../terreno/terrenov2.ts'
 import { type dimension, Mapa } from './mapaJuego.ts'
 import { type coordenada, Casilla } from './casilla.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -90,14 +90,14 @@ export async function generarMapaRelleno ({ dimensiones, idContenedor, tipoCasil
 
 // Subfunciones
 function generarCasillasAleatorias ({ dimensiones }: {dimensiones: dimension}){
-  const listaCasillas = []
-  for (let z = 0; z < (dimensiones.columnas * dimensiones.filas); z++) {
-    const tipoCasilla = arregloTerrenosNombres[Math.floor( (arregloTerrenosNombres.length - 1) * Math.random() )]
-    // TO-DO: Generar casillas de propiedades con propietario
-    listaCasillas.push(new Casilla(tipoCasilla, null, null))
-  }
+  // const listaCasillas = []
+  // for (let z = 0; z < (dimensiones.columnas * dimensiones.filas); z++) {
+  //   const tipoCasilla = arregloTerrenosNombres[Math.floor( (arregloTerrenosNombres.length - 1) * Math.random() )]
+  //   // TO-DO: Generar casillas de propiedades con propietario
+  //   listaCasillas.push(new Casilla(tipoCasilla, null, null))
+  // }
 
-  return listaCasillas
+  // return listaCasillas
 }
 
 function generarStage ({ idContenedor, dimensiones }: {idContenedor: string, dimensiones: dimension}){

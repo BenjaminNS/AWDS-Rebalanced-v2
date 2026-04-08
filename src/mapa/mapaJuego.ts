@@ -1,8 +1,8 @@
-import { ListaTerrenos } from '../terreno/terreno'
-import type { nombreTerreno } from '../terreno/terreno'
+import { getTerrenoClase } from '../terreno/terrenosClases'
+
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
-import { tamanoCasilla } from '../terreno/spriteTerrenos'
+import { type nombreTerreno, tamanoCasilla } from '../terreno/terrenov2'
 import type { Jugador } from '../jugador'
 import { Casilla, CasillaSimple, type coordenada } from './casilla'
 
@@ -224,7 +224,7 @@ export class Mapa{
 
   static obtenerTerrenos1Tipo (mapa: Mapa|MapaSimple, tipo:nombreTerreno):Set<coordenada|unknown>{
     const setCoordTerrenos = new Set()
-    if (!ListaTerrenos[tipo]){
+    if (getTerrenoClase(tipo).nombreCorto === 'invalido'){
       console.error('No existe ese tipo de terreno: ', tipo)
       return setCoordTerrenos
     }

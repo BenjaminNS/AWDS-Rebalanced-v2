@@ -1,5 +1,5 @@
 import { Terreno, type nombreTerreno } from '.././terrenov2'
-import { type spriteTerreno, type casillasAdyacentes, tamanoCasilla } from '.././spriteTerrenos'
+import { type spriteTerreno, type casillasAdyacentes, tamanoCasilla } from '.././terrenov2'
 
 export class Camino extends Terreno{
   constructor (){

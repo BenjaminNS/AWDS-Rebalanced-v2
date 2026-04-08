@@ -1,4 +1,4 @@
-import { type nombreTerreno } from '../terreno/terreno'
+import { type nombreTerreno } from '../terreno/terrenov2'
 import { fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../terreno/terrenosCompra'
 import { UnidadCasilla } from '../unidades/unidades'
 import type { nombresPaises } from './paises'

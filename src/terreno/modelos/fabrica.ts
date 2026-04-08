@@ -1,4 +1,4 @@
-import { type spriteTerreno, tamanoCasilla } from '.././spriteTerrenos'
+import { type spriteTerreno, tamanoCasilla } from '.././terrenov2'
 import { Propiedad } from '.././propiedad'
 
 export class Fabrica extends Propiedad{

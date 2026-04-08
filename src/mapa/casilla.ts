@@ -3,7 +3,7 @@ import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
 import { getTerrenoClase } from '../terreno/terrenosClases'
 import { type Terreno, type nombreTerreno } from '../terreno/terrenov2'
 import { Propiedad } from '../terreno/propiedad'
-import type { casillasAdyacentes, spriteTerreno } from '../terreno/spriteTerrenos'
+import type { casillasAdyacentes, spriteTerreno } from '../terreno/terrenov2'
 
 export type coordenada = {
   x: number,

@@ -1,5 +1,5 @@
 import { Terreno } from '.././terrenov2'
-import { type spriteTerreno, tamanoCasilla } from '.././spriteTerrenos'
+import { type spriteTerreno, tamanoCasilla } from '.././terrenov2'
 
 export class Invalido extends Terreno{
   constructor (){
