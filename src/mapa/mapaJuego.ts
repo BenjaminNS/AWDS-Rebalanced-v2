@@ -125,7 +125,7 @@ export class Mapa{
       // Que al menos cada comandante jugable tenga un tipo de fábrica
       if ( typeof this.casillas[i].getPropietario() === 'number'
         &&
-        ( this.casillas[i].getTipo() === 'fabrica' || this.casillas[i].getTipo() === 'aeropuerto' || this.casillas[i].getTipo() === 'puertoNaval' )
+        ( this.casillas[i].getNombreCorto() === 'fabrica' || this.casillas[i].getNombreCorto() === 'aeropuerto' || this.casillas[i].getNombreCorto() === 'puertoNaval' )
       ){
         setComandanteJugables.delete(this.casillas[i].getPropietario())
       }
@@ -347,7 +347,7 @@ export class Mapa{
 
     this.casillas.forEach(casilla => {
       if ( casilla.getPropietario() === numeroComandante ){
-        listaPropiedades.push(casilla.getTipo())
+        listaPropiedades.push(casilla.getNombreCorto())
       }
     })
 
@@ -410,7 +410,7 @@ function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: nu
   const casillaValida = mapa.getCasilla(coordDato)
   if ( casillaValida == null ) return null
 
-  const objTerreno = casillaValida.getTerrenoObjeto()
+  const objTerreno = casillaValida.getTerreno()
   if ( objTerreno == null ) return null
 
   const costoMovimiento = unidad.getLibroMovilidadTerreno(objTerreno.nombreCorto)

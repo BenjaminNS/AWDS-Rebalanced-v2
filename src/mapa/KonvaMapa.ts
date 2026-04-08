@@ -249,16 +249,15 @@ export class KonvaMapa{
     this.#capas.layerUnidad.add(unitKonvaGroup)
   }
   generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, mapa: Mapa):void{
-    const terreno = casilla.getTerrenoObjeto()
     const { x,y } = coordenada
     const casillasAdyacentes = {
-      top: mapa.getCasilla({ x: (x), y:(y - 1) })?.getTipo(),
-      left: mapa.getCasilla({ x: (x - 1), y:(y) })?.getTipo(),
-      right: mapa.getCasilla({ x: (x + 1), y:(y) })?.getTipo(),
-      bottom: mapa.getCasilla({ x: (x), y:(y + 1) })?.getTipo()
+      top: mapa.getCasilla({ x: (x), y:(y - 1) })?.getNombreCorto(),
+      left: mapa.getCasilla({ x: (x - 1), y:(y) })?.getNombreCorto(),
+      right: mapa.getCasilla({ x: (x + 1), y:(y) })?.getNombreCorto(),
+      bottom: mapa.getCasilla({ x: (x), y:(y + 1) })?.getNombreCorto()
     }
     // Objeto terreno
-    const objTerreno = terreno.obtenerSprite(casillasAdyacentes)
+    const objTerreno = casilla.getSpriteCalculado(casillasAdyacentes)
     const spriteTerreno = new Konva.Image({
       x: x * this.#tamanoCasilla,
       y: ( y * this.#tamanoCasilla - ( (objTerreno.height - this.#standardSpriteSize ) * (this.#tamanoCasilla / objTerreno.height) )),
@@ -273,8 +272,8 @@ export class KonvaMapa{
 
     const propietario = casilla.getPropietario()
 
-    if ( ( casilla.getTipo() === 'ciudad' || casilla.getTipo() === 'fabrica' || casilla.getTipo() === 'aeropuerto' ||
-    casilla.getTipo() === 'puertoNaval' ) && propietario != null ){
+    if ( ( casilla.getNombreCorto() === 'ciudad' || casilla.getNombreCorto() === 'fabrica' || casilla.getNombreCorto() === 'aeropuerto' ||
+    casilla.getNombreCorto() === 'puertoNaval' ) && propietario != null ){
       const aplicarTintado = () => {
         spriteTerreno.cache({
           pixelRatio: 1,

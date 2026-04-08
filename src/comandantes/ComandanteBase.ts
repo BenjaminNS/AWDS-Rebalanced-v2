@@ -363,7 +363,8 @@ export abstract class ComandanteBase{
     const unidadesCompraDatos:unidadCompra[] = []
 
     let propiedadUnidades
-    switch (propiedad.getTipo()){
+    // Esta lista debería regresarla la misma propiedad
+    switch (propiedad.getNombreCorto()){
     case 'fabrica':
       propiedadUnidades = fabricaUnidades
       break

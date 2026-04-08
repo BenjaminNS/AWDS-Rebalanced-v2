@@ -146,7 +146,7 @@ export class CursorMapaJuego {
         return this.#mostrarCasillasMovimiento(unidadSeleccionada, coord)
 
       // Si es tu propiedad y no tiene unidad encima
-      } else if ( tempCasilla.getTerrenoObjeto()?.propiedad != null && tempCasilla.getUnidad() == null
+      } else if ( tempCasilla.getPropietario != null && tempCasilla.getUnidad() == null
       && this.#fnGetters.getTurnoActual() === tempCasilla.getPropietario() ){
         return this.#abrirMenuCompra(tempCasilla, coord)
       }
@@ -196,14 +196,14 @@ export class CursorMapaJuego {
     this.cursorImg.y(coordHover.y * this.#konvaMapa.getTamanoCasilla())
 
     this.#fnReactSetters.setInfoCasilla({
-      estrellas: casillaHover.getTerrenoObjeto()?.estrellasDefensa,
+      estrellas: casillaHover.getEstrellasDefensa(),
       gasActual: casillaHover.getUnidad()?.getGasActual(),
       gasMaxima: casillaHover.getUnidad()?.getMaxGasolina(),
       hp: casillaHover.getUnidad()?.getHp(),
       municionesPrincipales: casillaHover.getUnidad()?.getMunicionPrincipal(),
       municionesSecundarias: casillaHover.getUnidad()?.getMunicionSecundaria(),
       status: casillaHover.getUnidad()?.getEstado(),
-      terreno: casillaHover.getTipo()
+      terreno: casillaHover.getNombreCorto()
     })
   }
   #mostrarCasillasMovimiento (unidadSeleccionada: UnidadCasilla, coord: coordenada){

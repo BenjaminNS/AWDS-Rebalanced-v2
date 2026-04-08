@@ -194,7 +194,7 @@ export async function moverUnidad (casOrigen:Casilla, direcciones: (direccion|'n
             x: konvaGroupUnidad.x() + tamanoCasilla * translateCoord.x,
             y: konvaGroupUnidad.y() + tamanoCasilla * translateCoord.y,
             onFinish: () => {
-              unidadSeleccionada.gastarGasolinaTerreno(casillaDestino.getTipo())
+              unidadSeleccionada.gastarGasolinaTerreno(casillaDestino.getNombreCorto())
               casillaFinal = mapa.getCasilla(coordDestino) as Casilla
               res(true)
             }
