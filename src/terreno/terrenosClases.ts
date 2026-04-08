@@ -47,6 +47,7 @@ export function getTerrenoClase (nombreTerreno: nombreTerreno, propietario?: num
     return new Tuberia()
 
   default:
+    console.error('Terreno inválido: ', nombreTerreno)
     return new Invalido()
   }
 }
