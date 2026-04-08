@@ -1,4 +1,5 @@
 import type { nombreUnidad } from '../unidades/unidadInfoBasica'
+import { type nombreTerreno, Terreno } from './terrenov2'
 
 type Recompensa = Partial<{
   dinero?: number,
@@ -6,15 +7,17 @@ type Recompensa = Partial<{
   defensa?: number, // Torre de comunicación
 }>
 
-export class Propiedad{
+export abstract class Propiedad extends Terreno{
   #propietario: number
   #recompensas: Recompensa
-  #opcionesCompra: nombreUnidad[]
+  #opcionesCompra: nombreUnidad[] // opcionesReparacion
 
-  constructor ({ propietario, recompensas, opcionesCompra }: {propietario: number, recompensas: Recompensa, opcionesCompra: nombreUnidad[]}){
-    this.#propietario = propietario
-    this.#recompensas = recompensas
-    this.#opcionesCompra = opcionesCompra
+  constructor (propiedad: {propietario: number, recompensas: Recompensa, opcionesCompra: nombreUnidad[]}, terreno: {descripcion: string, estrellasDefensa: number, nombreCorto: nombreTerreno, nombreLargo: string }){
+    super({ descripcion: terreno.descripcion, estrellasDefensa: terreno.estrellasDefensa, nombreCorto: terreno.nombreCorto, nombreLargo: terreno.nombreLargo })
+    this.#propietario = propiedad.propietario
+
+    this.#recompensas = propiedad.recompensas
+    this.#opcionesCompra = propiedad.opcionesCompra
   }
   setPropietario (propietario: number){
     this.#propietario = propietario
