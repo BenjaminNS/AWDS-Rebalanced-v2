@@ -2,14 +2,14 @@ import Konva from 'konva'
 // import { type SpriteConfig } from 'konva/lib/shapes/Sprite'
 // import type { GroupConfig } from 'konva/lib/Group'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
-import { ListaTerrenos, Terreno, type nombreTerreno } from '../terreno/terreno'
+import { type nombreTerreno } from '../terreno/terrenov2'
 import type { ComandanteBase } from '../comandantes/ComandanteBase'
 import type { nombreUnidad, categoriaUnidad, estado, municiones } from './unidadInfoBasica'
 import { type Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
 import { getInfoBasica } from './unidadInfoBasica'
 import { unidadTurnoShader } from '../mapa/shaders'
-import type { Casilla } from '../mapa/mapaJuego'
+import { type Casilla } from '../mapa/casilla'
 
 export const UnidadesNombres = ['infanteria','mecha','recon','tanqueLigero','tanqueMediano','neotanque','megatanque','apc','artilleria','cohetes','tanqueAntiaereo','misiles','piperunner','bCopter','tCopter','fighter','bomber','stealthFighter','blackBomb','lander','cruiser','submarino','battleship','carrier','blackBoat','motocicletas','lanchas','sniper']
 
