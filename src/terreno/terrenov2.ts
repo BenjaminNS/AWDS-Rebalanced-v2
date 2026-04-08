@@ -1,7 +1,7 @@
 import { type spriteTerreno, type casillasAdyacentes } from './spriteTerrenos'
 // import { Propiedad } from './propiedad'
 
-export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'|'inexistente'
+export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 export type nombrePropiedad = 'fabrica'|'aeropuerto'|'puertoNaval'
 
 export abstract class Terreno {
