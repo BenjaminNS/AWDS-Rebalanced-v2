@@ -8,11 +8,11 @@ type Recompensa = Partial<{
 }>
 
 export abstract class Propiedad extends Terreno{
-  #propietario: number
+  #propietario: number|null|undefined
   #recompensas: Recompensa
   #opcionesCompra: nombreUnidad[] // opcionesReparacion
 
-  constructor (propiedad: {propietario: number, recompensas: Recompensa, opcionesCompra: nombreUnidad[]}, terreno: {descripcion: string, estrellasDefensa: number, nombreCorto: nombreTerreno, nombreLargo: string }){
+  constructor (propiedad: {propietario: number|null|undefined, recompensas: Recompensa, opcionesCompra: nombreUnidad[]}, terreno: {descripcion: string, estrellasDefensa: number, nombreCorto: nombreTerreno, nombreLargo: string }){
     super({ descripcion: terreno.descripcion, estrellasDefensa: terreno.estrellasDefensa, nombreCorto: terreno.nombreCorto, nombreLargo: terreno.nombreLargo })
     this.#propietario = propiedad.propietario
 
