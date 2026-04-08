@@ -31,8 +31,6 @@ export function getTerrenoClase (nombreCorto: nombreTerreno, propietario?: numbe
     return new CuartelGeneral({ propietario: propietario })
   case 'fabrica':
     return new Fabrica({ propietario: propietario })
-  case 'invalido':
-    return new Invalido()
   case 'mar':
     return new Mar()
   case 'montana':
@@ -47,5 +45,8 @@ export function getTerrenoClase (nombreCorto: nombreTerreno, propietario?: numbe
     return new Silo()
   case 'tuberia':
     return new Tuberia()
+
+  default:
+    return new Invalido()
   }
 }
