@@ -1,7 +1,9 @@
-import { ListaTerrenos } from '../terreno/terreno'
-import type { nombreTerreno, Terreno } from '../terreno/terreno'
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
+import { getTerrenoClase } from '../terreno/terrenosClases'
+import { type Terreno, type nombreTerreno } from '../terreno/terrenov2'
+import { Propiedad } from '../terreno/propiedad'
+import type { casillasAdyacentes, spriteTerreno } from '../terreno/spriteTerrenos'
 
 export type coordenada = {
   x: number,
@@ -9,29 +11,14 @@ export type coordenada = {
 }
 
 export class Casilla {
-  #tipo: nombreTerreno
-  #propietario: number|null
+  // clima?: Clima
   #unidad: UnidadCasilla|null
   sprite: Konva.Image|null // ¿Debería ser spriteTerreno o Konva.Image?
   #coordenada: coordenada
+  #terreno: Terreno
 
   constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null, coordenada: coordenada){
-    if (ListaTerrenos[tipo] == undefined){
-      console.error('Tipo de casilla no encontrada: ', tipo)
-      this.#tipo = 'invalido'
-      this.#propietario = null
-    } else {
-      this.#tipo = tipo
-
-      if ( ListaTerrenos[tipo].propiedad != null ){
-        this.#propietario = propietario
-      } else if ( !ListaTerrenos[tipo].propiedad && propietario != null ) {
-        console.error(`No se puede ser dueño de las casillas tipo "${tipo}"`)
-        this.#propietario = null
-      } else {
-        this.#propietario = null
-      }
-    }
+    this.#terreno = getTerrenoClase(tipo, propietario)
 
     // ¿Debería validar?
     this.#coordenada = coordenada
@@ -43,20 +30,43 @@ export class Casilla {
     return this.#coordenada
   }
 
-  // Quitar esta función y hacer composición
-  public getTerrenoObjeto = ():Terreno|null => {
-    return ListaTerrenos[this.#tipo]
+  // TERRENO
+  public getTerreno (){
+    return this.#terreno
   }
-  public getTipo = () => {
-    return this.#tipo
+  public setTerreno = (nombreTerreno: nombreTerreno, propietario: number) => {
+    this.#terreno = getTerrenoClase(nombreTerreno, propietario)
   }
-  public setTipo = (nombreTerreno:nombreTerreno) => {
-    this.#tipo = nombreTerreno
+  public getNombreCorto (){
+    return this.#terreno.nombreCorto
   }
-  public getPropietario = () => this.#propietario
-  public setPropietario (propietario:number|null){
-    this.#propietario = propietario
+  public getNombreLargo (){
+    return this.#terreno.nombreLargo
   }
+  public getDescripcion (){
+    return this.#terreno.descripcion
+  }
+  public getEstrellasDefensa (){
+    return this.#terreno.estrellasDefensa
+  }
+  public getPuedeOcultarEnFOW (){
+    return this.#terreno.puedeOcultarEnFOW
+  }
+  public getSpriteCalculado (casillasAdyacentes: casillasAdyacentes): spriteTerreno{
+    return this.#terreno.getSprite({ casillasAdyacentes })
+  }
+  public getOpcionesTerreno (){
+    return this.#terreno.getOpcionesTerreno()
+  }
+  // PROPIEDAD
+  public getPropietario (){
+    if ( this.#terreno instanceof Propiedad ){
+      return this.#terreno.getPropietario()
+    }
+
+    return null
+  }
+
   public getUnidad = () => this.#unidad
   public setUnidad (unidad:UnidadCasilla|null){
     unidad?.setCasilla(this)
@@ -77,12 +87,8 @@ export class CasillaSimple{
   unidad?: UnidadSimple|null
 
   constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
-    if (ListaTerrenos[tipo] == undefined){
-      console.error('Tipo de casilla no encontrada: ', tipo)
-      this.tipo = 'invalido'
-    } else {
-      this.tipo = tipo
-    }
+    const claseEscogida = getTerrenoClase(tipo)
+    this.tipo = claseEscogida.nombreCorto
     this.propietario = propietario
     this.unidad = unidad
   }
