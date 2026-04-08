@@ -1,8 +1,22 @@
-import { type spriteTerreno, type casillasAdyacentes } from './spriteTerrenos'
-// import { Propiedad } from './propiedad'
-
 export type nombreTerreno = 'planicie'|'bosque'|'montana'|'cuartelGeneral'|'ciudad'|'fabrica'|'aeropuerto'|'puertoNaval'|'silo'|'camino'|'puente'|'tuberia'|'mar'|'arrecife'|'rio'|'costa'|'invalido'
 export type nombrePropiedad = 'fabrica'|'aeropuerto'|'puertoNaval'
+
+export type spriteTerreno = {
+  width: number, height: number, offsetY: number
+  crop: {
+    x: number, y: number,
+    width: number, height: number
+  }
+  // animations: {} //Para HQ's y fábricas
+}
+export type casillasAdyacentes = {
+  top: nombreTerreno,
+  left: nombreTerreno,
+  right: nombreTerreno,
+  bottom: nombreTerreno
+}
+
+export const tamanoCasilla = 16
 
 export abstract class Terreno {
   #nombreLargo: string
