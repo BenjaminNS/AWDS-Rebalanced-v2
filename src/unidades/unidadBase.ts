@@ -1,0 +1,133 @@
+import { type nombreTerreno } from '../terreno/terrenov2'
+import { type Matchups } from './matchups'
+import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
+
+export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'
+
+type municionBase = {actual: number, maxima: number}
+export interface municiones {
+  principal: municionBase,
+  secundaria?: municionBase
+}
+
+// *Si tiene habilidad de capturar propiedades es soldado, y si no, es vehículo
+// Solo puede ser Terrestre, Aéreo o Naval. Esto se determina por el tipo de movimiento
+// Es una unidad de transporte si tiene al menos un espacio para guardar cualquier tipo de unidad
+// Es directo si tiene el rango mínimo de 1
+// Es indirecto si la suma de rango minimo con el rango extra es igual o supera 2
+export type categoriaUnidad = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo'
+export type estado = 'normal'|'oculto'
+
+export type UnidadBase = {
+  nombreLargo: string
+  nombreCorto: nombreUnidad
+  descripcion: string
+  categorias: categoriaUnidad[]
+  costoOro: number
+  rango: {minimo: number, extra: number}|null
+  movilidad: number
+  tipoMovimiento: tipoMovimiento
+  vision: number
+  maxGasolina: number
+  atacarYMoverse: boolean
+  contraataque: number|null
+  municiones: municiones
+  matchups: Matchups
+}
+
+export abstract class Unidad {
+  #nombreLargo: string
+  #nombreCorto: nombreUnidad
+  #descripcion: string
+  #categorias: categoriaUnidad[]
+  #costoOro: number // Gold
+  #rango: {minimo: number, extra: number}|null
+  #movilidad: number
+  #tipoMovimiento: tipoMovimiento
+  #vision: number
+  #maxGasolina: number
+  #atacarYMoverse: boolean
+  #contraataque: number|null
+  #matchups: Matchups
+
+  constructor (
+    baseUnidad: UnidadBase
+  ){
+    this.#nombreLargo = baseUnidad.nombreLargo
+    this.#nombreCorto = baseUnidad.nombreCorto
+    this.#descripcion = baseUnidad.descripcion
+    this.#categorias = baseUnidad.categorias
+    this.#costoOro = baseUnidad.costoOro
+    this.#rango = baseUnidad.rango
+    this.#movilidad = baseUnidad.movilidad
+    this.#tipoMovimiento = baseUnidad.tipoMovimiento
+    this.#vision = baseUnidad.vision
+    this.#maxGasolina = baseUnidad.maxGasolina
+    this.#contraataque = baseUnidad.contraataque
+    this.#atacarYMoverse = baseUnidad.atacarYMoverse
+    this.#matchups = baseUnidad.matchups
+  }
+
+  getMovilidad (): number {
+    return this.#movilidad
+  }
+  getLibroMovilidad (){
+    return LibroMovilidad[this.#tipoMovimiento]
+  }
+  getLibroMovilidadTerreno (tipo: nombreTerreno){
+    return LibroMovilidad[this.#tipoMovimiento][tipo]
+  }
+
+  getNombreLargo (){
+    return this.#nombreLargo
+  }
+  getNombreCorto (){
+    return this.#nombreCorto
+  }
+  getDescripcion (){
+    return this.#descripcion
+  }
+  getCategorias (){
+    return this.#categorias
+  }
+  getCostoOro (){
+    return this.#costoOro
+  }
+  getRango (){
+    return this.#rango
+  }
+  getRangoMinimo (){
+    return this.#rango?.minimo ? this.#rango?.minimo : null
+  }
+  getRangoExtra (){
+    return this.#rango?.extra ? this.#rango?.extra : null
+  }
+  getRangoMaximo (){
+    return this.#rango ? (this.#rango.minimo + this.#rango.extra) : null
+  }
+  getTipoMovimiento (){
+    return this.#tipoMovimiento
+  }
+  getVision (){
+    return this.#vision
+  }
+  getMaxGasolina (){
+    return this.#maxGasolina
+  }
+  abstract getConsumoDiario ( estado: estado ):number
+  getAtacarYMoverse (){
+    return this.#atacarYMoverse
+  }
+  getUnitMatchupList (){
+    return this.#matchups
+  }
+  getUnitMatchup (unidadDefensivaNombre: nombreUnidad, tipo: 'principal'|'secundaria'){
+    if ( this.#matchups[tipo] == null )
+      return null
+
+    return this.#matchups[tipo][unidadDefensivaNombre]
+  }
+  getContraataque (){
+    return this.#contraataque
+  }
+}
