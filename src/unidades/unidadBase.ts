@@ -102,6 +102,15 @@ export abstract class Unidad {
       categoriasLista.push('Naval')
     }
 
+    const rangoMinimo = this.getRangoMinimo()
+    const rangoMaximo = this.getRangoMaximo()
+    if ( rangoMinimo === 1 ){
+      categoriasLista.push('Directo')
+    }
+    if ( ( rangoMinimo !== null && rangoMinimo >= 1 ) || ( rangoMaximo !== null && rangoMaximo >= 1 ) ){
+      categoriasLista.push('Indirecto')
+    }
+
     return categoriasLista
   }
   getCostoOro (){
