@@ -39,7 +39,6 @@ export abstract class Unidad {
   #nombreLargo: string
   #nombreCorto: nombreUnidad
   #descripcion: string
-  #categorias: categoriaUnidad[]
   #costoOro: number // Gold
   #rango: {minimo: number, extra: number}|null
   #movilidad: number
@@ -56,7 +55,6 @@ export abstract class Unidad {
     this.#nombreLargo = baseUnidad.nombreLargo
     this.#nombreCorto = baseUnidad.nombreCorto
     this.#descripcion = baseUnidad.descripcion
-    this.#categorias = baseUnidad.categorias
     this.#costoOro = baseUnidad.costoOro
     this.#rango = baseUnidad.rango
     this.#movilidad = baseUnidad.movilidad
@@ -87,8 +85,14 @@ export abstract class Unidad {
   getDescripcion (){
     return this.#descripcion
   }
-  getCategorias (){
-    return this.#categorias
+  // Solo puede ser Terrestre, Aéreo o Naval. Esto se determina por el tipo de movimiento
+  // Es una unidad de transporte si tiene al menos un espacio para guardar cualquier tipo de unidad
+  // Es directo si tiene el rango mínimo de 1
+  // Es indirecto si la suma de rango minimo con el rango extra es igual o supera 2
+  getCategorias ():categoriaUnidad[]{
+    const categoriasLista:categoriaUnidad[] = []
+
+    return categoriasLista
   }
   getCostoOro (){
     return this.#costoOro
