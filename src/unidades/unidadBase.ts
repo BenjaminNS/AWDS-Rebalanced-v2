@@ -92,13 +92,13 @@ export abstract class Unidad {
   getCategorias ():categoriaUnidad[]{
     const categoriasLista:categoriaUnidad[] = []
 
-    if ( tipoMovimientoTerrestre.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+    if ( tipoMovimientoTerrestre.findIndex(tipo => tipo === this.#tipoMovimiento) !== -1 ){
       categoriasLista.push('Terrestre')
     }
-    if ( tipoMovimientoAereo.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+    if ( tipoMovimientoAereo.findIndex(tipo => tipo === this.#tipoMovimiento) !== -1 ){
       categoriasLista.push('Aereo')
     }
-    if ( tipoMovimientoNaval.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+    if ( tipoMovimientoNaval.findIndex(tipo => tipo === this.#tipoMovimiento) !== -1 ){
       categoriasLista.push('Naval')
     }
 
