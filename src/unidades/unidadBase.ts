@@ -107,7 +107,7 @@ export abstract class Unidad {
     if ( rangoMinimo === 1 ){
       categoriasLista.push('Directo')
     }
-    if ( ( rangoMinimo !== null && rangoMinimo >= 1 ) || ( rangoMaximo !== null && rangoMaximo >= 1 ) ){
+    if ( rangoMaximo !== null && rangoMaximo > 1 ){
       categoriasLista.push('Indirecto')
     }
 
