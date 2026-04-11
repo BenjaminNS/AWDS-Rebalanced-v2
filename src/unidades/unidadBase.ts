@@ -1,6 +1,6 @@
 import { type nombreTerreno } from '../terreno/terrenov2'
 import { type Matchups } from './matchups'
-import { LibroMovilidad, type tipoMovimiento } from './tipoMovilidad'
+import { LibroMovilidad, type tipoMovimiento, tipoMovimientoAereo, tipoMovimientoNaval, tipoMovimientoTerrestre } from './tipoMovilidad'
 
 export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'
 
@@ -91,6 +91,16 @@ export abstract class Unidad {
   // Es indirecto si la suma de rango minimo con el rango extra es igual o supera 2
   getCategorias ():categoriaUnidad[]{
     const categoriasLista:categoriaUnidad[] = []
+
+    if ( tipoMovimientoTerrestre.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+      categoriasLista.push('Terrestre')
+    }
+    if ( tipoMovimientoAereo.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+      categoriasLista.push('Aereo')
+    }
+    if ( tipoMovimientoNaval.findIndex(tipo => tipo === this.getTipoMovimiento()) !== -1 ){
+      categoriasLista.push('Naval')
+    }
 
     return categoriasLista
   }
