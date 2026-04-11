@@ -1,5 +1,9 @@
 import { type nombreTerreno } from '../terreno/terrenov2'
-export type tipoMovimiento = 'pie'|'mecha'|'ruedas'|'oruga'|'piperunner'|'aereo'|'naval'
+export const tipoMovimientoTerrestre = ['pie', 'mecha', 'ruedas', 'oruga', 'piperunner'] as const
+export const tipoMovimientoAereo = ['aereo'] as const
+export const tipoMovimientoNaval = ['naval'] as const
+
+export type tipoMovimiento = typeof tipoMovimientoTerrestre[number] | typeof tipoMovimientoAereo[number] | typeof tipoMovimientoNaval[number]
 
 export const LibroMovilidad:Record<tipoMovimiento, Partial<Record<nombreTerreno, number>>> = {
   pie: {
