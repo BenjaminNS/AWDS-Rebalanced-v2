@@ -18,7 +18,7 @@ export interface municiones {
 export type categoriaUnidad = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo'
 export type estado = 'normal'|'oculto'
 
-export type UnidadBase = {
+export type UnidadBaseTipo = {
   nombreLargo: string
   nombreCorto: nombreUnidad
   descripcion: string
@@ -35,7 +35,7 @@ export type UnidadBase = {
   matchups: Matchups
 }
 
-export abstract class Unidad {
+export abstract class UnidadBase {
   #nombreLargo: string
   #nombreCorto: nombreUnidad
   #descripcion: string
@@ -50,7 +50,7 @@ export abstract class Unidad {
   #matchups: Matchups
 
   constructor (
-    baseUnidad: UnidadBase
+    baseUnidad: UnidadBaseTipo
   ){
     this.#nombreLargo = baseUnidad.nombreLargo
     this.#nombreCorto = baseUnidad.nombreCorto
