@@ -10,12 +10,7 @@ export interface municiones {
   secundaria?: municionBase
 }
 
-// *Si tiene habilidad de capturar propiedades es soldado, y si no, es vehículo
-// Solo puede ser Terrestre, Aéreo o Naval. Esto se determina por el tipo de movimiento
-// Es una unidad de transporte si tiene al menos un espacio para guardar cualquier tipo de unidad
-// Es directo si tiene el rango mínimo de 1
-// Es indirecto si la suma de rango minimo con el rango extra es igual o supera 2
-export type categoriaUnidad = 'Soldado'|'Vehiculo'|'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo'
+export type categoriaUnidad = 'Directo'|'Indirecto'|'Transporte'|'Terrestre'|'Aereo'|'Naval'|'Antiaereo'
 export type estado = 'normal'|'oculto'
 
 export type UnidadBaseTipo = {
@@ -85,10 +80,7 @@ export abstract class UnidadBase {
   getDescripcion (){
     return this.#descripcion
   }
-  // Solo puede ser Terrestre, Aéreo o Naval. Esto se determina por el tipo de movimiento
-  // Es una unidad de transporte si tiene al menos un espacio para guardar cualquier tipo de unidad
-  // Es directo si tiene el rango mínimo de 1
-  // Es indirecto si la suma de rango minimo con el rango extra es igual o supera 2
+
   getCategorias ():categoriaUnidad[]{
     const categoriasLista:categoriaUnidad[] = []
 
