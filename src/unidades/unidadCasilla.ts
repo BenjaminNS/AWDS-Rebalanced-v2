@@ -4,6 +4,7 @@ import { UnidadBase, type UnidadBaseTipo } from './unidadBase'
 import { type municiones, type estado } from './unidadInfoBasica'
 import { type Casilla } from '../mapa/casilla'
 import { unidadTurnoShader } from '../mapa/shaders'
+import { type spriteUnidad } from './unidadesSpriteConf'
 // import { type SpriteConfig } from 'konva/lib/shapes/Sprite'
 // import type { GroupConfig } from 'konva/lib/Group'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -19,20 +20,6 @@ export type datosActuales = {
   propietario: number
   casilla: Casilla
   comandante: ComandanteBase
-}
-
-type spriteAnimations = {
-  'idle': number[],
-  'derecha': number[],
-  'abajo': number[]
-}
-
-export type spriteUnidad = {
-  image: ImageData,
-  animations: spriteAnimations
-  animation: 'idle'|'no-turno'|'derecha'|'izquierda'|'arriba'|'abajo',
-  frameRate: 3,
-  frameIndex: 0
 }
 
 export abstract class UnidadCasilla extends UnidadBase {
