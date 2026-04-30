@@ -15,8 +15,6 @@ export class Infanteria extends UnidadCasilla {
     }, datosActuales, casilla )
 
     this.#puntosCapturaActual = params?.capturaActual
-
-    this.#id = crypto.randomUUID()
   }
 
   getPuntosCaptura (){
