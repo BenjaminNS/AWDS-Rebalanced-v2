@@ -23,6 +23,7 @@ export type datosActuales = {
 }
 
 export abstract class UnidadCasilla extends UnidadBase {
+  #id: string
   #hp!: number
   #municiones!: municiones
   #gasActual!: number
@@ -41,6 +42,7 @@ export abstract class UnidadCasilla extends UnidadBase {
     // sprite|Konva.Group
   ){
     super(baseUnidad)
+    this.#id = crypto.randomUUID()
     this.#setHP(datosActuales.hp)
     // Cambiar segundo parámetro
     this.#setMuniciones(datosActuales.municiones, datosActuales.municiones)
@@ -49,6 +51,10 @@ export abstract class UnidadCasilla extends UnidadBase {
     this.#setTurnos(datosActuales.turnos)
     this.#setPropietario(datosActuales.propietario, datosActuales.comandante)
     this.setCasilla(datosActuales.casilla)
+  }
+
+  getId (){
+    return this.#id
   }
 
   // SECCION HP
