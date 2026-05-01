@@ -40,7 +40,8 @@ export class APC extends UnidadCasilla {
     }
 
     // Debería filtrarse también solo si le falta gasolina o municiones
-    const unidadesCercanasAliadas = contexto.mapa.getUnidadesEnArea(contexto.ultimaCasillaSeleccionada.getCoordenada(), 1).filter((unidadCercana) => {
+    const unidadesAdyacentes = contexto.mapa.getUnidadesEnArea(contexto.ultimaCasillaSeleccionada.getCoordenada(), 1)
+    const unidadesCercanasAliadas = unidadesAdyacentes.filter((unidadCercana) => {
       return (unidadCercana.getPropietario() === contexto.jugadorActual && unidadCercana.getId() !== this.getId())
     })
 
