@@ -355,6 +355,20 @@ export class Mapa{
     return listaPropiedades
   }
 
+  public getUnidadesEnArea (coord: coordenada, radio: number) : UnidadCasilla[]{
+    const unidadesEnArea:UnidadCasilla[] = []
+
+    for (let y = - radio; y < radio; y++) {
+      for (let x = - radio; x < radio; x++) {
+        if ( ( Math.abs(x) + Math.abs(y) ) >= radio && this.getCasilla({ x, y })?.getUnidad() != null ) {
+          unidadesEnArea.push(this.getCasilla({ x, y })?.getUnidad())
+        }
+      }
+    }
+
+    return unidadesEnArea
+  }
+
   public getCasillasSeleccionadas (coordenadas: coordenada[]):Casilla[]{
     const casillasSeleccionadas:Casilla[] = []
     coordenadas.forEach(coord => {
