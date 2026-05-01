@@ -260,19 +260,19 @@ export class Mapa{
       const tempCoords = listaCoordMovimiento.filter(coord => coord.movDisponible === movDisponible)
 
       for (const coord of tempCoords){
-        const top = esCoordenadaValida( { ...coord, y: ( coord.y - 1 ) }, this, unidad, listaCoordMovimiento )
+        const top = esCoordenadaValidaMovimiento( { ...coord, y: ( coord.y - 1 ) }, this, unidad, listaCoordMovimiento )
         if ( top != null ) {
           listaCoordMovimiento.push(top)
         }
-        const left = esCoordenadaValida( { ...coord, x: ( coord.x - 1 ) }, this, unidad, listaCoordMovimiento )
+        const left = esCoordenadaValidaMovimiento( { ...coord, x: ( coord.x - 1 ) }, this, unidad, listaCoordMovimiento )
         if ( left != null ) {
           listaCoordMovimiento.push(left)
         }
-        const right = esCoordenadaValida( { ...coord, x: ( coord.x + 1 ) }, this, unidad, listaCoordMovimiento )
+        const right = esCoordenadaValidaMovimiento( { ...coord, x: ( coord.x + 1 ) }, this, unidad, listaCoordMovimiento )
         if ( right != null ) {
           listaCoordMovimiento.push(right)
         }
-        const bottom = esCoordenadaValida( { ...coord, y: ( coord.y + 1 ) }, this, unidad, listaCoordMovimiento )
+        const bottom = esCoordenadaValidaMovimiento( { ...coord, y: ( coord.y + 1 ) }, this, unidad, listaCoordMovimiento )
         if ( bottom != null ) {
           listaCoordMovimiento.push(bottom)
         }
@@ -406,7 +406,7 @@ export class MapaSimple{
   }
 }
 
-function esCoordenadaValida (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa,
+function esCoordenadaValidaMovimiento (coordDato: {x: number, y: number, movDisponible: number}, mapa: Mapa,
   unidad: UnidadCasilla, coordCasillas: {x: number, y: number, movDisponible: number}[]):{x: number, y: number, movDisponible: number, costo: number}|null{
   const casillaValida = mapa.getCasilla(coordDato)
   if ( casillaValida == null ) return null
