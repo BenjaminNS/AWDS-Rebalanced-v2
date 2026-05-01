@@ -7,13 +7,13 @@ import { tamanoSprite, UnitSpritesheet } from '../unidadesSpriteConf'
 import Konva from 'konva'
 
 export class APC extends UnidadCasilla {
-  unidadTransportada: UnidadCasilla
+  #unidadTransportada: UnidadCasilla|null|undefined
 
   constructor (refComandante: ComandanteBase, casilla: Casilla, datosActuales: datosActuales, params?: { unidadTransportada?: UnidadCasilla }){
     super({ nombreLargo: 'APC', nombreCorto: 'apc', descripcion: 'Vehículo de transporte terrestre capaz de mover soldados y reponer municiones y gasolina a todas las unidades.', categorias: ['Vehiculo', 'Terrestre', 'Transporte'],
       costo: 4000, rango: { minimo: 1, extra: 0 }, movilidad: 6, tipoMovimiento: 'oruga', vision: 1, maxGasolina: 99, consumoDiario: () => 0, maxMuniciones: null, contraataque: null, atacarYMoverse: true, matchups: apc_MU, sprite: spriteApc
     }, datosActuales, casilla )
-
+    this.#unidadTransportada = params?.unidadTransportada
   }
 
   override getConsumoDiario (): number {
@@ -30,6 +30,10 @@ export class APC extends UnidadCasilla {
       },
       animation: 'idle', frameRate: 3, frameIndex: 0
     })
+  }
+
+  public getUnidadTransportada(){
+    return this.#unidadTransportada
   }
 
   override getAccionesDisponibles (contexto: contextoAcciones){
