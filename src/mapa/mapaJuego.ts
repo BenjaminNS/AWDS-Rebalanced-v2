@@ -369,6 +369,21 @@ export class Mapa{
     return unidadesEnArea
   }
 
+  public getCasillasEnArea (coord: coordenada, radio: number) : Casilla[]{
+    const casillasEnArea:Casilla[] = []
+
+    for (let y = - radio; y < radio; y++) {
+      for (let x = - radio; x < radio; x++) {
+        const casilla = this.getCasilla({ x, y })
+        if ( ( Math.abs(x) + Math.abs(y) ) >= radio && casilla != null ) {
+          casillasEnArea.push(casilla)
+        }
+      }
+    }
+
+    return casillasEnArea
+  }
+
   public getCasillasSeleccionadas (coordenadas: coordenada[]):Casilla[]{
     const casillasSeleccionadas:Casilla[] = []
     coordenadas.forEach(coord => {
