@@ -15,7 +15,7 @@ import { Rio } from './modelos/rio'
 import { Silo } from './modelos/silo'
 import { Tuberia } from './modelos/tuberia'
 
-export function getTerrenoClase (nombreTerreno: nombreTerreno, propietario?: number|null){
+export function fabricarTerreno (nombreTerreno: nombreTerreno, propietario?: number|null){
   switch (nombreTerreno){
   case 'aeropuerto':
     return new Aeropuerto({ propietario: propietario })
