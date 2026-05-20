@@ -164,7 +164,7 @@ export class KonvaMapa{
       for (let x = 0; x < columnas; x++) {
         if ( mapa.casillas[( ( y * columnas ) + x )].getUnidad() != null ){
           this.generarSpriteUnidad(
-            mapa.casillas[( ( y * columnas ) + x )].getUnidad(),
+            mapa.casillas[( ( y * columnas ) + x )].getUnidad() as UnidadCasilla,
             { x: x, y: y }
           )
         }
