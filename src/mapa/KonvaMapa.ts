@@ -7,10 +7,11 @@ const CaminoSprite = new window.Image()
 CaminoSprite.src = caminoInicio
 import { pintarCamino, ocultarCaminos } from './konvaCamino.ts'
 import { listaPaises } from '../comandantes/paises.ts'
-import type { coordenada, Casilla, Mapa } from './mapaJuego.ts'
+import type { Mapa } from './mapaJuego.ts'
 import type { TextConfig } from 'konva/lib/shapes/Text'
 import { obtenerColorTerreno, aplicarTinteUnidad, generarShaderPropiedad, unidadTurnoShader } from './shaders.ts'
 import type { UnidadCasilla } from '../unidades/unidadCasilla.ts'
+import type { Casilla, coordenada } from './casilla.ts'
 
 export const COLORES_INTERACCION = {
   MOVIMIENTO: '#345bc788',
