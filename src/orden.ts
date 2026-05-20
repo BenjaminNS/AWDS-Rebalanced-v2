@@ -2,7 +2,7 @@ import { type Casilla, type coordenada } from './mapa/casilla'
 import { Mapa } from './mapa/mapaJuego'
 // import type { Unidad } from "./unidades/unidades";
 import Konva from 'konva'
-import type { UnidadCasilla } from './unidades/unidad'
+import type { UnidadCasilla } from './unidades/unidadCasilla'
 import { generarCoordenadaVector } from './camino'
 import { type direccion } from './camino'
 const durationMovement = .25
