@@ -59,9 +59,19 @@ export class Casilla {
     return this.#terreno.getOpcionesTerreno()
   }
   // PROPIEDAD
+  public esPropiedad (){
+    return this.#terreno instanceof Propiedad
+  }
   public getPropietario (){
     if ( this.#terreno instanceof Propiedad ){
       return this.#terreno.getPropietario()
+    }
+
+    return null
+  }
+  public getOpcionesCompra (){
+    if ( this.#terreno instanceof Propiedad ){
+      return this.#terreno.getOpcionesCompra()
     }
 
     return null
