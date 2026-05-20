@@ -1,5 +1,6 @@
 import Konva from 'konva'
 import { UnidadCasilla } from '../unidades/unidadCasilla'
+import { type UnidadSimple } from '../unidades/unidadSimple'
 import { fabricarTerreno } from '../terreno/fabricaTerrenos'
 import { type Terreno, type nombreTerreno } from '../terreno/terrenov2'
 import { Propiedad } from '../terreno/propiedad'
