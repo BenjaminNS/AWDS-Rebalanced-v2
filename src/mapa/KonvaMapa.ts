@@ -179,8 +179,8 @@ export class KonvaMapa{
     const unitKonvaGroup = new Konva.Group({
       x: (x * this.#tamanoCasilla),
       y: y * this.#tamanoCasilla,
-      name: unidad.id,
-      id: unidad.id
+      name: unidad.getId(),
+      id: unidad.getId()
     })
 
     const unitSprite = unidad.getSprite().clone()
