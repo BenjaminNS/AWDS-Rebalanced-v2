@@ -1,6 +1,6 @@
 import Konva from 'konva'
 import { UnidadCasilla, type UnidadSimple } from '../unidades/unidades'
-import { getTerrenoClase } from '../terreno/terrenosClases'
+import { fabricarTerreno } from '../terreno/fabricaTerrenos'
 import { type Terreno, type nombreTerreno } from '../terreno/terrenov2'
 import { Propiedad } from '../terreno/propiedad'
 import type { casillasAdyacentes, spriteTerreno } from '../terreno/terrenov2'
@@ -18,7 +18,7 @@ export class Casilla {
   #terreno: Terreno
 
   constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadCasilla|null, coordenada: coordenada){
-    this.#terreno = getTerrenoClase(tipo, propietario)
+    this.#terreno = fabricarTerreno(tipo, propietario)
 
     // ¿Debería validar?
     this.#coordenada = coordenada
@@ -35,7 +35,7 @@ export class Casilla {
     return this.#terreno
   }
   public setTerreno = (nombreTerreno: nombreTerreno, propietario: number) => {
-    this.#terreno = getTerrenoClase(nombreTerreno, propietario)
+    this.#terreno = fabricarTerreno(nombreTerreno, propietario)
   }
   public getNombreCorto (){
     return this.#terreno.nombreCorto
@@ -87,7 +87,7 @@ export class CasillaSimple{
   unidad?: UnidadSimple|null
 
   constructor (tipo: nombreTerreno, propietario: number|null, unidad: UnidadSimple|null){
-    const claseEscogida = getTerrenoClase(tipo)
+    const claseEscogida = fabricarTerreno(tipo)
     this.tipo = claseEscogida.nombreCorto
     this.propietario = propietario
     this.unidad = unidad

@@ -1,4 +1,4 @@
-import { getTerrenoClase } from '../terreno/terrenosClases'
+import { fabricarTerreno } from '../terreno/fabricaTerrenos'
 
 import Konva from 'konva'
 import { UnidadCasilla } from '../unidades/unidadCasilla'
