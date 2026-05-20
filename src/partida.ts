@@ -6,7 +6,7 @@ import { esClima } from './clima.ts'
 import type { Clima } from './clima.ts'
 // import { accion } from './accion.ts'
 import { KonvaMapa } from './mapa/KonvaMapa.ts'
-import type { UnidadCasilla } from './unidades/unidades.ts'
+import type { UnidadCasilla } from './unidades/unidad.ts'
 // Se debería cargar una partida con un id único de partida solicitando a una DB
 
 // Clase PartidaSnapshot: una captura del estatus de una partida.

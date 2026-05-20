@@ -4,7 +4,7 @@ import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, ge
 import { Mapa } from './mapa/mapaJuego'
 import { Casilla, type coordenada } from './mapa/casilla'
 import { ListaTerrenos, type nombreTerreno } from './terreno/terreno'
-import { UnidadCasilla } from './unidades/unidades'
+import { UnidadCasilla } from './unidades/unidad'
 import { ListaUnidades, type municiones, type nombreUnidad } from './unidades/unidadInfoBasica'
 let layerUnidad:Konva.Layer, layerTerreno:Konva.Layer
 

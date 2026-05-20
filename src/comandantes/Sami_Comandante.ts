@@ -1,6 +1,6 @@
 import type { Casilla } from '../mapa/mapaJuego'
 import { ComandanteBase, type ComandantePoder, type DayToDay, metaPuntosCaptura, type statusEffect } from './ComandanteBase'
-import type { UnidadCasilla } from '../unidades/unidades'
+import type { UnidadCasilla } from '../unidades/unidadCasilla'
 import type { Jugador } from '../jugador'
 
 type SamiD2D = DayToDay & {

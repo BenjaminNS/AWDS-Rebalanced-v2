@@ -1,6 +1,6 @@
 import { type nombreTerreno } from '../terreno/terrenov2'
 import { fabricaUnidades, aeropuertoUnidades, puertoNavalUnidades } from '../terreno/terrenosCompra'
-import { UnidadCasilla } from '../unidades/unidades'
+import { UnidadCasilla } from '../unidades/unidadCasilla'
 import type { nombresPaises } from './paises'
 import { getInfoBasica } from '../unidades/unidadInfoBasica'
 // import type { nombrePropiedad } from '../terreno/terreno'

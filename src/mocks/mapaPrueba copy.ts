@@ -1,5 +1,5 @@
 import { Mapa, Casilla } from "../mapa/mapaJuego"
-import { UnidadCasilla } from '../unidades/unidades'
+import { UnidadCasilla } from '../unidades/unidad'
 
 const spriteInfanteria2 = new UnidadCasilla('infanteria', 1, 100, {principal: 5}, 40, 'normal', null )
 const spriteInfanteria1 = new UnidadCasilla('infanteria', 0, 100, {principal: 5}, 40, 'normal', null )
