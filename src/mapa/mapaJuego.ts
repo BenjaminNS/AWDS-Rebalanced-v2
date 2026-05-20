@@ -281,6 +281,38 @@ export class Mapa{
 
     return listaCoordMovimiento
   }
+  obtenerCoordenadasAtaque (mapa:Mapa, coordOriginal: coordenada, unidad: UnidadCasilla){
+    const listaCasillasAtaque:coordenada[] = []
+
+    const municiones = unidad.getMunicionesActuales()
+    const rangoMinimo = unidad.getRangoMinimo()
+    const rangoMaximo = unidad.getRangoMaximo()
+
+    if ( municiones == null || municiones.principal == null || municiones.principal.actual === 0
+      && municiones.secundaria == null || municiones.secundaria?.actual === 0
+      || rangoMinimo == null || rangoMaximo == null
+    ){
+      return listaCasillasAtaque
+    }
+
+    debugger
+    const listaCoordMovimiento = unidad.getAtacarYMoverse() ? this.obtenerCoordenadasMovimiento(mapa, coordOriginal, unidad) : [coordOriginal]
+
+    for (let i = 0; i < listaCoordMovimiento.length; i++){
+      for (let rango = rangoMinimo; rango < (rangoMaximo + 1); rango++) {
+        if ( esCoordenadaAtaque({ x: listaCoordMovimiento[i].x, y: listaCoordMovimiento[i].y - rango }, mapa, listaCasillasAtaque) )
+          listaCasillasAtaque.push({ x: listaCoordMovimiento[i].x, y: listaCoordMovimiento[i].y - rango })
+        if ( esCoordenadaAtaque({ x: listaCoordMovimiento[i].x - rango, y: listaCoordMovimiento[i].y }, mapa, listaCasillasAtaque) )
+          listaCasillasAtaque.push({ x: listaCoordMovimiento[i].x - rango, y: listaCoordMovimiento[i].y })
+        if ( esCoordenadaAtaque({ x: listaCoordMovimiento[i].x + rango, y: listaCoordMovimiento[i].y }, mapa, listaCasillasAtaque) )
+          listaCasillasAtaque.push({ x: listaCoordMovimiento[i].x + rango, y: listaCoordMovimiento[i].y })
+        if ( esCoordenadaAtaque({ x: listaCoordMovimiento[i].x, y: listaCoordMovimiento[i].y + rango }, mapa, listaCasillasAtaque) )
+          listaCasillasAtaque.push({ x: listaCoordMovimiento[i].x, y: listaCoordMovimiento[i].y + rango })
+      }
+    }
+
+    return listaCasillasAtaque
+  }
 
   // (equipo:equipo, jugadores: jugador[])
   public getCasillasVision (){
