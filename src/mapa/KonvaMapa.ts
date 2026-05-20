@@ -306,6 +306,16 @@ export class KonvaMapa{
       }
     }
   }
+  mostrarCasillasAtaque (coordCasillas: coordenada[]){
+    this.#capas.layerCasillas?.show()
+
+    for (const coordCasilla of coordCasillas){
+      const cuadroKonva:Konva.Rect|undefined = this.#capas.layerCasillas?.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)
+
+      if ( cuadroKonva != null ){
+        cuadroKonva.fill(COLORES_INTERACCION.ATAQUE)
+        cuadroKonva.show()
+      }
     }
   }
   ocultarCasillasCuadros (layerCasillas: Konva.Layer){
