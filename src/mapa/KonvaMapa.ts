@@ -353,4 +353,17 @@ export class KonvaMapa{
     this.#konvaStage?.off('tap')
     this.#konvaStage?.off('click')
   }
+
+  public calcularCoordenada (tamanoCasilla: number):coordenada|null{
+    if ( this.#konvaStage ){
+      const pos = this.#konvaStage.getPointerPosition()
+      if (!pos) return
+      const coordX = Math.floor(pos.x / tamanoCasilla)
+      const coordY = Math.floor(pos.y / tamanoCasilla)
+
+      return { x: coordX, y: coordY }
+    } else {
+      return null
+    }
+  }
 }
