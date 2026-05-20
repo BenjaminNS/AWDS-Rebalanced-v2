@@ -29,6 +29,11 @@ export abstract class Propiedad extends Terreno{
     return this.#recompensas
   }
 
+  override getOpcionesTerreno (): string[] {
+    // Debe dar la opcion de poder ser capturada
+    return ['Capturar']
+  }
+
   getOpcionesCompra (){
     return this.#opcionesCompra
   }
