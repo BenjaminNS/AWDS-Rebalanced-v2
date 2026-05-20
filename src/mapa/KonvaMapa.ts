@@ -358,7 +358,7 @@ export class KonvaMapa{
   public calcularCoordenada (tamanoCasilla: number):coordenada|null{
     if ( this.#konvaStage ){
       const pos = this.#konvaStage.getPointerPosition()
-      if (!pos) return
+      if (!pos) return null
       const coordX = Math.floor(pos.x / tamanoCasilla)
       const coordY = Math.floor(pos.y / tamanoCasilla)
 
