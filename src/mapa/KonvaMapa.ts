@@ -298,8 +298,14 @@ export class KonvaMapa{
     this.#capas.layerCasillas?.show()
 
     for (const coordCasilla of coordCasillas){
-      this.#capas.layerCasillas?.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)?.show()
-    // animar cada cuadro creciendo (de 0 a 100% al final)
+      const cuadroKonva:Konva.Rect|undefined = this.#capas.layerCasillas?.findOne(`#cuadro_${coordCasilla.x}_${coordCasilla.y}`)
+
+      if ( cuadroKonva != null ){
+        cuadroKonva.fill(COLORES_INTERACCION.MOVIMIENTO)
+        cuadroKonva.show()
+      }
+    }
+  }
     }
   }
   ocultarCasillasCuadros (layerCasillas: Konva.Layer){
