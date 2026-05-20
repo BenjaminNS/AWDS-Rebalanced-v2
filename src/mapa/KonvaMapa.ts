@@ -294,7 +294,7 @@ export class KonvaMapa{
   }
 
   // CUADROS DE CASILLA
-  mostrarCasillasCuadros (coordCasillas: coordenada[]){
+  mostrarCasillasMovimiento (coordCasillas: coordenada[]){
     this.#capas.layerCasillas?.show()
 
     for (const coordCasilla of coordCasillas){
