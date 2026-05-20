@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, type Ref } from 'react'
 import './header.css'
 
 type elementoHeader = {
