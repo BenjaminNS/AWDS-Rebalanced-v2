@@ -6,7 +6,7 @@ import type { Casilla } from '../../mapa/casilla'
 import { tamanoSprite, UnitSpritesheet } from '../unidadesSpriteConf'
 import Konva from 'konva'
 
-export class Infanteria extends UnidadCasilla {
+export class Recon extends UnidadCasilla {
 
   constructor (refComandante: ComandanteBase, casilla: Casilla, datosActuales: datosActuales){
     super({ nombreLargo: 'Recon', nombreCorto: 'recon', descripcion: 'Vehículo pequeño con alta visión, eficiente contra soldados.', categorias: ['Vehiculo', 'Terrestre', 'Directo'],
