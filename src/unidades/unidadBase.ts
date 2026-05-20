@@ -1,8 +1,7 @@
 import { type nombreTerreno } from '../terreno/terrenov2'
 import { type Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento, tipoMovimientoAereo, tipoMovimientoNaval, tipoMovimientoTerrestre } from './tipoMovilidad'
-
-export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'
+import type { nombreUnidad } from './types';
 
 type municionBase = {actual: number, maxima: number}
 export interface municiones {

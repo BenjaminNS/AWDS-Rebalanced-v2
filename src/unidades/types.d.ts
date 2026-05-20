@@ -1,0 +1,1 @@
+export type nombreUnidad = 'apc'|'artilleria'|'bCopter'|'battleship'|'blackBoat'|'blackBomb'|'bomber'|'carrier'|'cohetes'|'cruiser'|'fighter'|'infanteria'|'lanchas'|'lander'|'mecha'|'megatanque'|'misiles'|'motocicletas'|'neotanque'|'pipeRunner'|'recon'|'sniper'|'stealthFighter'|'submarino'|'tanqueAntiaereo'|'tanqueLigero'|'tanqueMediano'|'tCopter'

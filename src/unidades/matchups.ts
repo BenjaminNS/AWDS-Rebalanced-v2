@@ -1,5 +1,5 @@
 // https://script.google.com/u/0/home/projects/1onDerp2_kKIOLy975IhzFwuggwBLO39Kl8oCUzTPcCeu_T64mCwHAZzw/edit
-import { type nombreUnidad } from './unidadInfoBasica'
+import type { nombreUnidad } from "./types.d";
 
 export type dano = {base: number, suerte: number}
 export interface Matchups {
