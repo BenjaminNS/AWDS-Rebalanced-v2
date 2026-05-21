@@ -28,14 +28,14 @@ export class Camino{
   public agregarCoordenada (coordenada:coordenada){
     // No se puede añadir un camino fuera de las coordenadas
     // Por ende, no se agrega la coordenada a la lista
-    const coord = this.coordenadasDisponibles.find(coord => (coord.x === coordenada.x && coord.y === coordenada.y))
+    const coordBuscada = this.coordenadasDisponibles.find(coord => (coord.x === coordenada.x && coord.y === coordenada.y))
 
-    if ( coord == null || this.getIndexCoordenadaDisponible(coord) === -1 ){
+    if ( coordBuscada == null || this.getIndexCoordenadaDisponible(coordBuscada) === -1 ){
       // console.log('Coordenada no existe en la lista de coordenadasCamino disponibles: ', coordenada)
       return false
     }
 
-    const indexCamino = this.getIndexCamino(coord)
+    const indexCamino = this.getIndexCamino(coordBuscada)
 
     if ( indexCamino !== -1 && (indexCamino + 1) === this.coordenadasCamino.length ){
       return false
@@ -47,28 +47,28 @@ export class Camino{
     }
 
     // Si es la primera coordenada, no requiere más validación
-    // Vendría siendo la coordenada de inicio
+    // Vendría siendo la coordenada de origen
     if ( this.coordenadasCamino.length === 0 ){
-      this.coordenadasCamino.push(coord)
+      this.coordenadasCamino.push(coordBuscada)
       pintarCamino(this.layerCamino, this.coordenadasCamino, this.getDirecciones())
       return true
     }
 
     // casilla adyacente
-    const delta = Math.abs(this.coordenadasCamino[(this.coordenadasCamino.length - 1)].x - coord.x) + Math.abs(this.coordenadasCamino[(this.coordenadasCamino.length - 1)].y - coord.y)
+    const delta = Math.abs(this.coordenadasCamino[(this.coordenadasCamino.length - 1)].x - coordBuscada.x) + Math.abs(this.coordenadasCamino[(this.coordenadasCamino.length - 1)].y - coordBuscada.y)
     if ( delta === 1 ){
-      if ( this.maxCosto >= (this.getCostoCamino() + coord.costo) ){
-        this.coordenadasCamino.push(coord)
+      if ( this.maxCosto >= (this.getCostoCamino() + coordBuscada.costo) ){
+        this.coordenadasCamino.push(coordBuscada)
       } else {
 
         // console.log('Costo más elevado al disponible', (this.getCostoCamino() + coord.costo))
-        this.recalcularCamino(coord)
+        this.recalcularCamino(coordBuscada)
       }
       pintarCamino(this.layerCamino, this.coordenadasCamino, this.getDirecciones())
       return true
     } else {
       // console.log('Distancia entre las últimas casillas es más de 1: ', delta )
-      this.recalcularCamino(coord)
+      this.recalcularCamino(coordBuscada)
       pintarCamino(this.layerCamino, this.coordenadasCamino, this.getDirecciones())
     }
 
@@ -85,7 +85,6 @@ export class Camino{
   }
   private getIndexCamino (coord:coordenada){
     for ( let i = 0; i < this.coordenadasCamino.length; i++ ){
-      // A veces esta validacion me está dando error, viene vacío no se por que
       if ( this.coordenadasCamino[i].x === coord.x && this.coordenadasCamino[i].y === coord.y ){
         return i
       }
@@ -145,7 +144,7 @@ export class Camino{
       }
     }
 
-    // Si llega a este punto, recorrió todo pero no puedo cerrar el camino
+    // Si llega a este punto, se recorrieron todas las casillas pero no se pudo cerrar el camino
     return false
   }
   public getCamino (){
