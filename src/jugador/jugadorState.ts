@@ -7,7 +7,7 @@ import type { paramsJugadorState } from './jugadorStateManager'
 // En menú de compra
 // Seleccionando unidad (propia)
 
-export class jugadorState {
+export abstract class jugadorState {
   #leftClickHandler: (casilla?: Casilla)=>void|jugadorState
   #rightClickHandler: (casilla?: Casilla)=>void|jugadorState
   #hoverMouseHandler: (casilla?: Casilla)=>void|jugadorState
