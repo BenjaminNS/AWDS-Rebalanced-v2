@@ -2,7 +2,7 @@ import { fabricarTerreno } from '../terreno/fabricaTerrenos'
 
 import Konva from 'konva'
 import { UnidadCasilla } from '../unidades/unidadCasilla'
-import { type UnidadSimple } from '../unidades/unidadSimple'
+import { UnidadSimple } from '../unidades/unidadSimple'
 import { type nombreTerreno, tamanoCasilla } from '../terreno/terrenov2'
 import type { Jugador } from '../jugador'
 import { Casilla, CasillaSimple, type coordenada } from './casilla'
@@ -172,9 +172,13 @@ export class Mapa{
   static generarMapaSimple (mapa:Mapa):MapaSimple{
     const _casillasSimples:CasillaSimple[] = []
     mapa.casillas.forEach(casilla => {
-      const _unidadSimple:UnidadSimple|null = casilla.unidad ?
-        new UnidadSimple(casilla.unidad.nombreUnidad, casilla.unidad.propietario, casilla.unidad.hp,
-          casilla.unidad.municiones, casilla.unidad.gasActual, casilla.unidad.estado) : null
+      const unidad = casilla.getUnidad()
+      const _unidadSimple:UnidadSimple|null = unidad ?
+        new UnidadSimple({
+          estado: unidad.getEstado(), gasActual: unidad.getGasActual(), hp: unidad.getHp(),
+          id: unidad.getId(), municiones: unidad.getMuniciones(), nombreCorto: unidad.getNombreCorto(), 
+          otrosDatos: unidad.getOtrosDatosUnidad(), propietario: unidad.getPropietario(), turnos: unidad.getTurnos()
+        }) : null
       // Simplificar: No mandar datos si son nulos para no mandar contenido de más (se reduce el peso casi la mitad cuando no mandas datos nulos)
 
       _casillasSimples.push({
