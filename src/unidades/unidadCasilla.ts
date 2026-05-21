@@ -190,7 +190,7 @@ export abstract class UnidadCasilla extends UnidadBase {
     return this.#gasActual
   }
   public gastarGasolinaTerreno (tipoTerreno:nombreTerreno){
-    const gasConsumida = LibroMovilidad[this.#tipoMovimiento][tipoTerreno]
+    const gasConsumida = LibroMovilidad[this.getTipoMovimiento()][tipoTerreno]
     if ( gasConsumida ){
       this.#gasActual -= gasConsumida
     } else {
@@ -355,7 +355,7 @@ export abstract class UnidadCasilla extends UnidadBase {
   }
   // TODO: Aceptar parametros de gasolina y de municiones
   reponerUnidad (){
-    this.#gasActual = this.#maxGasolina
+    this.#gasActual = this.getMaxGasolina()
     if ( this.#municiones != null ){
       if ( this.#municiones.principal != null ){
         this.#municiones.principal.actual = this.#municiones.principal.maxima
