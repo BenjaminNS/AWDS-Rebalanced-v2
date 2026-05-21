@@ -5,6 +5,10 @@ import { type municiones, type estado } from './unidadInfoBasica'
 import { type Casilla } from '../mapa/casilla'
 import { unidadTurnoShader } from '../mapa/shaders'
 import { type spriteUnidad } from './unidadesSpriteConf'
+import type { Mapa } from '../mapa/mapaJuego'
+import type { KonvaMapa } from '../mapa/KonvaMapa'
+import type { nombreTerreno } from '../terreno/terrenov2';
+import { LibroMovilidad } from './tipoMovilidad';
 // import { type SpriteConfig } from 'konva/lib/shapes/Sprite'
 // import type { GroupConfig } from 'konva/lib/Group'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -20,6 +24,25 @@ export type datosActuales = {
   propietario: number
   casilla: Casilla
   comandante: ComandanteBase
+}
+
+export type contextoAcciones = {
+  konvaMapa: KonvaMapa,
+  bloquearInteracciones: () => void,
+  desbloquearInteracciones: () => void,
+  moverUnidad: Function,
+  ultimaCasillaSeleccionada: Casilla,
+  camino: any,
+  mapa: Mapa,
+  unidadSeleccionada: UnidadCasilla,
+  ordenUnidad: any,
+  deseleccionarCasilla: () => void,
+  jugadorActual: number
+}
+
+export type Accion = {
+  nombre: string,
+  clickHandler: () => void
 }
 
 export abstract class UnidadCasilla extends UnidadBase {
@@ -289,18 +312,7 @@ export abstract class UnidadCasilla extends UnidadBase {
   // SECCION ACCIONES (STATE MANAGER)
   // TODO: Hacer verificacion de que acciones puede retornar
   // Dependiendo el contexto. Hacerlo abstract
-  getAccionesDisponibles (contexto: {
-    konvaMapa: any,
-    bloquearInteracciones: () => void,
-    desbloquearInteracciones: () => void,
-    moverUnidad: Function,
-    ultimaCasillaSeleccionada: any,
-    camino: any,
-    mapa: any,
-    unidadSeleccionada: any,
-    ordenUnidad: any,
-    deseleccionarCasilla: () => void
-  }) {
+  getAccionesDisponibles (contexto: contextoAcciones) : Accion[] {
     // Por ahora solo acción Esperar
     return [{
       nombre: 'Esperar',
