@@ -9,6 +9,7 @@ import type { Mapa } from '../mapa/mapaJuego'
 import type { KonvaMapa } from '../mapa/KonvaMapa'
 import type { nombreTerreno } from '../terreno/terrenov2';
 import { LibroMovilidad } from './tipoMovilidad';
+import { type otrosDatosUnidad } from './unidadSimple'
 // import { type SpriteConfig } from 'konva/lib/shapes/Sprite'
 // import type { GroupConfig } from 'konva/lib/Group'
 // import type { TextConfig } from 'konva/lib/shapes/Text'
@@ -131,6 +132,9 @@ export abstract class UnidadCasilla extends UnidadBase {
     }
 
     this.#municiones = munTemp
+  }
+  getMuniciones (){
+    return this.#municiones
   }
   getMunicionesActuales (){
     return this.#municiones
@@ -364,5 +368,8 @@ export abstract class UnidadCasilla extends UnidadBase {
         this.#municiones.secundaria.actual = this.#municiones.secundaria.maxima
       }
     }
+  }
+  public getOtrosDatosUnidad():otrosDatosUnidad{
+    return {}
   }
 }
