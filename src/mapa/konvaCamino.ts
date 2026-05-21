@@ -98,7 +98,7 @@ export function generarCapaCaminos ({ mapa }: {mapa: Mapa}):Konva.Layer{
   return capaCaminos
 }
 
-function obtenerCoordenadasImgCamino (direccionInicio: direccion|null, direccionFin: direccion|null) {
+function obtenerCoordenadasImgCamino (direccionInicio: direccion|'ninguno'|null, direccionFin: direccion|'ninguno'|null) {
   // Curvas
   if ( (direccionInicio === 'abajo' && direccionFin === 'izquierda')
     || (direccionInicio === 'derecha' && direccionFin === 'arriba') ) {
@@ -140,7 +140,7 @@ function obtenerCoordenadasImgCamino (direccionInicio: direccion|null, direccion
   return coordenadasCaminoImg['inicio']
 }
 
-export function pintarCamino (layerCamino: Konva.Layer, coordsCamino: coordenada[], direcciones: direccion[]){
+export function pintarCamino (layerCamino: Konva.Layer, coordsCamino: coordenada[], direcciones: (direccion|'ninguno')[]){
   ocultarCaminos(layerCamino)
   layerCamino.show()
 
