@@ -1,9 +1,8 @@
 import { type nombreUnidad } from './unidadInfoBasica'
 import { type municiones, type estado } from './unidadInfoBasica'
 
-// Interfaz por si crece
-interface otrosDatos {
-  puntosCaptura: number
+export interface otrosDatosUnidad {
+  puntosCaptura?: number
 }
 
 export type UnidadSimple = {
