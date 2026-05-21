@@ -49,6 +49,54 @@ export class APC extends UnidadCasilla {
       return ( unidadCercana.getPropietario() === contexto.jugadorActual && unidadCercana.getEquipo() === this.getEquipo() && unidadCercana.getId() !== this.getId())
     })
 
+    // Soltar unidad
+    const casillasAdyacentes = contexto.mapa.getCasillasEnArea(contexto.ultimaCasillaSeleccionada.getCoordenada(), 1)
+
+    if ( this.#unidadTransportada != null ){
+      const hayCasillaDisponible = casillasAdyacentes.findIndex(casilla => {
+        return this.#unidadTransportada?.getLibroMovilidadTerreno(casilla.getTerreno().nombreCorto)} ) !== -1
+
+      if ( hayCasillaDisponible ){
+        // Deberia poder recibir cual es la casilla donde la suelta
+        const soltarUnidad = {
+          nombre: 'Soltar unidad',
+          clickHandler: () => {
+            console.log('Soltar unidad')
+            contexto.konvaMapa.ocultarCasillasCuadros(contexto.konvaMapa.getCapaCasillas())
+            contexto.bloquearInteracciones()
+
+            contexto.moverUnidad(
+              contexto.ultimaCasillaSeleccionada,
+              contexto.camino.getDirecciones(),
+              contexto.konvaMapa.getTamanoCasilla(),
+              contexto.mapa
+            )
+              .then((res, rej) => {
+                // if( casillaDespliegue esta ocupada ){
+                //   rej('Casilla ocupada. No se pudo soltar la unidad')
+                // } else{
+                //   return true
+                // }
+              })
+              .catch(() => {
+                console.log('Acción interrumpida')
+                return false
+              })
+              .finally(() => {
+                console.log('Camino: ', contexto.camino.getCamino())
+                contexto.desbloquearInteracciones()
+                contexto.unidadSeleccionada.gastarTurno()
+                contexto.camino.limpiarCoordenadasCamino()
+                contexto.deseleccionarCasilla()
+              })
+          }
+        }
+        acciones.push(soltarUnidad)
+      }
+
+    }
+
+    // Reponer
     if ( unidadesCercanasAliadas.length > 0 ){
       const reponerAccion = {
         nombre: 'Reponer',
