@@ -5,29 +5,29 @@ export interface otrosDatosUnidad {
   puntosCaptura?: number
 }
 
-export type UnidadSimple = {
-  nombreUnidad: nombreUnidad,
-  id: string, // Opcional. No se si sea necesario cuando guardas los datos de la jugada después
-  propietario: number|null,
-  hp: number,
-  municiones: municiones|null,
-  gasActual: number,
+export class UnidadSimple {
+  nombreCorto: nombreUnidad
+  id: string
+  propietario: number|null
+  hp: number
+  municiones: municiones|null
+  gasActual: number
   estado: estado
   turnos: number
-  params: otrosDatos
+  otrosDatos: otrosDatosUnidad
+
+  constructor (
+    { nombreCorto, id, propietario, hp, municiones, gasActual, estado, turnos, otrosDatos } : 
+    { nombreCorto: nombreUnidad, id: string, propietario: number, hp: number, municiones: municiones, gasActual: number, estado: estado, turnos: number, otrosDatos: otrosDatosUnidad}
+  ){
+    this.nombreCorto = nombreCorto
+    this.id = id
+    this.propietario = propietario
+    this.hp = hp
+    this.municiones = municiones
+    this.gasActual = gasActual
+    this.estado = estado
+    this.turnos = turnos
+    this.otrosDatos = otrosDatos
+  }
 }
-
-// export class UnidadSimple {
-//   nombreCorto: nombreUnidad
-//   id: string
-//   propietario: number|null
-//   hp: number
-//   municiones: municiones|null
-//   gasActual: number
-//   estado: estado // status
-//   turnos: number
-
-//   constructor (){
-
-//   }
-// }
