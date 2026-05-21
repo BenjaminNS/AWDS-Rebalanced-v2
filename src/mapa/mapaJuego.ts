@@ -241,7 +241,9 @@ export class Mapa{
     for (let coordY = 0; coordY < mapa.dimensiones.filas; coordY++) {
       for (let coordX = 0; coordX < mapa.dimensiones.columnas; coordX++) {
         const casillaComparar = mapa.casillas[ ( ( coordY * mapa.dimensiones.columnas ) + coordX ) ]
-        if ( casillaComparar.tipo === tipo ){
+        if(casillaComparar instanceof Casilla && casillaComparar.getNombreCorto() === tipo ){
+          setCoordTerrenos.add({ x: coordX, y: coordY })
+        } else if (casillaComparar instanceof CasillaSimple && casillaComparar.tipo === tipo) {
           setCoordTerrenos.add({ x: coordX, y: coordY })
         }
       }
