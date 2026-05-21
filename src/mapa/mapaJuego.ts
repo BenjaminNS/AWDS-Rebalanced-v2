@@ -497,3 +497,15 @@ function esCoordenadaValidaMovimiento (coordDato: {x: number, y: number, movDisp
 
   return { ...coordDato, movDisponible: ( coordDato.movDisponible - costoMovimiento ), costo: costoMovimiento }
 }
+
+function esCoordenadaAtaque (coord: coordenada, mapa: Mapa, listaCasillasAtaque: coordenada[]):boolean{
+  const casillaValida = mapa.getCasilla(coord)
+  if ( casillaValida == null ) return false
+
+  // Si ya existe la coordenada con dist
+  const coordExistente = listaCasillasAtaque.find(c => c.x === coord.x && c.y === coord.y )
+  if ( coordExistente != null )
+    return false
+
+  return true
+}
