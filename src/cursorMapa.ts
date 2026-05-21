@@ -213,7 +213,18 @@ export class CursorMapaJuego {
     this.camino.setMaxCosto(unidadSeleccionada.getRefComandante()?.getMaxMovilidad(unidadSeleccionada) ?? 0)
     this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
 
-    this.#konvaMapa.mostrarCasillasCuadros(this.camino.getCoordenadasDisponibles())
+    this.#konvaMapa.mostrarCasillasMovimiento(this.camino.getCoordenadasDisponibles())
+    return true
+  }
+  #mostrarCasillasAtaque (unidadSeleccionada: UnidadCasilla, coord: coordenada){
+    this.ultimaCasillaSeleccionada = this.mapa.getCasilla(coord) as Casilla
+    // this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasMovimiento(this.mapa, coord, unidadSeleccionada))
+    this.camino.setCoordenadasDisponibles(this.mapa.obtenerCoordenadasAtaque(this.mapa, coord, unidadSeleccionada))
+
+    this.camino.setMaxCosto(unidadSeleccionada.getRefComandante()?.getMaxMovilidad(unidadSeleccionada) ?? 0)
+    this.camino.agregarCoordenada(coord) // Se supone que es la primera coordenada
+
+    this.#konvaMapa.mostrarCasillasAtaque(this.camino.getCoordenadasDisponibles())
     return true
   }
   #abrirMenuCompra (tempCasilla: Casilla, coord: coordenada){
