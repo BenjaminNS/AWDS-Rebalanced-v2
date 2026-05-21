@@ -182,8 +182,8 @@ export class Mapa{
       // Simplificar: No mandar datos si son nulos para no mandar contenido de más (se reduce el peso casi la mitad cuando no mandas datos nulos)
 
       _casillasSimples.push({
-        propietario: casilla.propietario,
-        tipo: casilla.tipo,
+        propietario: casilla.getPropietario(),
+        tipo: casilla.getNombreCorto(),
         unidad: _unidadSimple
       })
     })
