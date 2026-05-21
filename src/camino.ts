@@ -9,6 +9,7 @@ export class Camino{
   private coordenadasDisponibles:cordCosto[] = []
   private coordenadasCamino:cordCosto[] = []
   private maxCosto:number = 0
+  private layerCamino!:Konva.Layer
   constructor (){}
 
   public setMaxCosto (maxCosto:number){
