@@ -18,13 +18,13 @@ const maxHp = 100
 
 export type datosActuales = {
   hp: number,
-  municiones: municiones
+  municiones: municiones|null
   gasActual: number
   estado: estado
   turnos: number
-  propietario: number
-  casilla: Casilla
-  comandante: ComandanteBase
+  propietario: number|null
+  casilla?: Casilla
+  comandante?: ComandanteBase
 }
 
 export type contextoAcciones = {
@@ -73,8 +73,11 @@ export abstract class UnidadCasilla extends UnidadBase {
     this.#setGasolina(datosActuales.gasActual)
     this.setEstado(datosActuales.estado)
     this.#setTurnos(datosActuales.turnos)
-    this.#setPropietario(datosActuales.propietario, datosActuales.comandante)
-    this.setCasilla(datosActuales.casilla)
+    if(datosActuales.comandante)
+      this.#setPropietario(datosActuales.propietario, datosActuales.comandante)
+
+    if(datosActuales.casilla)
+      this.setCasilla(datosActuales.casilla)
   }
 
   getId (){
