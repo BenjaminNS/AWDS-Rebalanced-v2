@@ -247,7 +247,7 @@ export class KonvaMapa{
     }
 
     unidad.setUnitKonvaGroup(unitKonvaGroup)
-    this.#capas.layerUnidad.add(unitKonvaGroup)
+    this.#capas.layerUnidad?.add(unitKonvaGroup)
   }
   generarSpriteTerreno (casilla: Casilla, coordenada: coordenada, mapa: Mapa):void{
     const { x,y } = coordenada
@@ -291,7 +291,7 @@ export class KonvaMapa{
       }
     }
 
-    this.#capas.layerTerreno.add(spriteTerreno)
+    this.#capas.layerTerreno?.add(spriteTerreno)
   }
 
   // CUADROS DE CASILLA
