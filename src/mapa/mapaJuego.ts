@@ -52,11 +52,16 @@ export class Mapa{
     for (const casilla of casillas){
       if ( casilla instanceof Casilla ) {
         casillasTemp.push(casilla)
-      } else {
+      } else if (casilla instanceof CasillaSimple ) {
         // ### Aquí haríamos la validación
         // Si los datos no existen desde el json, los ponemos como nulos
-        const coord = { x: (i % dimensiones.columnas), y: Math.floor(i / dimensiones.filas) }
-        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad, this.obtenerCoordenadaConIndice(i)))
+
+        const unidadSimple = casilla.unidad
+        const _unidadJuego = unidadSimple ?
+        fabricarUnidad(unidadSimple.nombreCorto, {
+          hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
+
+        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, _unidadJuego, this.obtenerCoordenadaConIndice(i)))
       }
       this.#casillasVision.push(true)
       i++
