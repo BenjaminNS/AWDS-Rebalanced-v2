@@ -6,6 +6,7 @@ import { UnidadSimple } from '../unidades/unidadSimple'
 import { type nombreTerreno, tamanoCasilla } from '../terreno/terrenov2'
 import type { Jugador } from '../jugador'
 import { Casilla, CasillaSimple, type coordenada } from './casilla'
+import { fabricarUnidad } from '../unidades/fabricaUnidades';
 
 export type dimension = {
   filas: number,
@@ -203,17 +204,12 @@ export class Mapa{
         refComandante = listaJugadores[casillaSimple.unidad.propietario].getComandantesJugador()[0]
       }
       // Las unidades se tendrian que crear luego de que se terminen de crear el objeto del mapa para tener acceso a las casillas
-      const _unidadJuego:UnidadCasilla|null = casillaSimple.unidad ?
-        new UnidadCasilla(casillaSimple.unidad.nombreUnidad, { propietario: casillaSimple.unidad.propietario, hp: casillaSimple.unidad.hp,
-          municiones: casillaSimple.unidad.municiones, gasActual: casillaSimple.unidad.gasActual, estado: casillaSimple.unidad.estado, turnos: casillaSimple.unidad.turnos },
-        refComandante, null) : null
+      const unidadSimple = casillaSimple.unidad
+      const _unidadJuego = unidadSimple ?
+        fabricarUnidad(unidadSimple.nombreCorto, {
+          hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
-      _casillasCompletas.push({
-        sprite: null,
-        propietario: casillaSimple.propietario,
-        tipo: casillaSimple.tipo,
-        unidad: _unidadJuego
-      })
+      _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, {x: 0, y: 0}))
     })
 
     return new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
