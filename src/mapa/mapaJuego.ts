@@ -56,7 +56,7 @@ export class Mapa{
         // ### Aquí haríamos la validación
         // Si los datos no existen desde el json, los ponemos como nulos
         const coord = { x: (i % dimensiones.columnas), y: Math.floor(i / dimensiones.filas) }
-        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad, coord))
+        casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, casilla.unidad, this.obtenerCoordenadaConIndice(i)))
       }
       this.#casillasVision.push(true)
       i++
@@ -64,6 +64,13 @@ export class Mapa{
 
     this.casillas = casillasTemp
     this.konvaStage = null
+  }
+
+  obtenerCoordenadaConIndice(indice: number):coordenada{
+    return {
+      x: indice % this.dimensiones.columnas,
+      y: Math.floor(indice / this.dimensiones.columnas)
+    }
   }
 
   generarUnidadCasilla (unidad:UnidadCasilla, coordenada: coordenada){
@@ -197,7 +204,7 @@ export class Mapa{
   static generarMapaCompleto (mapaSimple:MapaSimple, listaJugadores: Jugador[]):Mapa{
     // listaJugadores[0].getComandantesJugador()
     const _casillasCompletas:Casilla[] = []
-    mapaSimple.casillas.forEach(casillaSimple => {
+    mapaSimple.casillas.forEach((casillaSimple, i) => {
 
       let refComandante = null
       if ( casillaSimple.unidad != null && casillaSimple.unidad.propietario != null ){
@@ -209,7 +216,10 @@ export class Mapa{
         fabricarUnidad(unidadSimple.nombreCorto, {
           hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
-      _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, {x: 0, y: 0}))
+      if(_unidadJuego != null)
+        debugger
+
+      _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, {x: mapaSimple.dimensiones.columnas, y: 0}))
     })
 
     return new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
