@@ -23,7 +23,7 @@ export class Mapa{
   // estricto: No permite poner unidades en casillas inválidas
   // permisivo: Permite poner unidades en casillas inválidas
   // ejemplo: submarino en planicies o cualquier unidad en tuberías
-  constructor (nombre: string, dimensiones: dimension, casillas: Casilla[]|CasillaSimple[]){
+  constructor (nombre: string, dimensiones: dimension, casillas: Omit<Casilla, 'coordenada'>[]|CasillaSimple[]){
     this.nombre = nombre
     this.dimensiones = dimensiones
     if (dimensiones.columnas <= 0){
