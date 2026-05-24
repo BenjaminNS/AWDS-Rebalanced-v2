@@ -6,7 +6,7 @@ export interface otrosDatosUnidad {
 }
 
 export class UnidadSimple {
-  nombreCorto: nombreUnidad
+  nombreUnidad: nombreUnidad
   id: string
   propietario: number|null
   hp: number
@@ -17,10 +17,10 @@ export class UnidadSimple {
   otrosDatos: otrosDatosUnidad
 
   constructor (
-    { nombreCorto, id, propietario, hp, municiones, gasActual, estado, turnos, otrosDatos } : 
+    { nombreUnidad, id, propietario, hp, municiones, gasActual, estado, turnos, otrosDatos } : 
     { nombreCorto: nombreUnidad, id: string, propietario: number, hp: number, municiones: municiones, gasActual: number, estado: estado, turnos: number, otrosDatos: otrosDatosUnidad}
   ){
-    this.nombreCorto = nombreCorto
+    this.nombreUnidad = nombreUnidad
     this.id = id
     this.propietario = propietario
     this.hp = hp
