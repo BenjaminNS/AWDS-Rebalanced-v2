@@ -22,7 +22,7 @@ export type datosActuales = {
   gasActual: number
   estado: estado
   turnos: number
-  propietario: number|null
+  propietario: number
   casilla?: Casilla
   comandante?: ComandanteBase
 }
@@ -73,7 +73,7 @@ export abstract class UnidadCasilla extends UnidadBase {
     this.#setGasolina(datosActuales.gasActual)
     this.setEstado(datosActuales.estado)
     this.#setTurnos(datosActuales.turnos)
-    if(datosActuales.comandante)
+    if(datosActuales.propietario)
       this.#setPropietario(datosActuales.propietario, datosActuales.comandante)
 
     if(datosActuales.casilla)
