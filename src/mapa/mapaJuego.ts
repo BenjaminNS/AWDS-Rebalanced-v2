@@ -58,7 +58,7 @@ export class Mapa{
 
         const unidadSimple = casilla.unidad
         const _unidadJuego = unidadSimple ?
-        fabricarUnidad(unidadSimple.nombreCorto, {
+        fabricarUnidad(unidadSimple.nombreUnidad, {
           hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
         casillasTemp.push(new Casilla(casilla.tipo, casilla.propietario, _unidadJuego, this.obtenerCoordenadaConIndice(i)))
@@ -217,12 +217,10 @@ export class Mapa{
       }
       // Las unidades se tendrian que crear luego de que se terminen de crear el objeto del mapa para tener acceso a las casillas
       const unidadSimple = casillaSimple.unidad
-      const _unidadJuego = unidadSimple ?
-        fabricarUnidad(unidadSimple.nombreCorto, {
-          hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
-      if(_unidadJuego != null)
-        debugger
+      const _unidadJuego = unidadSimple ?
+        fabricarUnidad(unidadSimple.nombreUnidad, {
+          hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
       _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, {x: mapaSimple.dimensiones.columnas, y: 0}))
     })
