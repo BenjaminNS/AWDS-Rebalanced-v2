@@ -3,7 +3,7 @@ export type equipo = 'A'|'B'|'C'|'D'
 import type { jugadorData } from './componentes/JugadorDiv'
 import type { Mapa } from './mapa/mapaJuego'
 import type { nombreTerreno } from './terreno/terreno'
-
+import type { UnidadCasilla } from './unidades/unidadCasilla';
 export class Jugador {
   #id: string // crypto.randomUUID
   // Cada jugador debería existir en la base de datos y ser obtenido por medio de su ID
@@ -102,7 +102,7 @@ export class Jugador {
     let valorTotalUnidades = 0
     listaUnidades.forEach(unidad => {
       // Multiplicar por el valor del comandante
-      valorTotalUnidades += unidad.getCosto()
+      valorTotalUnidades += unidad.getCostoOro()
     })
 
     let ingresosDiarios = 0
