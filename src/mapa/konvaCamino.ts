@@ -1,15 +1,14 @@
 import Konva from 'konva'
 import { type Mapa } from './mapaJuego.ts'
 import type { coordenada } from './casilla.ts'
-import { MAPA_CAPAS } from './mapaKonva'
-import { tamanoCasilla } from './mapaKonva'
-import { type direccion, generarDireccion } from '../camino.ts'
+import { type direccion } from '../camino.ts'
 import caminoInicio from '/img/huds/caminos_tilesheet.png'
+import { MAPA_CAPAS } from './KonvaMapa.ts';
+import { tamanoCasilla } from '../terreno/terrenov2.ts';
 const CaminoSprite = new window.Image()
 CaminoSprite.src = caminoInicio
 export { CaminoSprite }
 export const tamanoTile = 100
-
 // Aquí debería cambiar de imagen (o de UV) dependiendo la dirección de la coordenada anterior y de la siguiente
 
 // Si es la primera casilla: Cuadrado

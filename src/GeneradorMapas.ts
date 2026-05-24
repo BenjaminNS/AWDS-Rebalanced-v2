@@ -1,11 +1,12 @@
 import './style.css'
 import Konva from 'konva'
-import { generarMapaAleatorio, generarMapaRelleno, tamanoCasilla, MAPA_CAPAS, generarSpriteTerreno, generarSpriteUnidad, generarShaderPropiedad } from './mapa/mapaKonva'
 import { Mapa } from './mapa/mapaJuego'
 import { Casilla, type coordenada } from './mapa/casilla'
-import { ListaTerrenos, type nombreTerreno } from './terreno/terreno'
-import { UnidadCasilla } from './unidades/unidad'
 import { ListaUnidades, type municiones, type nombreUnidad } from './unidades/unidadInfoBasica'
+import { MAPA_CAPAS } from './mapa/KonvaMapa';
+import { generarShaderPropiedad } from './mapa/shaders';
+import { type nombreTerreno, tamanoCasilla } from './terreno/terrenov2';
+import { UnidadCasilla } from './unidades/unidadCasilla';
 let layerUnidad:Konva.Layer, layerTerreno:Konva.Layer
 
 let mapaGenerado:Mapa|null = null
