@@ -189,14 +189,16 @@ export class KonvaMapa{
       x: 0, y: 0, name: 'sprite-unidad', class: 'sprite-unidad'
     })
     const escala = this.#tamanoCasilla / 16
-    if (unidad.getPropietario() != null && unidad.getPropietario() % 2 === 0){
+    
+    const propietario = unidad.getPropietario()
+    if (propietario != null && propietario % 2 === 0){
       unitSprite.scale({ x: escala, y: escala })
     } else {
       unitSprite.offsetX( this.#tamanoCasilla / 2 )
       unitSprite.scale({ x: (escala * -1), y: escala })
     }
     // Filtro sprite unidad: esperar a que la imagen esté cargada antes de cachear y aplicar filtros
-    if ( listaPaises[unidad.getPropietario()] != null ){
+    if ( listaPaises[propietario] != null ){
       unitSprite.width(this.#tamanoCasilla)
       unitSprite.height(this.#tamanoCasilla)
       const unidadImg = unitSprite.image()
