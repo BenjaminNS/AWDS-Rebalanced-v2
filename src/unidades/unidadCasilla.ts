@@ -24,7 +24,7 @@ export type datosActuales = {
   turnos: number
   propietario: number
   casilla?: Casilla
-  comandante?: ComandanteBase
+  comandante?: ComandanteBase|null|undefined
 }
 
 export type contextoAcciones = {
@@ -54,7 +54,7 @@ export abstract class UnidadCasilla extends UnidadBase {
   #estado!: estado
   #turnos!: number
   #propietario!: number
-  #comandante!: ComandanteBase
+  #comandante!: ComandanteBase|null|undefined
   #casilla!: Casilla // Referencia de casilla
   #unitKonvaGroup: Konva.Group|null = null
   // ¿Usar WeakMap o fábrica?
@@ -73,8 +73,8 @@ export abstract class UnidadCasilla extends UnidadBase {
     this.#setGasolina(datosActuales.gasActual)
     this.setEstado(datosActuales.estado)
     this.#setTurnos(datosActuales.turnos)
-    if(datosActuales.propietario)
-      this.#setPropietario(datosActuales.propietario, datosActuales.comandante)
+    this.#propietario = datosActuales.propietario
+    this.#comandante = datosActuales.comandante
 
     if(datosActuales.casilla)
       this.setCasilla(datosActuales.casilla)
@@ -251,10 +251,6 @@ export abstract class UnidadCasilla extends UnidadBase {
   // SECCION PROPIETARIO
   public getPropietario (){
     return this.#propietario
-  }
-  #setPropietario (propietario: number, comandante: ComandanteBase){
-    this.#propietario = propietario
-    this.#comandante = comandante
   }
 
   // SECCION COMANDANTE
