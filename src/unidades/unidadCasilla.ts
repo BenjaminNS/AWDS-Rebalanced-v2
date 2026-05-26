@@ -361,7 +361,7 @@ export abstract class UnidadCasilla extends UnidadBase {
     return Math.min(this.getMovilidad(), this.#gasActual)
   }
   getEquipo (){
-    return this.#comandante.getEquipo()
+    return this.#comandante?.getEquipo()
   }
   // TODO: Aceptar parametros de gasolina y de municiones
   reponerUnidad (){
