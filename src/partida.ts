@@ -85,6 +85,12 @@ export class PartidaJuego {
     } else {
       this.#fechaTerminado = null
     }
+
+    this.#mapa.casillas.forEach(casilla => {
+      const unidad = casilla.getUnidad()
+      if( unidad != null )
+        unidad.setComandante(this.#jugadores[unidad.getPropietario()].getComandantesJugador()[0])
+    })
   }
   public getMapa () {
     return this.#mapa

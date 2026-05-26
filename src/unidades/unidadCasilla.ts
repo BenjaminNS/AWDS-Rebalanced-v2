@@ -254,6 +254,13 @@ export abstract class UnidadCasilla extends UnidadBase {
   }
 
   // SECCION COMANDANTE
+  setComandante (comandante: ComandanteBase){
+    if( this.#comandante == null ){
+      this.#comandante = comandante
+    } else{
+      console.error(`Unidad ya tiene comandante designado: ${this.#comandante}`)
+    }
+  }
   getComandante (){
     return this.#comandante
   }
@@ -265,7 +272,7 @@ export abstract class UnidadCasilla extends UnidadBase {
   }
 
   // SECCION SPRITE/KONVA
-  abstract generarSpriteInfo () : spriteUnidad
+  abstract generarSpriteInfo () : Konva.Sprite
   #aplicarShaderTurno (){
     const spriteUnidad = this.#unitKonvaGroup?.findOne('.sprite-unidad') as Konva.Sprite
     if ( spriteUnidad != null ){
