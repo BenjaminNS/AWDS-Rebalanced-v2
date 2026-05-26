@@ -359,7 +359,7 @@ export abstract class ComandanteBase{
   public getMultiplicadorCosto (nombreUnidad: nombreUnidad, propiedad: Casilla):number{
     return 1
   }
-  public getListaUnidadesCompraDatos (propiedad: Casilla, comprarUnidad: (unidad: nombreUnidad)=>void):unidadCompra[]{
+  public getListaUnidadesCompraDatos (propiedad: Casilla, comprarUnidad: (unidad: nombreUnidad)=>boolean):unidadCompra[]{
     const unidadesCompraDatos:unidadCompra[] = []
 
     let propiedadUnidades
@@ -388,11 +388,12 @@ export abstract class ComandanteBase{
           spriteUrl: tempInfoBasica.nombreCorto + '.png',
           clickHandler: () => {
             if (this.gastarDinero(costoTotal)){
-              comprarUnidad(unidadNombre)
+              return comprarUnidad(unidadNombre)
             } else {
               // TODO: Animación de shake en seccion de dinero
               // SFX de accion negada
               console.log('No tienes fondos suficientes')
+              return false
             }
           }
         })

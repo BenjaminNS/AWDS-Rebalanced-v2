@@ -8,7 +8,7 @@ export type unidadCompra = {
   nombreCorto: nombreUnidad,
   // Talvez cambiar el nombre a visible
   habilitado: boolean,
-  clickHandler: (nombreUnidad: nombreUnidad)=>void
+  clickHandler: (nombreUnidad: nombreUnidad)=>boolean
 }
 
 export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, actualizarInfo, setPropiedadSeleccionada }:{
@@ -29,9 +29,12 @@ export function CompraUnidadesMenu ({ listaUnidades, propiedadSeleccionada, actu
             <div className={'opcion-compra bg-amber-200 hover:bg-amber-400 flex p-2 gap-.5 cursor-pointer rounded-sm'
               + ( UnidadCompra.habilitado ? '' : ' deshabilitado' )} onClick={() => {
               if (UnidadCompra.habilitado){
-                UnidadCompra.clickHandler(UnidadCompra.nombreCorto)
-                actualizarInfo()
-                setPropiedadSeleccionada(null)
+                const compraValida = UnidadCompra.clickHandler(UnidadCompra.nombreCorto)
+                
+                if(compraValida){
+                  actualizarInfo()
+                  setPropiedadSeleccionada(null)
+                }
               } else {
                 console.log('Botón inhabilitado')
               }

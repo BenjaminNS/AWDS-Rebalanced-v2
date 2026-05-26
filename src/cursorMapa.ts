@@ -14,6 +14,7 @@ accionInvalidaSFX_player.src = accionInvalidaSFX
 import CursorSprite from '/img/huds/cursor_mapa.png'
 import type { Jugador } from './jugador.ts'
 import type { nombreUnidad } from './unidades/unidadInfoBasica.ts'
+import { fabricarUnidad } from './unidades/fabricaUnidades.ts';
 const CursorKonva = new window.Image()
 CursorKonva.src = CursorSprite
 
@@ -230,7 +231,20 @@ export class CursorMapaJuego {
   #abrirMenuCompra (tempCasilla: Casilla, coord: coordenada){
     const unidadesCompraDatos = this.#fnGetters.getJugadorActual().getComandantesJugador()[0].getListaUnidadesCompraDatos(tempCasilla,
       (unidadNombre: nombreUnidad) => {
-        this.#otros.partidaJuego.generarUnidadMapaPartida(new UnidadCasilla(unidadNombre, { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municionesActuales: { principal: 6 }, hp: 100, turnos: 0 }, this.#fnGetters.getJugadorActual().getComandantesJugador()[0], tempCasilla), coord)
+        const unidadComprada = fabricarUnidad(unidadNombre, 
+          { propietario: this.#fnGetters.getTurnoActual(), estado: 'normal', gasActual: 40, municiones: { principal: { actual: 6, maxima: 6 } }, hp: 100, turnos: 0 },
+          {}
+        )
+        
+        if( unidadComprada ){
+          this.#otros.partidaJuego.generarUnidadMapaPartida(unidadComprada, coord)
+          return true
+        } else{
+          console.log('Unidad no disponible')
+          // play no valido/no encontrado
+          return false
+        }
+
       })
     if ( unidadesCompraDatos.length > 0 ){
       this.#fnReactSetters.setPropiedadSeleccionada(true)
