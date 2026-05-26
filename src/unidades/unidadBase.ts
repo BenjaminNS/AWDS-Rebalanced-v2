@@ -132,7 +132,7 @@ export abstract class UnidadBase {
   getMaxGasolina (){
     return this.#maxGasolina
   }
-  abstract getConsumoDiario ( estado: estado ):number
+  abstract getConsumoDiario ( estado?: estado ):number
   getAtacarYMoverse (){
     return this.#atacarYMoverse
   }
