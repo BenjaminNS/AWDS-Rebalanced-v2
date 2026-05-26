@@ -222,7 +222,7 @@ export class Mapa{
         fabricarUnidad(unidadSimple.nombreUnidad, {
           hp: unidadSimple.hp, municiones: unidadSimple.municiones, gasActual: unidadSimple.gasActual, estado: unidadSimple.estado, turnos: unidadSimple.turnos, propietario: unidadSimple.propietario }, unidadSimple.otrosDatos) : null
 
-      _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, {x: mapaSimple.dimensiones.columnas, y: 0}))
+      _casillasCompletas.push(new Casilla(casillaSimple.tipo, casillaSimple.propietario, _unidadJuego, obtenerCoordenadaConIndice(i, mapaSimple.dimensiones.columnas)))
     })
 
     return new Mapa(mapaSimple.nombre, mapaSimple.dimensiones, _casillasCompletas)
@@ -519,4 +519,11 @@ function esCoordenadaAtaque (coord: coordenada, mapa: Mapa, listaCasillasAtaque:
     return false
 
   return true
+}
+
+function obtenerCoordenadaConIndice(indice: number, columnas: number):coordenada{
+  return {
+    x: indice % columnas,
+    y: Math.floor(indice / columnas)
+  }
 }
