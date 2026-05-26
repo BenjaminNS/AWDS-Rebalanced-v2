@@ -267,7 +267,7 @@ export class Mapa{
     if ( unidad == null ){
       return listaCoordMovimiento
     }
-    const distanciaMax = unidad.getRefComandante().getMaxMovilidad(unidad)
+    const distanciaMax = unidad.getComandante()?.getMaxMovilidad(unidad)
     listaCoordMovimiento[0].movDisponible = distanciaMax
 
     // El paso puede ser de +0.5 para aceptar movimientos intermedios
