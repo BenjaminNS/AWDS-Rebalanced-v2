@@ -3,7 +3,7 @@ import { spriteInfanteria } from '../spriteUnidades'
 import { infanteria_MU } from '../matchups'
 import { type ComandanteBase } from '../../comandantes/ComandanteBase'
 import type { Casilla } from '../../mapa/casilla'
-import { tamanoSprite, UnitSpritesheet, type spriteUnidad } from '../unidadesSpriteConf'
+import { tamanoSprite, UnitSpritesheet } from '../unidadesSpriteConf'
 import Konva from 'konva'
 
 export class Infanteria extends UnidadCasilla {
@@ -33,7 +33,7 @@ export class Infanteria extends UnidadCasilla {
     return 0
   }
 
-  override generarSpriteInfo (): spriteUnidad {
+  override generarSpriteInfo (): Konva.Sprite {
     return new Konva.Sprite({
       image: UnitSpritesheet,
       animations: {

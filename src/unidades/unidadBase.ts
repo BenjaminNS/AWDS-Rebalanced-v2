@@ -2,6 +2,7 @@ import { type nombreTerreno } from '../terreno/terrenov2'
 import { type Matchups } from './matchups'
 import { LibroMovilidad, type tipoMovimiento, tipoMovimientoAereo, tipoMovimientoNaval, tipoMovimientoTerrestre } from './tipoMovilidad'
 import type { nombreUnidad } from './types';
+import Konva from 'konva'
 
 type municionBase = {actual: number, maxima: number}
 export interface municiones {
@@ -27,6 +28,7 @@ export type UnidadBaseTipo = {
   contraataque: number|null
   municiones: municiones
   matchups: Matchups
+  sprite: Konva.Sprite
 }
 
 export abstract class UnidadBase {
@@ -42,6 +44,7 @@ export abstract class UnidadBase {
   #atacarYMoverse: boolean
   #contraataque: number|null
   #matchups: Matchups
+  #sprite: Konva.Sprite
 
   constructor (
     baseUnidad: UnidadBaseTipo
@@ -58,6 +61,7 @@ export abstract class UnidadBase {
     this.#contraataque = baseUnidad.contraataque
     this.#atacarYMoverse = baseUnidad.atacarYMoverse
     this.#matchups = baseUnidad.matchups
+    this.#sprite = baseUnidad.sprite
   }
 
   getMovilidad (): number {
@@ -143,5 +147,9 @@ export abstract class UnidadBase {
   }
   getContraataque (){
     return this.#contraataque
+  }
+
+  getSprite(){
+    return this.#sprite
   }
 }
