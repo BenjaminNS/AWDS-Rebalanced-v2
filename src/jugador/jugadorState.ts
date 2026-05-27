@@ -9,13 +9,15 @@ import type { paramsJugadorState } from './jugadorStateManager'
 
 export abstract class jugadorState {
   #leftClickHandler: (casilla?: Casilla)=>void|jugadorState
+  #rightClickReleaseHandler: (casilla?: Casilla)=>void|jugadorState
   #rightClickHandler: (casilla?: Casilla)=>void|jugadorState
   #hoverMouseHandler: (casilla?: Casilla)=>void|jugadorState
   #params: paramsJugadorState
 
-  constructor ({ leftClickHandler, rightClickHandler, hoverMouseHandler, params }: {leftClickHandler:()=>void, rightClickHandler:()=>void, hoverMouseHandler:()=>void, params: paramsJugadorState }){
+  constructor ({ leftClickHandler, rightClickHandler, hoverMouseHandler, rightClickReleaseHandler, params }: {leftClickHandler:()=>void, rightClickHandler:()=>void, hoverMouseHandler:()=>void, rightClickReleaseHandler:()=>void, params: paramsJugadorState }){
     this.#leftClickHandler = leftClickHandler
     this.#rightClickHandler = rightClickHandler
+    this.#rightClickReleaseHandler = rightClickReleaseHandler
     this.#hoverMouseHandler = hoverMouseHandler
     this.#params = params
   }
@@ -29,6 +31,9 @@ export abstract class jugadorState {
   }
   getRightClickHandler (){
     return this.#rightClickHandler
+  }
+  getRightClickReleaseHandler (){
+    return this.#rightClickReleaseHandler
   }
   getHoverMouseHandler (){
     return this.#hoverMouseHandler
