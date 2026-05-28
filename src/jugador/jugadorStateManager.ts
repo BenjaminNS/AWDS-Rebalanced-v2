@@ -1,6 +1,13 @@
+import type { Jugador } from '../jugador';
+import { Casilla } from '../mapa/casilla';
 import { jugadorState } from './jugadorState'
 
-export type paramsJugadorState = object
+export type paramsJugadorState = {
+  tamanoCasilla: number,
+  getJugadorActual: ()=>Jugador
+  getCasilla: (mousePosition: {x: number, y: number}, tamanoCasilla: number)=>Casilla|null
+  getTurnoActual: ()=>number
+}
 
 export class jugadorStateManager {
   #jugadorState: jugadorState
