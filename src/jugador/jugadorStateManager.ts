@@ -24,19 +24,19 @@ export class jugadorStateManager {
   }
 
   leftClickHandler (){
-    const returnState = this.#jugadorState.getLeftClickHandler()
+    const returnState = this.#jugadorState.leftClickHandler()
     if ( returnState instanceof jugadorState ){
       this.setJugadorState(returnState)
     }
   }
   rightClickHandler (){
-    const returnState = this.#jugadorState.getRightClickHandler()
+    const returnState = this.#jugadorState.rightClickHandler()
     if ( returnState instanceof jugadorState ){
       this.setJugadorState(returnState)
     }
   }
   hoverMouseHandler (){
-    const returnState = this.#jugadorState.getHoverMouseHandler()
+    const returnState = this.#jugadorState.hoverMouseHandler()
     if ( returnState instanceof jugadorState ){
       this.setJugadorState(returnState)
     }
