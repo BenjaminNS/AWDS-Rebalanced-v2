@@ -3,8 +3,11 @@ import { jugadorState } from './jugadorState'
 import { type paramsJugadorState } from './jugadorStateManager'
 import { menuComprasState } from './menuComprasState'
 
-const leftClickHandler = (mousePosition: {x: number, y: number}, tamanoCasilla: number, jugadorActual: number, params: paramsJugadorState) => {
-  const casillaSeleccionada = getCasilla(mousePosition, tamanoCasilla) as Casilla
+const leftClickHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {
+  console.log(`leftClickHandler viendo tablero: ${mousePosition}`)
+  return
+
+  const casillaSeleccionada = params.getCasilla(mousePosition, params.tamanoCasilla) as Casilla
 
   if ( casillaSeleccionada == null )
     return
@@ -12,13 +15,26 @@ const leftClickHandler = (mousePosition: {x: number, y: number}, tamanoCasilla: 
   const unidadCasilla = casillaSeleccionada.getUnidad()
   if ( casillaSeleccionada.getUnidad() != null ){
     //
-  } else if ( casillaSeleccionada.getPropietario() === jugadorActual ){
-    //
-    return new menuComprasState(params)
+  } else if ( casillaSeleccionada.getPropietario() === params.jugadorActual() ){
+    // return new menuComprasState(params)
   }
 }
-const rightClickHandler = () => {}
-const hoverMouseHandler = () => {}
+const rightClickHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {
+  // const coord = this.#konvaMapa.calcularCoordenada(this.#konvaMapa.getTamanoCasilla())
+  // if ( coord == null )
+  //   return
+
+  // const casilla = this.mapa.getCasilla(coord)
+  // if ( casilla == null )
+  //   return
+
+  // const unidad = casilla.getUnidad()
+  // if ( unidad != null ){
+  //   mostrarCasillasAtaque(unidad, coord)
+  // }
+}
+const rightClickReleaseHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {}
+const hoverMouseHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {}
 
 export class viendoTableroState extends jugadorState{
   #leftClick = true
@@ -26,7 +42,6 @@ export class viendoTableroState extends jugadorState{
   #rightClick = true
 
   constructor (params: paramsJugadorState){
-    super({ leftClickHandler, rightClickHandler, hoverMouseHandler, params })
+    super({ leftClickHandler, rightClickHandler, rightClickReleaseHandler, hoverMouseHandler, params })
   }
-
 }
