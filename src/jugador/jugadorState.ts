@@ -8,10 +8,10 @@ import type { paramsJugadorState } from './jugadorStateManager'
 // Seleccionando unidad (propia)
 
 export abstract class jugadorState {
-  #leftClickHandler: (casilla?: Casilla)=>void|jugadorState
-  #rightClickReleaseHandler: (casilla?: Casilla)=>void|jugadorState
-  #rightClickHandler: (casilla?: Casilla)=>void|jugadorState
-  #hoverMouseHandler: (casilla?: Casilla)=>void|jugadorState
+  #leftClickHandler: (mousePosition: {x: number, y: number}, params: paramsJugadorState)=>void|jugadorState
+  #rightClickReleaseHandler: (mousePosition: {x: number, y: number}, params: paramsJugadorState)=>void|jugadorState
+  #rightClickHandler: (mousePosition: {x: number, y: number}, params: paramsJugadorState)=>void|jugadorState
+  #hoverMouseHandler: (mousePosition: {x: number, y: number}, params: paramsJugadorState)=>void|jugadorState
   #params: paramsJugadorState
 
   constructor ({ leftClickHandler, rightClickHandler, hoverMouseHandler, rightClickReleaseHandler, params }: {leftClickHandler:()=>void, rightClickHandler:()=>void, hoverMouseHandler:()=>void, rightClickReleaseHandler:()=>void, params: paramsJugadorState }){
