@@ -8,9 +8,13 @@ import { CursorMapaJuego } from './../cursorMapa.ts'
 import type { Jugador } from './../jugador.ts'
 import { PartidaSnapshotMock } from '../mocks/PartidaSnapshotMock.ts'
 import { MenuAcciones } from './MenuAcciones.tsx'
+import { jugadorStateManager } from '../jugador/jugadorStateManager.ts';
+import { viendoTableroState } from '../jugador/viendoTablero.ts';
 
 export function GameUI (){
   const partidaJuego:React.RefObject<PartidaJuego> = useRef(null)
+  const jugadorStateM:React.RefObject<jugadorStateManager> = useRef(null)
+
   // Revisar si tengo que poner info
   const [infoCasilla, setInfoCasilla] = useState({
     estrellas: 0, gasActual: 10, gasMaxima: 20, hp: 100,
@@ -57,6 +61,21 @@ export function GameUI (){
     setJugadoresData(jugadoresDataTemp)
     setDiaActual(partidaJuego.current.getDiaActual())
     setTurnoActual(partidaJuego.current.getTurnoActual())
+
+    const params = {
+      getJugadorActual: partidaJuego.current.getJugadorActual,
+      getTurnoActual: partidaJuego.current.getTurnoActual,
+      getCasilla: partidaJuego.current.getMapa().calcularCasillaKonva,
+      tamanoCasilla: 32
+    }
+    jugadorStateM.current = new jugadorStateManager({
+      jugadorState: new viendoTableroState(params),
+      params: params
+    })
+
+    partidaJuego.current.getKonvaMapa().getKonvaStage().on('click', ()=>{
+      jugadorStateM.current.leftClickHandler()
+    })
 
     new CursorMapaJuego(partidaJuego.current.getMapa(), partidaJuego.current.getKonvaMapa(), {
       setInfoCasilla: setInfoCasilla, setCasillaHover: setCasillaHover,
