@@ -8,8 +8,9 @@ import { CursorMapaJuego } from './../cursorMapa.ts'
 import type { Jugador } from './../jugador.ts'
 import { PartidaSnapshotMock } from '../mocks/PartidaSnapshotMock.ts'
 import { MenuAcciones } from './MenuAcciones.tsx'
-import { jugadorStateManager } from '../jugador/jugadorStateManager.ts';
+import { jugadorStateManager, type paramsJugadorState } from '../jugador/jugadorStateManager.ts';
 import { viendoTableroState } from '../jugador/viendoTablero.ts';
+import { Konva } from 'konva/lib/Core.js';
 
 export function GameUI (){
   const partidaJuego:React.RefObject<PartidaJuego> = useRef(null)
@@ -62,11 +63,28 @@ export function GameUI (){
     setDiaActual(partidaJuego.current.getDiaActual())
     setTurnoActual(partidaJuego.current.getTurnoActual())
 
-    const params = {
+    // this.layerCursor = new Konva.Layer({ name: 'cursor' })
+    // const cursorImg = new Konva.Image({
+    //   name: 'cursor_mapa',
+    //   x: 0, y: 0,
+    //   width: 32 * 1.33, height: 32 * 1.33,
+    //   image: CursorKonva
+    // })
+    // this.cursorImg.listening(false)
+    // this.layerCursor.add(this.cursorImg)
+    // this.#konvaMapa.getKonvaStage().add(this.layerCursor)
+    partidaJuego.current.getMapa().setKonvaStage(partidaJuego.current.getKonvaMapa().getKonvaStage())
+
+    const params:paramsJugadorState = {
       getJugadorActual: partidaJuego.current.getJugadorActual,
       getTurnoActual: partidaJuego.current.getTurnoActual,
-      getCasilla: partidaJuego.current.getMapa().calcularCasillaKonva,
-      tamanoCasilla: 32
+      getCasilla: () => {
+        return partidaJuego.current.getMapa().calcularCasillaKonva()
+      },
+      tamanoCasilla: 32,
+      konvaMapa: partidaJuego.current.getKonvaMapa(),
+      cursorImg: null,
+      setInfoCasilla: setInfoCasilla
     }
     jugadorStateM.current = new jugadorStateManager({
       jugadorState: new viendoTableroState(params),
