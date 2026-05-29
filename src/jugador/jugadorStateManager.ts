@@ -1,5 +1,9 @@
+import type Konva from 'konva';
 import type { Jugador } from '../jugador';
-import { Casilla } from '../mapa/casilla';
+import { Casilla, type coordenada } from '../mapa/casilla';
+import type { KonvaMapa } from '../mapa/KonvaMapa';
+import type { nombreTerreno } from '../terreno/terrenov2';
+import type { estado, municionBase } from '../unidades/unidadBase';
 import { jugadorState } from './jugadorState'
 
 export type paramsJugadorState = {
@@ -7,6 +11,22 @@ export type paramsJugadorState = {
   getJugadorActual: ()=>Jugador
   getCasilla: (mousePosition: {x: number, y: number}, tamanoCasilla: number)=>Casilla|null
   getTurnoActual: ()=>number
+  konvaMapa: KonvaMapa
+  // actualizarInfoCasilla: (coordHover: coordenada, casillaHover: Casilla)=>void
+  setInfoCasilla: (
+    { estrellas, gasActual, gasMaxima, hp, municionesPrincipales, municionesSecundarias, status, terreno } :
+    { 
+      estrellas: number|null|undefined,
+      gasActual: number|null|undefined,
+      gasMaxima: number|null|undefined,
+      hp: number|null|undefined,
+      municionesPrincipales: municionBase|null|undefined,
+      municionesSecundarias: municionBase|null|undefined,
+      status: estado|null|undefined,
+      terreno: nombreTerreno
+    }
+  ) => void
+  cursorImg: Konva.Image
 }
 
 export class jugadorStateManager {
