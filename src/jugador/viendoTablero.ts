@@ -3,6 +3,10 @@ import { jugadorState } from './jugadorState'
 import { type paramsJugadorState } from './jugadorStateManager'
 import { menuComprasState } from './menuComprasState'
 
+const canLeftClick = true
+const canHoverFlag = true
+const canRightClick = true
+
 const leftClickHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {
   console.log(`leftClickHandler viendo tablero: ${mousePosition}`)
   return
@@ -36,11 +40,9 @@ const rightClickHandler = (mousePosition: {x: number, y: number}, params: params
 const rightClickReleaseHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {}
 const hoverMouseHandler = (mousePosition: {x: number, y: number}, params: paramsJugadorState) => {}
 
-export class viendoTableroState extends jugadorState{
-  #leftClick = true
-  #hoverFlag = true
-  #rightClick = true
 
+
+export class viendoTableroState extends jugadorState{
   constructor (params: paramsJugadorState){
     super({ leftClickHandler, rightClickHandler, rightClickReleaseHandler, hoverMouseHandler, params })
   }
