@@ -159,6 +159,23 @@ export class Mapa{
     return true
   }
 
+  calcularCoordenadaKonva ():coordenada|null{
+    const pos = this.konvaStage?.getPointerPosition()
+    if (!pos) return null
+    const coordX = Math.floor(pos.x / this.tamanoCasilla)
+    const coordY = Math.floor(pos.y / this.tamanoCasilla)
+
+    return { x: coordX, y: coordY }
+  }
+
+  calcularCasillaKonva (){
+    const coord = this.calcularCoordenadaKonva()
+    if( coord != null ){
+      return this.getCasilla(coord)
+    }
+    return null
+  }
+
   public agregarEventoClick (fnClick: (coordenada: coordenada) => any, tamanoCasilla: number){
     if ( this.konvaStage && tamanoCasilla > 0){
       const manejarClick = (evt: any) => {
