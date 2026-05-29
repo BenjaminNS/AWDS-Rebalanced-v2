@@ -4,7 +4,7 @@ import { LibroMovilidad, type tipoMovimiento, tipoMovimientoAereo, tipoMovimient
 import type { nombreUnidad } from './types';
 import Konva from 'konva'
 
-type municionBase = {actual: number, maxima: number}
+export type municionBase = {actual: number, maxima: number}
 export interface municiones {
   principal: municionBase,
   secundaria?: municionBase
