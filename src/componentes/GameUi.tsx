@@ -94,6 +94,9 @@ export function GameUI (){
     partidaJuego.current.getKonvaMapa().getKonvaStage().on('click', ()=>{
       jugadorStateM.current.leftClickHandler()
     })
+    partidaJuego.current.getKonvaMapa().getKonvaStage().on('mousemove', ()=>{
+      jugadorStateM.current.hoverMouseHandler()
+    })
 
     new CursorMapaJuego(partidaJuego.current.getMapa(), partidaJuego.current.getKonvaMapa(), {
       setInfoCasilla: setInfoCasilla, setCasillaHover: setCasillaHover,
