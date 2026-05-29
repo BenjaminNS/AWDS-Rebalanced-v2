@@ -27,15 +27,15 @@ export abstract class jugadorState {
   }
 
   leftClickHandler (){
-    return this.#leftClickHandler ()
+    return this.#leftClickHandler ({x: 0, y: 0}, this.#params)
   }
   rightClickHandler (){
-    return this.#rightClickHandler ()
+    return this.#rightClickHandler ({x: 0, y: 0}, this.#params)
   }
   rightClickReleaseHandler (){
-    return this.#rightClickReleaseHandler ()
+    return this.#rightClickReleaseHandler ({x: 0, y: 0}, this.#params)
   }
   hoverMouseHandler (){
-    return this.#hoverMouseHandler ()
+    return this.#hoverMouseHandler ({x: 0, y: 0}, this.#params)
   }
 }
