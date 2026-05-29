@@ -457,6 +457,10 @@ export class Mapa{
     })
     return casillasSeleccionadas
   }
+
+  public setKonvaStage(konvaStage: Konva.Stage){
+    this.konvaStage = konvaStage
+  }
 }
 
 const casAdyacentes:{ top: any|null, left: any|null, right: any|null, bottom: any|null } = { top: null, left: null, right: null, bottom: null }
